@@ -1122,7 +1122,7 @@ function Gneiss(config)
 		    		.attr("id", "xBackground")
 					.attr("width", g.width())
 					.attr("height", Math.abs(g.padding.xAxis))
-					.attr("fill", "#F5F5F5")  //background color of x axis
+					.attr("fill", "#FF00FF")  //background color of x axis
 					.attr("transform", "translate(0,0)");
 			}
 		}
