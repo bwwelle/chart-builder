@@ -344,7 +344,8 @@ function Gneiss(config)
 		g.chart.append("rect")
 			.attr("id","ground")
 			.attr("width", g.width())
-			.attr("height", g.height());				
+			.attr("height", g.height())
+			.attr("fill","#FFFFFF");  //background color of graph		
 		
 		//group the series by their type
 		g.seriesByType(this.splitSeriesByType(g.series));
@@ -801,6 +802,7 @@ function Gneiss(config)
 		var g = this;
 		var curAxis;
 		var axisGroup;
+
 		
 		//CHANGE
 		if(g.yAxis.length == 1 ){
@@ -825,6 +827,7 @@ function Gneiss(config)
 					.attr("class","axis yAxis")
 					.attr("id",i==0?"leftAxis":"rightAxis")
 					.attr("transform",i==0?"translate("+g.padding.left+",0)":"translate("+( g.width()-g.padding.right)+",0)")
+					.attr("fill", "none") //Background color for y axis
 					.call(g.yAxis[i].axis)
 			}
 			else {
@@ -858,6 +861,7 @@ function Gneiss(config)
 					
 					//store the text element of the axisItem
 					axisItem.text = d3.select(this).select("text")
+						//.attr("stroke","#000000")  //color for Y axis text
 
 					//store the line element of the axisItem	
 					axisItem.line = d3.select(this).select("line")
@@ -1055,7 +1059,7 @@ function Gneiss(config)
 				.scale(g.xAxis.scale)
 				.orient(g.isBargrid() ? "left" : "bottom")
 				.tickFormat(g.xAxis.formatter ? Gneiss.dateParsers[g.xAxis.formatter] : function(d) {return d})
-				.ticks(g.xAxis.ticks);
+				.ticks(g.xAxis.ticks); 
 				
 			// if(g.xAxis.type == "date") {
 				
@@ -1118,7 +1122,7 @@ function Gneiss(config)
 		    		.attr("id", "xBackground")
 					.attr("width", g.width())
 					.attr("height", Math.abs(g.padding.xAxis))
-					.attr("fill", "#F5F5F5")
+					.attr("fill", "#F5F5F5")  //background color of x axis
 					.attr("transform", "translate(0,0)");
 			}
 		}

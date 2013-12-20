@@ -31,6 +31,7 @@
 				var c = document.createElement('canvas');
 				c.width = svgTag.clientWidth;
 				c.height = svgTag.clientHeight;
+
 				svgTag.parentNode.insertBefore(c, svgTag);
 				svgTag.parentNode.removeChild(svgTag);
 				var div = document.createElement('div');
@@ -53,6 +54,8 @@
 		svg.opts = opts;
 		
 		var ctx = target.getContext('2d');
+
+
 		if (typeof(s.documentElement) != 'undefined') {
 			// load from xml doc
 			svg.loadXmlDoc(ctx, s);

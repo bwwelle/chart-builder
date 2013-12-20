@@ -251,6 +251,8 @@ ChartBuilder = {
 		canvas.height = $("#chartContainer").height() * 2;
 
 		var canvasContext = canvas.getContext("2d")
+
+
 		var svg = $.trim(document.getElementById("chartContainer").innerHTML)
 		canvasContext.drawSvg(svg,0,0)
 		
