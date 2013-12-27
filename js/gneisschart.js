@@ -535,7 +535,7 @@ function Gneiss(config)
 			}
 			else {
 				//set extremes in y axis objects and update scales
-				g.yAxis[i].domain = d3.extent(g.yAxis[i].domain);
+				//g.yAxis[i].domain = d3.extent(g.yAxis[i].domain);  //BWW - Removed because it was inverting the min/max axis value
 				g.yAxis[i].scale.domain(g.yAxis[i].domain);
 			}	
 		};		
@@ -579,8 +579,6 @@ function Gneiss(config)
 				g.bargrid.longestValue = d3.extent(valueSizes)[1];
 				values = g.bargrid.longestValue * numSets;
 			}
-
-
 
 			g.yAxis[0].domain[0] = Math.min(g.yAxis[0].domain[0],0);
 			g.yAxis[0].domain[1] = largestYValue;
