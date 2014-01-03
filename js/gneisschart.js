@@ -765,7 +765,7 @@ function Gneiss(config)
 
 		d3.selectAll('#xAxis').selectAll('g').selectAll('text').each(function(){
 			var el = d3.select(this)[0][0];
-			extremes.push( parseFloat( el.getBoundingClientRect().width ) )
+			extremes.push( parseFloat( el.getBoundingClientRect().width ))
 		});
 
 		return d3.extent(extremes)[1]; 
@@ -815,7 +815,7 @@ function Gneiss(config)
 				g.yAxis[i].axis = d3.svg.axis()
 					.scale(g.yAxis[i].scale)
 					.orient(i==0?"right":"left")
-					.tickSize(40)
+					.tickSize(40) //Length of y-axis tick size
 					//.ticks(g.yAxis[0].ticks) // I'm not using built in ticks because it is too opinionated
 					.tickValues(g.yAxis[i].tickValues?g.yAxis[i].tickValues:Gneiss.helper.exactTicks(g.yAxis[i].scale.domain(),g.yAxis[0].ticks))
 					
@@ -934,6 +934,7 @@ function Gneiss(config)
 							//axisItem.line.attr("stroke","#666666")
 							d3.select(this).classed("zero", true)
 							axisItem.text.text("0")
+							axisItem.line.attr("x2","1000") // the zero line length
 						}
 						else {
 							// A non-zero value was rounded into a zero
@@ -998,7 +999,7 @@ function Gneiss(config)
 				//align the text right position it on top of the line
 				axisItem.text = d3.select(this).select("text")
 					.attr("text-anchor",i==0?"start":"end")
-					.attr("fill", "#666666")
+					.attr("fill", "#666666")  //y-axis text color
 					.attr("x", 0)
 					.attr("y", 11)
 				});
@@ -1177,7 +1178,7 @@ function Gneiss(config)
 				.tickFormat(g.xAxis.formatter ? Gneiss.dateParsers[g.xAxis.formatter] : function(d) { return d; })
 				.ticks(g.xAxis.ticks)
 				.orient(g.isBargrid() ? "left" : "bottom")
-				.tickPadding(4)
+				.tickPadding(4)  //padding for xaxis tick value to the bottom of the tick 
 				.tickSize(g.isBargrid() ? 0 : 6);
 			
 				
@@ -1233,7 +1234,7 @@ function Gneiss(config)
 		}
 		
 		g.chart.selectAll("#xAxis g text")
-			.attr("text-anchor", g.xAxis.type == "date" ? (g.seriesByType().column.length>0 && g.seriesByType().line.length == 0 && g.seriesByType().scatter.length == 0 ? "middle":"start"): (g.isBargrid() ? "end":"middle"))
+			.attr("text-anchor", g.xAxis.type == "date" ? (g.seriesByType().column.length>0 && g.seriesByType().line.length == 0 && g.seriesByType().scatter.length == 0 ? "middle":"middle"): (g.isBargrid() ? "end":"middle"))  //BWW Changed so that the xaxis text will line in the middle with the tick mark
 			//.attr("text-anchor", g.isBargrid ? "end":"middle")
 			.each(function() {
 				var pwidth = this.parentNode.getBoundingClientRect().width;
@@ -1555,7 +1556,7 @@ function Gneiss(config)
 
 				// this determines where the next series will be plotted
 				columnSeries.transition()
-					.duration(500)
+					.duration(1000)
 					.attr("transform",function(d,i){
 						if (i===0){
 							return "translate(0,0)"
