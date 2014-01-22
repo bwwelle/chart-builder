@@ -17,6 +17,11 @@ svg .axis g.zero line {
 		stroke: #666666;
 }
 
+.area {
+    fill: lightsteelblue;
+    stroke-width: 0;
+}
+
 svg #xAxis line {
 	stroke: #CCC;
 }

@@ -104,6 +104,14 @@ Gneiss.defaultGneissChartConfig = {
 			type: "line",
 			axis: 0,
 			color: null
+		},
+		{
+			name: "Area Data",
+			data: [ 12.20, 30.10, 21.20, 31.30, 34.10 ],
+			source: "",
+			type: "area",
+			axis: 0,
+			color: null
 		}
 	],
 	xAxisRef: [
@@ -376,9 +384,9 @@ function Gneiss(config)
 			.setXScales(true)
 			.setYAxes(true)
 			.setXAxis(true);
-				
 		this.drawSeriesAndLegend(true);
-      
+
+
 		return this;
 	};
   
@@ -1276,6 +1284,7 @@ function Gneiss(config)
 					
 				// }
 			});
+
       
 		return this;
 	};
@@ -1418,6 +1427,7 @@ function Gneiss(config)
 		var sbt = g.seriesByType();
 				
 		var lineSeries;
+		var areaSeries;
 		
 		if(first) {
 			
@@ -1426,13 +1436,13 @@ function Gneiss(config)
 				.attr("id","seriesContainer")
 				
 				
-			lineSeries = g.seriesContainer.selectAll("path");
+			lineSeries = g.seriesContainer.selectAll("path.seriesLine");
+			areaSeries = g.seriesContainer.selectAll("path.seriesArea");
 			columnSeries = g.seriesContainer.selectAll("g.seriesColumn")
 			var columnGroups
 			var columnRects
 			//var lineSeriesDots = g.seriesContainer.selectAll("g.lineSeriesDots")
 			var scatterSeries = g.seriesContainer.selectAll("g.seriesScatter")
-			
 				
 			//create a group to contain the legend items
 			g.legendItemContainer = g.chart.append("g")
@@ -1469,6 +1479,25 @@ function Gneiss(config)
 						.attr("stroke-linejoin","round")
 						.attr("stroke-linecap","round")
 						.attr("fill","none")
+
+				//add areas to chart
+				areaSeries.data(sbt.area)
+					.enter()
+					.append("path")
+						.attr("d",function(d,j) { yAxisIndex = d.axis; 
+							                      pathString = g.yAxis[d.axis].line(d.data).split("L0,0L").join("M");  
+							                      var ymin = g.yAxis[d.axis].scale(g.yAxis[d.axis].domain[0]);
+							                     var xmin = g.xAxis.range[0];
+							                     var xmax = g.xAxis.range[1];
+							                     pathString += "L"+xmax+","+ymin+"L"+xmin+","+ymin;
+							                      return pathString.indexOf("NaN")==-1?pathString:"M0,0"})
+						.attr("class","seriesArea seriesGroup")
+						.attr("stroke",function(d,i){return d.color? d.color : g.colors[i]})
+						.attr("stroke-width",0.1)
+						//.attr("stroke-linejoin","round")
+						//.attr("stroke-linecap","round")
+						.attr("fill",function(d,i){return d.color? d.color : g.colors[i]})
+		
 				
 				/*lineSeriesDotGroups = lineSeriesDots.data(sbt.line)
 					.enter()
@@ -1515,7 +1544,8 @@ function Gneiss(config)
 		else {
 			//update don't create
 			
-			lineSeries = g.seriesContainer.selectAll("path");
+			lineSeries = g.seriesContainer.selectAll("path.seriesLine");
+			areaSeries = g.seriesContainer.selectAll("path.seriesArea");
 			columnSeries = g.seriesContainer.selectAll("g.seriesColumn")
 			scatterSeries = g.seriesContainer.selectAll("g.seriesScatter")
 			//lineSeriesDotGroups = g.seriesContainer.selectAll("g.lineSeriesDots")
@@ -1689,9 +1719,10 @@ function Gneiss(config)
 				columnRects.exit().remove()
 			
 				//add lines
-				lineSeries = g.seriesContainer.selectAll("path")
+				lineSeries = g.seriesContainer.selectAll("path.seriesLine")
 					.data(sbt.line)
 					.attr("stroke",function(d,i){return d.color? d.color : g.colors[i]});
+
 
 				lineSeries.enter()
 					.append("path")
@@ -1708,8 +1739,46 @@ function Gneiss(config)
 					.attr("d",function(d,j) { yAxisIndex = d.axis; pathString = g.yAxis[d.axis].line(d.data).split("L0,0L").join("M0,0M"); return pathString;})
 
 				lineSeries.exit().remove()
-			
-			
+
+				// **** AREAS
+
+				areaSeries = g.seriesContainer.selectAll("path.seriesArea")
+					.data(sbt.area)
+					.attr("stroke",function(d,i){return d.color? d.color : g.colors[i]})
+					.attr("fill", function(d,i){return d.color? d.color : g.colors[i]});
+
+
+				areaSeries.enter()
+					.append("path")
+						.attr("d",function(d,j) { yAxisIndex = d.axis; 
+							                     pathString = g.yAxis[d.axis].line(d.data).split("L0,0L").join("M0,0L"); 
+							                     var ymin = g.yAxis[d.axis].scale(g.yAxis[d.axis].domain[0]);
+							                     var xmin = g.xAxis.range[0];
+							                     var xmax = g.xAxis.range[1];
+							                     pathString += "L"+xmax+","+ymin+"L"+xmin+","+ymin;
+							                     //Console.log(pathstring);
+							                     return pathString;})
+						.attr("class","seriesArea")
+						.attr("stroke",function(d,i){
+							                        return d.color? d.color : g.colors[i]})
+						.attr("stroke-width",0.1)
+						//.attr("stroke-linejoin","round")
+						//.attr("stroke-linecap","round")
+						.attr("fill", function(d,i){
+							                        return d.color? d.color : g.colors[i]});
+
+				areaSeries.transition()
+					.duration(500)
+					.attr("d",function(d,j) { yAxisIndex = d.axis; pathString = g.yAxis[d.axis].line(d.data).split("L0,0L").join("M0,0M"); 
+							                     var ymin = g.yAxis[d.axis].scale(g.yAxis[d.axis].domain[0]);
+							                     var xmin = g.xAxis.range[0];
+							                     var xmax = g.xAxis.range[1];
+							                     pathString += "L"+xmax+","+ymin+"L"+xmin+","+ymin;
+												return pathString;})
+
+				areaSeries.exit().remove()
+
+
 				//Add dots to the appropriate line series
 				/*lineSeriesDotGroups = g.seriesContainer.selectAll("g.lineSeriesDots")
 					.data(sbt.line)
@@ -1931,7 +2000,8 @@ function Gneiss(config)
 			"line": [],
 			"column": [],
 			"bargrid": [],
-			"scatter": []
+			"scatter": [],
+			"area": []
 		};
 		
 		for (var i = 0; i < series.length; i++) {
@@ -1993,6 +2063,16 @@ function Gneiss(config)
 		});
 
 		d3.select("#seriesContainer").selectAll(".seriesLine").each(function(){
+			orderedArr.push(this);
+		});
+
+		var selection = d3.select("#seriesContainer").selectAll(".seriesArea");
+
+        function my_compare(x,y){ return x.data.max() - y.data.max();}
+
+        selection.sort(my_compare);
+
+ 		selection.each(function(){
 			orderedArr.push(this);
 		});
 

@@ -324,6 +324,7 @@ ChartBuilder = {
 					<option '+(currSeries.type=="column"?"selected":"")+' value="column">Column</option>\
 					<option '+(currSeries.type=="bargrid"?"selected":"")+' '+(g.xAxis.type === "date"?"disabled":"")+' value="bargrid">Bar Grid</option>\
 					<option '+(currSeries.type=="scatter"?"selected":"")+' value="scatter">Scatter</option>\
+					<option '+(currSeries.type=="area"?"selected":"")+' value="area">Area</option>\
 				</select>\
 				<input id="'+this.idSafe(currSeries.name.split(" ").join(""))+'_check" name="'+this.idSafe(currSeries.name.split(" ").join(""))+'_check" type="checkbox" />\
 				<div class="clearfix"></div>\
@@ -1174,7 +1175,8 @@ ChartBuilder.start = function(config) {
 					"line": [],
 					"column": [],
 					"bargrid": [],
-					"scatter": []
+					"scatter": [],
+					"area": []
 				};
 
 		  		for (var i = 0; i < chart.series.length; i++) {
