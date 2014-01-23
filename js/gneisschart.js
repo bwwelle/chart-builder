@@ -1484,9 +1484,9 @@ function Gneiss(config)
 				areaSeries.data(sbt.area)
 					.enter()
 					.append("path")
-						.attr("d",function(d,j) { yAxisIndex = d.axis; 
-							                      pathString = g.yAxis[d.axis].line(d.data).split("L0,0L").join("M");  
-							                      var ymin = g.yAxis[d.axis].scale(g.yAxis[d.axis].domain[0]);
+						.attr("d",function(d,j) { //yAxisIndex = d.axis; 
+							                      pathString = g.yAxis[d.axis].line(d.data).split("L0,0L").join("M");  							                      
+							                     var ymin = g.yAxis[d.axis].scale(Math.max(g.yAxis[d.axis].domain[0],0));
 							                     var xmin = g.xAxis.range[0];
 							                     var xmax = g.xAxis.range[1];
 							                     pathString += "L"+xmax+","+ymin+"L"+xmin+","+ymin;
@@ -1752,7 +1752,7 @@ function Gneiss(config)
 					.append("path")
 						.attr("d",function(d,j) { yAxisIndex = d.axis; 
 							                     pathString = g.yAxis[d.axis].line(d.data).split("L0,0L").join("M0,0L"); 
-							                     var ymin = g.yAxis[d.axis].scale(g.yAxis[d.axis].domain[0]);
+							                     var ymin = g.yAxis[d.axis].scale(Math.max(g.yAxis[d.axis].domain[0],0));
 							                     var xmin = g.xAxis.range[0];
 							                     var xmax = g.xAxis.range[1];
 							                     pathString += "L"+xmax+","+ymin+"L"+xmin+","+ymin;
@@ -1770,7 +1770,7 @@ function Gneiss(config)
 				areaSeries.transition()
 					.duration(500)
 					.attr("d",function(d,j) { yAxisIndex = d.axis; pathString = g.yAxis[d.axis].line(d.data).split("L0,0L").join("M0,0M"); 
-							                     var ymin = g.yAxis[d.axis].scale(g.yAxis[d.axis].domain[0]);
+							                     var ymin = g.yAxis[d.axis].scale(Math.max(g.yAxis[d.axis].domain[0],0));
 							                     var xmin = g.xAxis.range[0];
 							                     var xmax = g.xAxis.range[1];
 							                     pathString += "L"+xmax+","+ymin+"L"+xmin+","+ymin;
