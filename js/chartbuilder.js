@@ -1,6 +1,7 @@
 var chart;
 ChartBuilder = {
-	allColors: [ "95B51E", "FD5516", "6385C6", "FFBB24", "0A808A", "B30024", "172B98" ],
+	allColors: [ "00ADEF", "0A57A4", "B20838", "FF6600","65B500","889CA2","FFB800","006065","780028","AF335C","BE597A","D28CA3","DCA6B8","993900","FF6600",
+	"FF9900","FFB800","003300","006600","65B500","ACD733","889CA2","A0B0B5","B8C4C7","CFD7DA"],
 	curRaw: "",
 	getNewData: function(csv) {
 		// Split the csv information by lines
@@ -1039,7 +1040,8 @@ ChartBuilder = {
 ChartBuilder.getDefaultConfig = function() {
   var chartConfig = {};
   
-  chartConfig.colors = [ "#95B51E", "#FD5516", "#6385C6", "#FFBB24", "#0A808A", "#B30024", "#172B98" ];
+  chartConfig.colors = ["00ADEF", "0A57A4", "B20838", "FF6600","65B500","889CA2","FFB800","006065","780028","AF335C","BE597A","D28CA3","DCA6B8","993900","FF6600",
+	"FF9900","FFB800","003300","006600","65B500","ACD733","889CA2","A0B0B5","B8C4C7","CFD7DA"];
   
   return chartConfig;
 }
