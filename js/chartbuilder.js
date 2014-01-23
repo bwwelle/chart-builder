@@ -1041,7 +1041,7 @@ ChartBuilder.getDefaultConfig = function() {
   var chartConfig = {};
   
   chartConfig.colors = ["00ADEF", "0A57A4", "B20838", "FF6600","65B500","889CA2","FFB800","006065","780028","AF335C","BE597A","D28CA3","DCA6B8","993900","FF6600",
-	"FF9900","FFB800","003300","006600","65B500","ACD733","889CA2","A0B0B5","B8C4C7","CFD7DA"];
+	"FF9900","FFB800","003300","006600","65B500","ACD733","889CA2","A0B0B5","B8C4C7","CFD7DA", "000000"];
   
   return chartConfig;
 }
