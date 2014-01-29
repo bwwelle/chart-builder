@@ -26,7 +26,7 @@ Gneiss.defaultGneissChartConfig = {
 	legend: true, // whether or not there should be a legend
 	title: "", // the chart title 
 	colors: [ "00ADEF", "0A57A4", "B20838", "FF6600","65B500","889CA2","FFB800","006065","780028","AF335C","BE597A","D28CA3","DCA6B8","993900","FF6600",
-	"FF9900","FFB800","003300","006600","65B500","ACD733","889CA2","A0B0B5","B8C4C7","CFD7DA"],
+	"FF9900","FFB800","003300","006600","65B500","ACD733","889CA2","A0B0B5","B8C4C7","CFD7DA", "000000"],
 	bargrid: {
 		barHeight: 30,
 		barSpacing: 2,
@@ -111,6 +111,14 @@ Gneiss.defaultGneissChartConfig = {
 			data: [ 12.20, 30.10, 21.20, 31.30, 34.10 ],
 			source: "",
 			type: "area",
+			axis: 0,
+			color: null
+		},
+		{
+			name: "Stacked Area Data",
+			data: [ 14.20, 56.10, 64.20, 21.30, 34.10 ],
+			source: "",
+			type: "stackedarea",
 			axis: 0,
 			color: null
 		}
@@ -317,6 +325,25 @@ function Gneiss(config)
 		}
 		isBargrid = b;
 	};
+
+	this.updatedStackedData = function Gneiss$updatedStackedData(b) {
+		if (!arguments.length) {
+			return updatedStackedData;
+		}
+		updatedStackedData = b;
+	};
+
+	this.getStackedAreaData = function Gneiss$getStackedAreaData(){
+		// var datapoints = [],
+		// 	g = this;
+
+		// d3.selectAll('.seriesStackedArea').selectAll('text').each(function(){
+		// 	var el = d3.select(this)[0][0];
+		// 	extremes.push( parseFloat( el.getBoundingClientRect().width ) )
+		// });
+
+		// return d3.extent(extremes)[1]; 
+	};
 	
 	this.build = function Gneiss$build(config) {
 		/*
@@ -354,7 +381,8 @@ function Gneiss(config)
 			.attr("id","ground")
 			.attr("width", g.width())
 			.attr("height", g.height())
-			.attr("fill","#FFFFFF");  //background color of graph		
+			.attr("fill","#FFFFFF");  //background color of graph
+		
 		
 		//group the series by their type
 		g.seriesByType(this.splitSeriesByType(g.series));
@@ -1429,6 +1457,7 @@ function Gneiss(config)
 				
 		var lineSeries;
 		var areaSeries;
+		var stackedAreaSeries;
 		
 		if(first) {
 			
@@ -1439,7 +1468,9 @@ function Gneiss(config)
 				
 			lineSeries = g.seriesContainer.selectAll("path.seriesLine");
 			areaSeries = g.seriesContainer.selectAll("path.seriesArea");
-			columnSeries = g.seriesContainer.selectAll("g.seriesColumn")
+			columnSeries = g.seriesContainer.selectAll("g.seriesColumn");
+			stackedAreaSeries = g.seriesContainer.selectAll("g.seriesStackedArea");
+
 			var columnGroups
 			var columnRects
 			//var lineSeriesDots = g.seriesContainer.selectAll("g.lineSeriesDots")
@@ -1493,11 +1524,32 @@ function Gneiss(config)
 							                     pathString += "L"+xmax+","+ymin+"L"+xmin+","+ymin;
 							                      return pathString.indexOf("NaN")==-1?pathString:"M0,0"})
 						.attr("class","seriesArea seriesGroup")
+						.attr("stroke",function(d,i){
+							return d.color? d.color : g.colors[i]})
+						.attr("stroke-width",0.1)
+						//.attr("stroke-linejoin","round")
+						//.attr("stroke-linecap","round")
+						.attr("fill",function(d,i){
+							return d.color? d.color : g.colors[i]})
+
+				//add stacked areas to chart
+				stackedAreaSeries.data(sbt.stackedarea)
+					.enter()
+					.append("path")
+						.attr("d",function(d,j) { //yAxisIndex = d.axis; 
+							                      pathString = g.yAxis[d.axis].line(d.data).split("L0,0L").join("M");  							                      
+							                     var ymin = g.yAxis[d.axis].scale(Math.max(g.yAxis[d.axis].domain[0],0));
+							                     var xmin = g.xAxis.range[0];
+							                     var xmax = g.xAxis.range[1];
+							                     pathString += "L"+xmax+","+ymin+"L"+xmin+","+ymin;
+							                      return pathString.indexOf("NaN")==-1?pathString:"M0,0"})
+						.attr("class","seriesStackedArea seriesGroup")
 						.attr("stroke",function(d,i){return d.color? d.color : g.colors[i]})
 						.attr("stroke-width",0.1)
 						//.attr("stroke-linejoin","round")
 						//.attr("stroke-linecap","round")
-						.attr("fill",function(d,i){return d.color? d.color : g.colors[i]})
+						.attr("fill",function(d,i){
+							return d.color? d.color : g.colors[i]})
 		
 				
 				/*lineSeriesDotGroups = lineSeriesDots.data(sbt.line)
@@ -1547,8 +1599,10 @@ function Gneiss(config)
 			
 			lineSeries = g.seriesContainer.selectAll("path.seriesLine");
 			areaSeries = g.seriesContainer.selectAll("path.seriesArea");
-			columnSeries = g.seriesContainer.selectAll("g.seriesColumn")
-			scatterSeries = g.seriesContainer.selectAll("g.seriesScatter")
+			columnSeries = g.seriesContainer.selectAll("g.seriesColumn");
+			scatterSeries = g.seriesContainer.selectAll("g.seriesScatter");
+			stackedAreaSeries = g.seriesContainer.selectAll("path.seriesStackedArea");
+
 			//lineSeriesDotGroups = g.seriesContainer.selectAll("g.lineSeriesDots")
 			var columnGroups
 			var columnRects
@@ -1638,6 +1692,8 @@ function Gneiss(config)
 				columnRects.exit().remove()
 				//lineSeriesDotGroups.remove()
 				lineSeries.remove()
+				areaSeries.remove()
+				stackedAreaSeries.remove()
 			}
 			else {
 				//Not a bargrid
@@ -1745,8 +1801,10 @@ function Gneiss(config)
 
 				areaSeries = g.seriesContainer.selectAll("path.seriesArea")
 					.data(sbt.area)
-					.attr("stroke",function(d,i){return d.color? d.color : g.colors[i]})
-					.attr("fill", function(d,i){return d.color? d.color : g.colors[i]});
+					.attr("stroke",function(d,i){
+						return d.color? d.color : g.colors[i]})
+					.attr("fill", function(d,i){
+						return d.color? d.color : g.colors[i]});
 
 
 				areaSeries.enter()
@@ -1778,6 +1836,46 @@ function Gneiss(config)
 												return pathString;})
 
 				areaSeries.exit().remove()
+
+
+				// **** STACKED AREAS
+				stackedAreaSeries = g.seriesContainer.selectAll("path.seriesStackedArea")
+					.data(sbt.stackedarea)
+					.attr("stroke",function(d,i){
+						return d.color? d.color : g.colors[i]
+					})
+					.attr("fill", function(d,i){
+						return d.color? d.color : g.colors[i]});
+
+
+				stackedAreaSeries.enter()
+					.append("path")
+						.attr("d",function(d,j) { yAxisIndex = d.axis; 
+							                     pathString = g.yAxis[d.axis].line(d.data).split("L0,0L").join("M0,0L"); 
+							                     var ymin = g.yAxis[d.axis].scale(Math.max(g.yAxis[d.axis].domain[0],0));
+							                     var xmin = g.xAxis.range[0];
+							                     var xmax = g.xAxis.range[1];
+							                     pathString += "L"+xmax+","+ymin+"L"+xmin+","+ymin;
+							                     //Console.log(pathstring);
+							                     return pathString;})
+						.attr("class","seriesStackedArea")
+						.attr("stroke",function(d,i){return d.color? d.color : g.colors[i]})
+						.attr("stroke-width",0.1)
+						//.attr("stroke-linejoin","round")
+						//.attr("stroke-linecap","round")
+						.attr("fill", function(d,i){
+							                        return d.color? d.color : g.colors[i]});
+
+				stackedAreaSeries.transition()
+					.duration(500)
+					.attr("d",function(d,j) { yAxisIndex = d.axis; pathString = g.yAxis[d.axis].line(d.data).split("L0,0L").join("M0,0M"); 
+							                     var ymin = g.yAxis[d.axis].scale(Math.max(g.yAxis[d.axis].domain[0],0));
+							                     var xmin = g.xAxis.range[0];
+							                     var xmax = g.xAxis.range[1];
+							                     pathString += "L"+xmax+","+ymin+"L"+xmin+","+ymin;
+												return pathString;})
+
+				stackedAreaSeries.exit().remove()
 
 
 				//Add dots to the appropriate line series
@@ -1998,15 +2096,40 @@ function Gneiss(config)
 			Partition the data by the way it is supposed to be displayed
 		*/
 		var seriesByType = {
-			"line": [],
-			"column": [],
-			"bargrid": [],
-			"scatter": [],
-			"area": []
+			line: [],
+			column: [],
+			bargrid: [],
+			scatter: [],
+			area: [],
+			stackedarea: []
 		};
+
+		var newStackedArea;
+		var count = 0;
 		
 		for (var i = 0; i < series.length; i++) {
-			seriesByType[series[i].type].push(series[i]);
+			if(series[i].type == 'stackedarea')
+			{	
+				var newColor = series[i].color;
+
+				for (var t=0;t < series[i].data.length; t++)
+				{
+					if(typeof(newStackedArea) === 'undefined'){
+						newStackedArea = jQuery.extend(true, {}, series[i]);
+					}else{
+			 			newStackedArea.data[t] = newStackedArea.data[t] + series[i].data[t];			 			
+			 		}			 		
+				}
+
+				newStackedArea.color = newColor;
+
+			 	seriesByType['stackedarea'].push(jQuery.extend(true, {}, newStackedArea)); 	
+
+			 }
+			 else
+			 {
+				seriesByType[series[i].type].push(series[i]);
+			 }
 		}
 		
 		return seriesByType;
@@ -2034,7 +2157,7 @@ function Gneiss(config)
   this.redraw = function Gneiss$redraw() {
 		/*
 			Redraw the chart
-		*/
+		*/	
 				
 		//group the series by their type
 		this.seriesByType(this.splitSeriesByType(this.series));
@@ -2069,13 +2192,39 @@ function Gneiss(config)
 
 		var selection = d3.select("#seriesContainer").selectAll(".seriesArea");
 
-        function my_compare(x,y){ return x.data.max() - y.data.max();}
+        function my_compare(z,k){ 
+        	return z.data.max() - k.data.max();
+        }
 
         selection.sort(my_compare);
         
  		selection.each(function(){
 			orderedArr.push(this);
 		});
+
+		var selection = d3.select("#seriesContainer").selectAll(".seriesStackedArea");
+
+        function my_compare(z,k){ 
+        	return z.data.max() - k.data.max();
+        }
+
+        selection.sort(my_compare);
+        
+ 		selection.each(function(){
+			orderedArr.push(this);
+		});
+
+		// var selectiontest = d3.select("#seriesContainer").selectAll(".seriesStackedArea");
+
+  //       function my_comparetest(x,y){ 
+  //       	return x.data.max() - y.data.max();
+  //       }
+
+  //       selectiontest.sort(my_comparetest);
+        
+ 	// 	selectiontest.each(function(){
+		// 	orderedArr.push(this);
+		// });
 
  	    // 	var seriesAreaArray = [],t;
 

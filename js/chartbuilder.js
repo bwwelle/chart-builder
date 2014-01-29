@@ -326,6 +326,7 @@ ChartBuilder = {
 					<option '+(currSeries.type=="bargrid"?"selected":"")+' '+(g.xAxis.type === "date"?"disabled":"")+' value="bargrid">Bar Grid</option>\
 					<option '+(currSeries.type=="scatter"?"selected":"")+' value="scatter">Scatter</option>\
 					<option '+(currSeries.type=="area"?"selected":"")+' value="area">Area</option>\
+					<option '+(currSeries.type=="stackedarea"?"selected":"")+' value="stackedarea">Stacked Area</option>\
 				</select>\
 				<input id="'+this.idSafe(currSeries.name.split(" ").join(""))+'_check" name="'+this.idSafe(currSeries.name.split(" ").join(""))+'_check" type="checkbox" />\
 				<div class="clearfix"></div>\
@@ -438,6 +439,8 @@ ChartBuilder = {
 				if( (chart.yAxis.length > 1 && axis == 0) ) {
 					chart.yAxis.pop()
 				}
+
+
 				
 				chart.setYScales()
 					.setYAxes()
@@ -1041,7 +1044,7 @@ ChartBuilder.getDefaultConfig = function() {
   var chartConfig = {};
   
   chartConfig.colors = ["00ADEF", "0A57A4", "B20838", "FF6600","65B500","889CA2","FFB800","006065","780028","AF335C","BE597A","D28CA3","DCA6B8","993900","FF6600",
-	"FF9900","FFB800","003300","006600","65B500","ACD733","889CA2","A0B0B5","B8C4C7","CFD7DA", "#000000"];
+	"FF9900","FFB800","003300","006600","65B500","ACD733","889CA2","A0B0B5","B8C4C7","CFD7DA", "000000"];
   
   return chartConfig;
 }
@@ -1178,7 +1181,8 @@ ChartBuilder.start = function(config) {
 					"column": [],
 					"bargrid": [],
 					"scatter": [],
-					"area": []
+					"area": [],
+					"stackedarea": []
 				};
 
 		  		for (var i = 0; i < chart.series.length; i++) {
