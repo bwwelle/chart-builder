@@ -25,33 +25,27 @@
   </head>
   <body>
     <!-- Add your site or application content here -->
-    <div>
-      <div id="topSection">
+    <div id="interactiveContent">
+      <div id="leftColumn" class="column">
         <div class="cbInner">
           <div id="staticContainer">
-            <div id="chartContainer"></div>  
-            <canvas id="canvas" width="100%" height="676px"></canvas> 
+            <div id="chartContainer"></div>
+  
+            <canvas id="canvas" width="1200px" height="676px"></canvas> 
             <canvas id="favicanvas" width="16px" height="16px"></canvas> 
           </div>
         </div>
       </div>
 
-      <div id="bottomSection">
+      <div id="rightColumn" class="column">
         <div class="cbInner">
-          <div style="padding-bottom: 20px"><img style="vertical-align:middle; padding-right: 5px;" src="css\images\th.jpg" /><span style="display:inline-block; vertical-align:middle; font-size: 23pt; font-weight: bold;">Chart Builder</span></div>
+          <h1>ChartBuilder</h1>
+          <h2>based on open source project: chartbuild from quartz</h2>
+        
           <div id="chartOptions" class="interfaceCol">
-            <div class="optionBlock">
-                <h2>1. Chart Size</h2>
-                <div><select name="x_axis_tick_num" id="chartsize" size="1">
-                  <option selected="selected">Powerpoint</option>
-                  <option>.com</option>
-                  <option>Something Else</option>
-                </select></div>
-            </div>
-             <div class="clearfix"></div>
              <div id="datainput">
-              <div class="inputGroup">                  
-                <h2>2. Input your data</h2>
+              <div class="inputGroup">
+                <h2>1. Input your data</h2>
                 <span id="invalidDataSpan" class="hide">Warning: Data is Invalid</span>
                 <textarea id="csvInput" class="input-box" name="csvInput" rows="8"></textarea>
               </div>
@@ -68,12 +62,12 @@
             </div>
 
             <div class="optionBlock topOptionBlock">
-              <h2>3. Series Options</h2>
+              <h2>2. Series Options</h2>
               <div id="seriesItems"></div>
             </div>
             
             <div class="optionBlock">
-              <h2>4. Chart Options</h2>
+              <h2>3. Chart Options</h2>
                 <div class="optionGroup"><label for="chart_title">Title</label><input type="text" name="chart_title" value="" id="chart_title"></div>
                 <div class="optionGroup"><label for="source">Source</label><input id="sourceLine" type="text" name="source" value=""></div>
                 <div class="optionGroup"><label for="credit">Credit</label><input id="creditLine" type="text" name="credit" value=""></div>
@@ -155,7 +149,7 @@
               </div>
             </div>
             <div class="optionBlock full">
-              <h2>5. Export</h2>
+              <h2>4. Export</h2>
               <div class="updateButton" id="createImageButton">
                 <p>Create Image of Chart</p>
               </div>
@@ -164,7 +158,7 @@
                 <a download="new_chart.svg" id="downloadSVGLink" class="downloadLink" href="#" target="_blank">Download&nbsp;SVG&nbsp;of&nbsp;Chart</a>
               </div>
             </div>
-            <!--<div class="optionBlock full">
+            <div class="optionBlock full">
               <h4>5. Copy the HTML table of your data (if you want)</h4>
               <textarea  class="input-box"  id="table-html" type="text" rows="10"></textarea>
               
@@ -173,16 +167,16 @@
                   <select name="previous_charts" id="previous_charts"></select>
                 </div>
               </div>
-            </div>-->
+            </div>
             <div class="clearfix"></div>
           </div>
           
           <div id="currentSeries" class="interfaceCol"></div>
         </div>      
       </div>
-      <div id="blankColumn"</div>
+      <div id="blankColumn" class="column"></div>
       <div class="clearfix"></div>
-      </div>
+    </div>
 
     <!-- Libraries JS -->
     <script src="bower_components/modernizr/modernizr.js" charset="utf-8"></script>
@@ -204,13 +198,13 @@
     <script src="js/vendor/rgbcolor.js" charset="utf-8"></script>
     
     <script type="text/javascript">
-        (function () {
-            // This starts Chartbuilder and can be passed a configuration
-            // object.  See the Gneiss charting options.
-            ChartBuilder.start({
-
-            });
-        })();
+      (function() {
+        // This starts Chartbuilder and can be passed a configuration
+        // object.  See the Gneiss charting options.
+        ChartBuilder.start({
+          
+        });
+      })();
     </script>
   </body>
 </html>

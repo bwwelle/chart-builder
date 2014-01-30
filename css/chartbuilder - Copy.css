@@ -54,19 +54,29 @@ table {
 /**
  * Layout
  */
-
 .cbInner {
   margin: 0 1em;
 }
 
-#topSection {		
-	height:363px;
-	width: 100%;
-	margin-left: -100%;	
+#interactiveContent {
+  margin: 0;
+  padding-left: 650px;
+  padding-right: 0px
 }
 
-#bottomSection {
-  	/*min-width: 100px;*/
+#interactiveContent .columns {
+	float:left;
+	position: relative;
+}
+
+#leftColumn {
+	width: 650px;
+	margin-left: -100%;
+	right: 650px;
+}
+
+#rightColumn {
+  	min-width: 100px;
 	width: 100%;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -79,11 +89,11 @@ table {
 	margin-right: 0px;
 }
 
-#topSection .cbInner {
-  /*margin-top: 1em;*/
+#leftColumn .cbInner {
+  margin-top: 1em;
 }
 
-#bottomSection .cbInner {
+#rightColumn .cbInner {
   margin-bottom: 2em;
 }
 
@@ -98,18 +108,15 @@ table {
 /**
  * Chart
  */
-#staticContainer {	
-	/*margin-top: 0.5;*/
+#staticContainer {
 	position: fixed;
-	width:100%;
 	left: 1em;
-	background-color: #FFFFFF;
+	margin-top: 0.5;
 }
 
-#chartContainer {	
-	margin-top: 1em;
+#chartContainer {
+	width: 600px;
 	height: 343px;
-	width: 650px;
 	border: 1px solid #efefef;
 }
 
@@ -124,14 +131,14 @@ table {
 /**
  * Form items.
  */
-#bottomSection .cbInner .optionGroup {
+#rightColumn .cbInner .optionGroup {
 	width:100%;
 	margin-left: 5px;
 	margin-right: 5px;
 	float: left;
 }
 
-#bottomSection .cbInner .optionBlock {
+#rightColumn .cbInner .optionBlock {
 	padding-right: 1%;
 	padding-left: 1%;
 	margin-right: 1%;
@@ -141,33 +148,33 @@ table {
 	float: left;
 	background-color: #f6f6f6;
 }
-#bottomSection .cbInner .optionBlock h2 {
+#rightColumn .cbInner .optionBlock h2 {
 	margin-left: 5px;
 	margin-right: 5px;
 }
 
-#bottomSection .cbInner .optionBlock.topOptionBlock {
+#rightColumn .cbInner .optionBlock.topOptionBlock {
 	clear: both;
 }
 
-#bottomSection .cbInner .optionBlock.full {
+#rightColumn .cbInner .optionBlock.full {
 	width:96%;
 }
 
 @media (min-width: 950px) {
-	#bottomSection .cbInner .optionBlock {
+	#rightColumn .cbInner .optionBlock {
 		width: 46%;
 	}
 
 }
 
 @media (min-width: 1250px) {
-	#bottomSection .cbInner .optionBlock {
+	#rightColumn .cbInner .optionBlock {
 		width: 29%;
 	}
 
 
-#bottomSection .cbInner h2 {
+#rightColumn .cbInner h2 {
 	clear: both;
 }
 
