@@ -343,7 +343,9 @@ ChartBuilder = {
 			// picker for color; typer for chart type; and axer for axes
 			var picker = seriesItem.find("#"+this.idSafe(currSeries.name.split(" ").join(""))+"_color").colorPicker({pickerDefault: color, colors:this.allColors});
 			var typer = seriesItem.find("#"+this.idSafe(currSeries.name.split(" ").join(""))+"_type")
-			var axer = seriesItem.find("#"+this.idSafe(currSeries.name.split(" ").join(""))+"_check")
+			var axer = seriesItem.find("#"+this.idSafe(currSeries.name.split(" ").join(""))+"_check") 
+
+			ChartBuilder.setChartArea();
 			
 			// check if the current series' data is being used to create a right axis
 			if ( g.series[i].axis == 1 ) {
@@ -562,7 +564,6 @@ ChartBuilder = {
 				}
 			}
 
-			// if isBargrid has been set to true, adjust the height of the chart
 			if (chart.isBargrid()){
 
 				if (chart.splitSeriesByType(chart.series).bargrid.length === 1){
@@ -580,8 +581,25 @@ ChartBuilder = {
 
 				ChartBuilder.updateYLabels();
 				chart.height( totalBarHeight + totalBarSpacing + chart.padding.top + metaSpacing);
-				d3.select("#ground").attr("height", chart.height());				
+				d3.select("#ground").attr("height", chart.height());		
 				$("#chartContainer").css("height", chart.height());
+				
+				
+				chart.height( parseFloat($("#chartContainer").css("height")) );
+
+				if ( d3.select("#metaInfo")[0][0] !== null){
+					d3.select("#metaInfo").attr("transform", "translate(0," + (chart.height() - chart.padding.meta) +")");
+				}
+			}
+			else
+			{
+				ChartBuilder.updateYLabels();
+
+				chart.width( parseFloat($("#chartContainer").css("width")) );
+				d3.select("#ground").attr("height", chart.height());		
+				d3.select("#ground").attr("width", chart.width());	
+				
+				
 				chart.height( parseFloat($("#chartContainer").css("height")) );
 
 				if ( d3.select("#metaInfo")[0][0] !== null){
@@ -953,6 +971,11 @@ ChartBuilder = {
 		return x1 + x2;
 	},
 	actions: {
+		chart_size_change: function(index,that) {
+			$("#chartContainer").removeClass("PowerPoint");
+			$("#chartContainer").addClass("SomethingElse");
+			ChartBuilder.setChartArea();	
+		},
 		axis_prefix_change: function(index,that) {
 			chart.yAxis[index].prefix.value = $(that).val();
 			ChartBuilder.redraw();
@@ -1205,6 +1228,10 @@ ChartBuilder.start = function(config) {
   		}
   
   	}).keyup() 
+
+	$("#chartsize").change(function() {
+  		ChartBuilder.actions.chart_size_change(0,this)
+  	})
   	
 	$("#left_axis_label").keyup(function() {
   		ChartBuilder.updateYLabels(this);

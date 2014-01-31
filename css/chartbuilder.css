@@ -106,10 +106,17 @@ table {
 	background-color: #FFFFFF;
 }
 
-#chartContainer {	
+.PowerPoint {	
 	margin-top: 1em;
 	height: 343px;
-	width: 650px;
+	width: 600px;
+	border: 1px solid #efefef;
+}
+
+.SomethingElse {	
+	margin-top: 1em;
+	height: 343px;
+	width: 1200px;
 	border: 1px solid #efefef;
 }
 

@@ -2103,28 +2103,32 @@ function Gneiss(config)
 			area: [],
 			stackedarea: []
 		};
-
+		
 		var newStackedArea;
 		var count = 0;
 		
-		for (var i = 0; i < series.length; i++) {
+		for (var i = 0; i < series.length; i++) 
+		{
 			if(series[i].type == 'stackedarea')
 			{	
 				var newColor = series[i].color;
 
-				for (var t=0;t < series[i].data.length; t++)
-				{
-					if(typeof(newStackedArea) === 'undefined'){
+				if(typeof(newStackedArea) === 'undefined'){
 						newStackedArea = jQuery.extend(true, {}, series[i]);
-					}else{
-			 			newStackedArea.data[t] = newStackedArea.data[t] + series[i].data[t];			 			
-			 		}			 		
+				}
+				else
+				{
+					for (var t=0; t<series[i].data.length; t++)
+					{					
+						var num = newStackedArea.data[t] + series[i].data[t];
+
+						newStackedArea.data[t] += series[i].data[t];
+					}
 				}
 
 				newStackedArea.color = newColor;
 
 			 	seriesByType['stackedarea'].push(jQuery.extend(true, {}, newStackedArea)); 	
-
 			 }
 			 else
 			 {
