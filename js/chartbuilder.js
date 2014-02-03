@@ -591,21 +591,21 @@ ChartBuilder = {
 					d3.select("#metaInfo").attr("transform", "translate(0," + (chart.height() - chart.padding.meta) +")");
 				}
 			}
-			else
-			{
-				ChartBuilder.updateYLabels();
+			// else
+			// {
+			// 	ChartBuilder.updateYLabels();
 
-				chart.width( parseFloat($("#chartContainer").css("width")) );
-				d3.select("#ground").attr("height", chart.height());		
-				d3.select("#ground").attr("width", chart.width());	
+			// 	chart.width( parseFloat($("#chartContainer").css("width")) );
+			// 	d3.select("#ground").attr("height", chart.height());		
+			// 	d3.select("#ground").attr("width", chart.width());	
 				
 				
-				chart.height( parseFloat($("#chartContainer").css("height")) );
+			// 	chart.height( parseFloat($("#chartContainer").css("height")) );
 
-				if ( d3.select("#metaInfo")[0][0] !== null){
-					d3.select("#metaInfo").attr("transform", "translate(0," + (chart.height() - chart.padding.meta) +")");
-				}
-			}
+			// 	if ( d3.select("#metaInfo")[0][0] !== null){
+			// 		d3.select("#metaInfo").attr("transform", "translate(0," + (chart.height() - chart.padding.meta) +")");
+			// 	}
+			// }
 		}
 
 		// if isBargrid is true
@@ -972,9 +972,12 @@ ChartBuilder = {
 	},
 	actions: {
 		chart_size_change: function(index,that) {
-			$("#chartContainer").removeClass("PowerPoint");
-			$("#chartContainer").addClass("SomethingElse");
-			ChartBuilder.setChartArea();	
+			$('.chartContainer').css({ width: $(that).val() });
+			d3.select("#chartContainer").attr("width", $(that).val());
+			chart.width($(that).val());
+			ChartBuilder.setChartArea();
+			d3.select("#xBackground").remove();				
+			chart.redraw();
 		},
 		axis_prefix_change: function(index,that) {
 			chart.yAxis[index].prefix.value = $(that).val();
