@@ -60,7 +60,7 @@ table {
 }
 
 #topSection {		
-	height:363px;
+	height:400px;
 	width: 100%;
 	margin-left: -100%;	
 }
@@ -95,6 +95,12 @@ table {
 	color: #ff0000;
 }
 
+.titleClass{
+	position:fixed;
+	padding-bottom: 20px;
+	background-color: #FFFFFF;
+	width:100%;
+}
 /**
  * Chart
  */
