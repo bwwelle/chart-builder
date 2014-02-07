@@ -118,7 +118,7 @@ Gneiss.defaultGneissChartConfig = {
 			name: "Stacked Area Data",
 			data: [ 14.20, 56.10, 64.20, 21.30, 34.10 ],
 			source: "",
-			type: "stackedarea",
+			type: "column",
 			axis: 0,
 			color: null
 		}
@@ -126,7 +126,7 @@ Gneiss.defaultGneissChartConfig = {
 	xAxisRef: [
 		{
 			name: "Years",
-			data: ["2008", "2009", "2010", "2011", "2012"]
+			data: ["1", "2", "3", "4", "5"]
 		}
 	],
 	sourceline: "",
@@ -1485,19 +1485,24 @@ function Gneiss(config)
 					.enter()
 					.append("g") 
 						.attr("class","seriesColumn seriesGroup")
-						.attr("fill",function(d,i){return d.color? d.color : g.colors[i+sbt.line.length]})
-						.attr("transform",function(d,i){return "translate(0,0)"})
+						.attr("fill",function(d,i){
+							return d.color? d.color : g.colors[i+sbt.line.length]})
+						.attr("transform",function(d,i){
+							return "translate(0,0)"})
 						
 				columnGroups.selectAll("rect")
-					.data(function(d,i){return d.data})
+					.data(function(d,i){
+						return d.data})
 					.enter()
 						.append("rect")
 						.attr("width",g.columns.columnWidth)
-						.attr("height", function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; return Math.abs(g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())))})
+						.attr("height", function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; 
+							return Math.abs(g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())))})
 						.attr("x", function(d,i) {
 							return g.xAxis.scale(g.xAxisRef[0].data[i])  - g.columns.columnWidth/2
 							})
-						.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
+						.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; 
+							return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
 								
 				
 				//add lines to chart
@@ -1718,12 +1723,15 @@ function Gneiss(config)
 				columnGroups.exit().remove()
 			
 				columnRects = columnGroups.selectAll("rect")
-					.data(function(d,i){return d.data})
+					.data(function(d,i){
+						return d.data})
 				
 				columnRects.enter()
 						.append("rect")
 						.attr("width",g.columns.columnWidth)
-						.attr("height", function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; return Math.abs(g.yAxis[yAxisIndex].scale(d) - g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())))})
+						.attr("height", function(d,i) {
+							yAxisIndex = d3.select(this.parentNode).data()[0].axis; 
+							return Math.abs(g.yAxis[yAxisIndex].scale(d) - g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())))})
 						.attr("x",g.xAxis.type =="date" ?
 							function(d,i) {
 								g.calculateColumnWidths();
@@ -1743,8 +1751,10 @@ function Gneiss(config)
 										return ( g.padding.left * 2 ) + g.columns.longestYValue + ((g.columns.numColumnCharts - 1) * (g.columns.columnWidth/2)) + ( ((g.columns.numColumnCharts - 1) * g.columns.columnSpacing)/2 ) + (i * (g.columns.numColumnCharts * g.columns.columnWidth)) + (i * (g.columns.numColumnCharts-1) * g.columns.columnSpacing) + (i * g.columns.gutterSpacing);
 									}
 								}}:
-							function(d,i) {return g.xAxis.scale(i) - g.columns.columnWidth/2})
-						.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
+							function(i) {
+								return g.xAxis.scale(i) - g.columns.columnWidth/2})
+						.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; 
+							return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
 			
 				columnRects.transition()
 					.duration(500)
@@ -1769,10 +1779,11 @@ function Gneiss(config)
 									return ( g.padding.left * 2 ) + g.columns.longestYValue + ((g.columns.numColumnCharts - 1) * (g.columns.columnWidth/2)) + ( ((g.columns.numColumnCharts - 1) * g.columns.columnSpacing)/2 ) + (i * (g.columns.numColumnCharts * g.columns.columnWidth)) + (i * (g.columns.numColumnCharts-1) * g.columns.columnSpacing) + (i * g.columns.gutterSpacing);
 								}
 							}}:
-						function(d,i) {return g.xAxis.scale(i) - g.columns.columnWidth/2})
-					.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
-					.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
-				
+						function(i) {
+							return g.xAxis.scale(i) - g.columns.columnWidth/2})
+					.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; 
+						return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
+					
 				columnRects.exit().remove()
 			
 				//add lines
