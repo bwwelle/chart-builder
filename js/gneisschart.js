@@ -971,7 +971,7 @@ function Gneiss(config)
 							//axisItem.line.attr("stroke","#666666")
 							d3.select(this).classed("zero", true)
 							axisItem.text.text("0")
-							axisItem.line.attr("x2","1000") // the zero line length
+							axisItem.line.attr("x2",g.width() -  g.padding.right) // the zero line length
 						}
 						else {
 							// A non-zero value was rounded into a zero
