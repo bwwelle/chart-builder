@@ -1193,6 +1193,8 @@ function Gneiss(config)
 				            .y(function(d) { return d.y; })
 				        	.interpolate("linear");
 
+				    d3.select(".xLabelLine").remove();
+
 					xAxis.append("path")
 						.attr("class", "xLabelLine")
 						.attr("d", lineFunction(xPathData))
