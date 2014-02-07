@@ -86,7 +86,7 @@ Gneiss.defaultGneissChartConfig = {
 			name: "Revenue",
 			data: [ 65.50, 60.20, 68.30, 73.80, 77.30 ],
 			source: "",
-			type: "column",
+			type: "line",
 			axis: 0,
 			color: null
 		},
@@ -110,7 +110,7 @@ Gneiss.defaultGneissChartConfig = {
 			name: "Area Data",
 			data: [ 12.20, 30.10, 21.20, 31.30, 34.10 ],
 			source: "",
-			type: "area",
+			type: "line",
 			axis: 0,
 			color: null
 		},
@@ -118,7 +118,7 @@ Gneiss.defaultGneissChartConfig = {
 			name: "Stacked Area Data",
 			data: [ 14.20, 56.10, 64.20, 21.30, 34.10 ],
 			source: "",
-			type: "column",
+			type: "line",
 			axis: 0,
 			color: null
 		}
