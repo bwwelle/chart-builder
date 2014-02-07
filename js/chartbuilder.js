@@ -974,9 +974,14 @@ ChartBuilder = {
 		chart_size_change: function(index,that) {
 			$('.chartContainer').css({ width: $(that).val() });
 			d3.select("#chartContainer").attr("width", $(that).val());
-			chart.width($(that).val());
-			ChartBuilder.setChartArea();
-			d3.select("#xBackground").remove();				
+			chart.width($(that).val());			
+			d3.select("#ground").attr("width", $(that).val());
+			d3.select("#titleContainer").attr("width", $(that).val());
+			d3.select("#titleBackground").attr("width", $(that).val());
+			d3.select("#metaInfo").attr("width", $(that).val());
+			d3.select("#xBackground").remove();		
+			chart.appendMeta();
+			ChartBuilder.setChartArea();		
 			chart.redraw();
 		},
 		axis_prefix_change: function(index,that) {
