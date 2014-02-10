@@ -979,10 +979,10 @@ ChartBuilder = {
 			d3.select("#titleContainer").attr("width", $(that).val());
 			d3.select("#titleBackground").attr("width", $(that).val());
 			d3.select("#xAxis").attr("width", $(that).val());
-			//d3.select("#metaInfo").remove();
-			// d3.select("#metaInfo").attr("width", $(that).val());
+			d3.select("#metaInfo").remove();
+			d3.select("#metaInfo").attr("width", $(that).val());
 			d3.select("#xBackground").remove();	
-			//chart.appendMeta();
+			chart.appendMeta();
 			ChartBuilder.setChartArea();		
 			chart.redraw();
 		},
