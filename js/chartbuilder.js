@@ -408,7 +408,7 @@ ChartBuilder = {
 					// if so, then set that one to 0
 					for ( var i = 0; i < chart.series.length; i++ ){
 						var selectedElem = $(this).attr("id"),
-							curr = chart.series[i].name.split(" ").join("") + "_check";
+							curr = ChartBuilder.idSafe(chart.series[i].name.split(" ").join("")) + "_check";
 
 						if ( (chart.series[i].axis === 1) && (curr !== selectedElem) ){
 							$("#" + curr).removeAttr("checked");
