@@ -81,7 +81,9 @@ ChartBuilder = {
 						//allow for nulls or blank cells
 						for (var z = 0; z < chart.series.length; z++) {
 							//to account for area's lack of functionality to draw blanks correctly
-		  					if (chart.series[z].type === "area" || chart.series[z].type === "stackedarea"){		  				
+		  					if (chart.series[z].type === "area" || chart.series[z].type === "stackedarea"){
+		  						d3.select("#invalidDataSpan").text("Warning: Area/Stacked Area Series Cannot Have Blank Cells/Data");		  				
+								
 								return null;
 		  					}
 		  					else
@@ -421,6 +423,8 @@ ChartBuilder = {
 						ChartBuilder.showInvalidData();
 	  				return;
 	  			}
+
+	  			d3.select("#invalidDataSpan").text("Warning: Data is Invalid");
 				ChartBuilder.hideInvalidData();
 	  
 	  			ChartBuilder.createTable(newData, dataObj.datetime);
@@ -1277,6 +1281,9 @@ ChartBuilder.start = function(config) {
 					ChartBuilder.showInvalidData();
   				return;
   			}
+
+  			d3.select("#invalidDataSpan").text("Warning: Data is Invalid");
+
 			ChartBuilder.hideInvalidData();
   
   			ChartBuilder.createTable(newData, dataObj.datetime);
