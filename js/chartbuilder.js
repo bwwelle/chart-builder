@@ -76,9 +76,19 @@ ChartBuilder = {
 				// If it's a data point
 				else {
 					var value = csv_matrix[j][i];
+
 					if(value == "null" || value == "") {
 						//allow for nulls or blank cells
-						value = null
+						for (var z = 0; z < chart.series.length; z++) {
+							//to account for area's lack of functionality to draw blanks correctly
+		  					if (chart.series[z].type === "area" || chart.series[z].type === "stackedarea"){		  				
+								return null;
+		  					}
+		  					else
+		  					{
+		  						value = null;
+		  					}
+		  				}		
 					}
 					else if (isNaN(value)){
 						//data isn't valid
@@ -372,9 +382,62 @@ ChartBuilder = {
 			// assigns the new type to the data series' type property
 			typer.change(function() {
 				var val = $(this).val();
+
 				var index = $(this).parent().data().index;
 				chart.series[index].type = val;
+
 				ChartBuilder.setChartArea();
+
+				var csv = ChartBuilder.curRaw;
+	  			var newData = ChartBuilder.getNewData(csv);
+	  			if(newData == null) {
+						ChartBuilder.showInvalidData();
+	  				return;
+	  			}
+
+	  			// if the current chart is a bargrid, but then a date chart is entered
+			  	// swithc all of the bargrids to a line
+			  	if ( chart.splitSeriesByType(chart.series).bargrid.length > 0 && chart.xAxis.type === "date" ){
+			  		var seriesByType = {
+						"line": [],
+						"column": [],
+						"bargrid": [],
+						"scatter": [],
+						"area": [],
+						"stackedarea": []
+					};
+
+			  		for (var i = 0; i < chart.series.length; i++) {
+			  			if (chart.series[i].type === "bargrid"){
+			  				chart.series[i].type = "line";
+			  			}
+			  			seriesByType[chart.series[i].type].push(chart.series[i]);
+			  		}
+			  	}
+	  
+	  			dataObj = ChartBuilder.makeDataObj(newData);
+
+	  			if(dataObj == null) {
+						ChartBuilder.showInvalidData();
+	  				return;
+	  			}
+				ChartBuilder.hideInvalidData();
+	  
+	  			ChartBuilder.createTable(newData, dataObj.datetime);
+	  			
+	  			chart.series.unshift(chart.xAxisRef)
+	  			dataObj = ChartBuilder.mergeData(dataObj)
+	  			
+	  			if(dataObj.datetime) {
+	  				chart.xAxis.type = "date";
+	  				chart.xAxis.formatter = chart.xAxis.formatter?chart.xAxis.formatter:"mm/dd/yyyy";
+	  			}
+	  			else {
+	  				chart.xAxis.type = "ordinal";
+	  			}
+	  			chart.xAxisRef = [dataObj.data.shift()]
+	  			
+	  			chart.series = dataObj.data;
 				
 				// removes the right y axis when it is not in use
 				if ( chart.yAxis.length > 1 && chart.isBargrid() ) {
@@ -1170,6 +1233,7 @@ ChartBuilder.start = function(config) {
   		if( $(this).val() != ChartBuilder.curRaw) {
   			//cache the the raw textarea value
   			ChartBuilder.curRaw = $(this).val()
+ 			
   			ChartBuilder.updateInterface();
   			
   			if($("#right_axis_max").val().length == 0 && $("#right_axis_min").val().length == 0) {
@@ -1186,13 +1250,34 @@ ChartBuilder.start = function(config) {
 					ChartBuilder.showInvalidData();
   				return;
   			}
+
+  			// if the current chart is a bargrid, but then a date chart is entered
+		  	// swithc all of the bargrids to a line
+		  	if ( chart.splitSeriesByType(chart.series).bargrid.length > 0 && chart.xAxis.type === "date" ){
+		  		var seriesByType = {
+					"line": [],
+					"column": [],
+					"bargrid": [],
+					"scatter": [],
+					"area": [],
+					"stackedarea": []
+				};
+
+		  		for (var i = 0; i < chart.series.length; i++) {
+		  			if (chart.series[i].type === "bargrid"){
+		  				chart.series[i].type = "line";
+		  			}
+		  			seriesByType[chart.series[i].type].push(chart.series[i]);
+		  		}
+		  	}
   
   			dataObj = ChartBuilder.makeDataObj(newData);
+
   			if(dataObj == null) {
 					ChartBuilder.showInvalidData();
   				return;
   			}
-				ChartBuilder.hideInvalidData();
+			ChartBuilder.hideInvalidData();
   
   			ChartBuilder.createTable(newData, dataObj.datetime);
   			
@@ -1214,27 +1299,7 @@ ChartBuilder.start = function(config) {
 		  		chart.state.hasLegend = false;
 		  		chart.padding.top -= chart.padding.legend;
 		  		ChartBuilder.updateTitle();
-		  	}
-
-		  	// if the current chart is a bargrid, but then a date chart is entered
-		  	// swithc all of the bargrids to a line
-		  	if ( chart.splitSeriesByType(chart.series).bargrid.length > 0 && chart.xAxis.type === "date" ){
-		  		var seriesByType = {
-					"line": [],
-					"column": [],
-					"bargrid": [],
-					"scatter": [],
-					"area": [],
-					"stackedarea": []
-				};
-
-		  		for (var i = 0; i < chart.series.length; i++) {
-		  			if (chart.series[i].type === "bargrid"){
-		  				chart.series[i].type = "line";
-		  			}
-		  			seriesByType[chart.series[i].type].push(chart.series[i]);
-		  		}
-		  	}
+		  	}		  	
   			
   			ChartBuilder.setChartArea();
   			

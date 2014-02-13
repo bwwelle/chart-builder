@@ -86,7 +86,7 @@ Gneiss.defaultGneissChartConfig = {
 			name: "Revenue",
 			data: [ 65.50, 60.20, 68.30, 73.80, 77.30 ],
 			source: "",
-			type: "line",
+			type: "area",
 			axis: 0,
 			color: null
 		},
