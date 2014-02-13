@@ -973,18 +973,28 @@ ChartBuilder = {
 	actions: {
 		chart_size_change: function(index,that) {
 			$('.chartContainer').css({ width: $(that).val() });
-			d3.select("#chartContainer").attr("width", $(that).val());
+			//d3.select("#chartContainer").attr("width", $(that).val());
 			chart.width($(that).val());			
 			d3.select("#ground").attr("width", $(that).val());
 			d3.select("#titleContainer").attr("width", $(that).val());
 			d3.select("#titleBackground").attr("width", $(that).val());
-			d3.select("#xAxis").attr("width", $(that).val());
-			d3.select("#metaInfo").remove();
-			d3.select("#metaInfo").attr("width", $(that).val());
+			d3.select("#xAxis").attr("width", $(that).val());		
+
 			d3.select("#xBackground").remove();	
-			chart.appendMeta();
+			d3.select("#leftAxis").remove();
+			d3.select("#rightAxis").remove();					
+
+			chart.setYAxes(true);
+
 			ChartBuilder.setChartArea();		
 			chart.redraw();
+
+			chart.metaInfo.remove();
+
+			if ( chart.creditline !== "" || chart.sourceline !== "")
+			{
+				chart.appendMeta();
+			}
 		},
 		axis_prefix_change: function(index,that) {
 			chart.yAxis[index].prefix.value = $(that).val();

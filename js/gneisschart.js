@@ -1409,12 +1409,14 @@ function Gneiss(config)
 			.attr("transform","translate(0," + (g.height() - g.padding.meta) + ")");
 		
 		g.metaInfo.append("path")
+			.attr("id", "metaInfoPath")
 			.attr("class", "xSourceLine")
 			.attr("d", lineFunction(sourcePathData))
     		.attr("stroke", "#AAA")
     		.attr("transform", "translate(0,-1)");
 
 		g.metaBackground = g.metaInfo.append("rect")
+			.attr("id","metaInfoRect")
 			.attr("width", g.width())
 			.attr("height", g.padding.meta)
 			.attr("fill", "#FFF")
