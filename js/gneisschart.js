@@ -129,6 +129,23 @@ Gneiss.defaultGneissChartConfig = {
 			data: ["1", "2", "3", "4", "5"]
 		}
 	],
+	chartsizes: [
+		{
+			name: "Powerpoint",
+			data: "600,600",
+			selected: "selected"
+		},
+		{
+			name: ".com",
+			data: "800,600",
+			selected: ""
+		},
+		{
+			name: "Something Else",
+			data: "1200,600",
+			selected: ""
+					}
+	],
 	sourceline: "",
 	creditline: ""
 };

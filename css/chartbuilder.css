@@ -302,6 +302,10 @@ textarea {
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 }
+#widthdiv {
+	display:inline;
+
+}
 
 #seriesItems .seriesItem p {
 	margin: 0;

@@ -322,7 +322,29 @@ ChartBuilder = {
 		var g = chart;
 		var currSeries;
 		var seriesContainer = $("#seriesItems");
+		var sizesContainer = $("#sizeItems");
 		var isMultiAxis = false;
+		var sizeValues;
+
+		for(var i=0;i<g.chartsizes.length;i++)
+		{
+			currSize = g.chartsizes[i];
+			sizesItem = $('<option value="'+currSize.data +'"'+currSize.selected + '>'+currSize.name + '</option>')
+
+			if(currSize.selected !=="")
+			{
+				sizeValues=currSize.data.split(",");
+
+				d3.select("#widthInput").attr("value",sizeValues[0]);
+				d3.select("#heightInput").attr("value",sizeValues[1]);
+			}
+
+			sizesContainer.append(sizesItem);
+		}	
+
+		sizesItem = $('<option value="">Custom Size</option>')
+		sizesContainer.append(sizesItem);
+
 		
 		// loops through the series data
 		for (var i=0; i < g.series.length; i++) {
@@ -1039,13 +1061,32 @@ ChartBuilder = {
 	},
 	actions: {
 		chart_size_change: function(index,that) {
-			$('.chartContainer').css({ width: $(that).val() });
+			var sizeValues=$(that).val().split(",");
+
+			var chartWidth = sizeValues[0];
+			var chartHeight = sizeValues[1];
+
+			d3.select("#widthInput").attr("value",chartWidth);
+			d3.select("#heightInput").attr("value",chartHeight);
+
+			// if($(that).val() == "")
+			// {
+			// 	d3.select("#widthInput").attr('disabled', null);
+			// 	d3.select("#heightInput").attr('disabled', null);
+			// }
+			// else
+			// {
+			// 	d3.select("#widthInput").attr('disabled', "disabled");
+			// 	d3.select("#heightInput").attr('disabled', "disabled");
+			// }
+
+			$('.chartContainer').css({ width: chartWidth });
 			//d3.select("#chartContainer").attr("width", $(that).val());
-			chart.width($(that).val());			
-			d3.select("#ground").attr("width", $(that).val());
-			d3.select("#titleContainer").attr("width", $(that).val());
-			d3.select("#titleBackground").attr("width", $(that).val());
-			d3.select("#xAxis").attr("width", $(that).val());		
+			chart.width(chartWidth);			
+			d3.select("#ground").attr("width", chartWidth);
+			d3.select("#titleContainer").attr("width",chartWidth);
+			d3.select("#titleBackground").attr("width", chartWidth);
+			d3.select("#xAxis").attr("width", chartWidth);		
 
 			d3.select("#xBackground").remove();	
 			d3.select("#leftAxis").remove();
@@ -1056,7 +1097,10 @@ ChartBuilder = {
 			ChartBuilder.setChartArea();		
 			chart.redraw();
 
-			chart.metaInfo.remove();
+			if(chart.metaInfo !== undefined)
+			{
+				chart.metaInfo.remove();
+			}
 
 			if ( chart.creditline !== "" || chart.sourceline !== "")
 			{
@@ -1321,7 +1365,7 @@ ChartBuilder.start = function(config) {
   
   	}).keyup() 
 
-	$("#chartsize").change(function() {
+	$("#sizeItems").change(function() {
   		ChartBuilder.actions.chart_size_change(0,this)
   	})
   	
@@ -1434,7 +1478,38 @@ ChartBuilder.start = function(config) {
   			chart.redraw();
   		}
   	});
-		
+	
+  	$("#widthInput").keyup(function() {
+  		var chartWidth = $(this).val();
+  		d3.select("#widthInput").attr("value",chartWidth);
+		$('.chartContainer').css({ width: chartWidth });
+		//d3.select("#chartContainer").attr("width", $(that).val());
+		chart.width(chartWidth);			
+		d3.select("#ground").attr("width", chartWidth);
+		d3.select("#titleContainer").attr("width",chartWidth);
+		d3.select("#titleBackground").attr("width", chartWidth);
+		d3.select("#xAxis").attr("width", chartWidth);		
+
+		d3.select("#xBackground").remove();	
+		d3.select("#leftAxis").remove();
+		d3.select("#rightAxis").remove();					
+
+		chart.setYAxes(true);
+
+		ChartBuilder.setChartArea();		
+		chart.redraw();
+
+		if(chart.metaInfo !== undefined)
+		{
+			chart.metaInfo.remove();
+		}
+
+		if ( chart.creditline !== "" || chart.sourceline !== "")
+		{
+			chart.appendMeta();
+		}
+  	});
+
   	$("#sourceLine").keyup(function() {
   		
   		// capture the current value of the field
