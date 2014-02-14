@@ -344,7 +344,6 @@ ChartBuilder = {
 
 		sizesItem = $('<option value="">Custom Size</option>')
 		sizesContainer.append(sizesItem);
-
 		
 		// loops through the series data
 		for (var i=0; i < g.series.length; i++) {
@@ -1065,20 +1064,22 @@ ChartBuilder = {
 
 			var chartWidth = sizeValues[0];
 			var chartHeight = sizeValues[1];
+			var widthInputBox = $("#widthInput");
+			var heightInputBox = $("#widthInput");
 
-			d3.select("#widthInput").attr("value",chartWidth);
-			d3.select("#heightInput").attr("value",chartHeight);
+			widthInputBox.val(chartWidth);
+			heightInputBox.val(chartWidth);
 
-			// if($(that).val() == "")
-			// {
-			// 	d3.select("#widthInput").attr('disabled', null);
-			// 	d3.select("#heightInput").attr('disabled', null);
-			// }
-			// else
-			// {
-			// 	d3.select("#widthInput").attr('disabled', "disabled");
-			// 	d3.select("#heightInput").attr('disabled', "disabled");
-			// }
+			if($(that).val() == "")
+			{
+				d3.select("#widthInput").attr('disabled', null);
+				d3.select("#heightInput").attr('disabled', null);
+			}
+			else
+			{
+				d3.select("#widthInput").attr('disabled', "disabled");
+				d3.select("#heightInput").attr('disabled', "disabled");
+			}
 
 			$('.chartContainer').css({ width: chartWidth });
 			//d3.select("#chartContainer").attr("width", $(that).val());
