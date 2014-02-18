@@ -132,8 +132,8 @@ Gneiss.defaultGneissChartConfig = {
 	chartsizes: [
 		{
 			name: "Powerpoint",
-			data: "600,600",
-			selected: "selected"
+			data: "600,500",
+			selected: "selected" //"selected" if you want it to be selected as default when opening the app
 		},
 		{
 			name: ".com",
@@ -142,9 +142,14 @@ Gneiss.defaultGneissChartConfig = {
 		},
 		{
 			name: "Something Else",
-			data: "1200,600",
+			data: "1200,343",
 			selected: ""
-					}
+		},
+		{
+			name: "Custom Size",
+			data: "600,343",
+			selected: ""
+		}
 	],
 	sourceline: "",
 	creditline: ""

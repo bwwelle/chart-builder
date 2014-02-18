@@ -319,6 +319,7 @@ ChartBuilder = {
 	},
 	redraw: function() {
 		$(".seriesItemGroup").detach();
+		$(".selectBox").detach();
 		var g = chart;
 		var currSeries;
 		var seriesContainer = $("#seriesItems");
@@ -329,21 +330,43 @@ ChartBuilder = {
 		for(var i=0;i<g.chartsizes.length;i++)
 		{
 			currSize = g.chartsizes[i];
-			sizesItem = $('<option value="'+currSize.data +'"'+currSize.selected + '>'+currSize.name + '</option>')
+			sizesItem = $('<option class="selectBox" value="'+currSize.data +'"'+currSize.selected + '>'+currSize.name + '</option>')
 
 			if(currSize.selected !=="")
 			{
 				sizeValues=currSize.data.split(",");
+				$('#topSection').css({ height: Number(sizeValues[1]) + 57 +"px" });
+				$('.chartContainer').css({ width: sizeValues[0] });
+				$('.chartContainer').css({ height: sizeValues[1] });
+				chart.width(sizeValues[0]);	
+				chart.height(sizeValues[1]);			
 
-				d3.select("#widthInput").attr("value",sizeValues[0]);
-				d3.select("#heightInput").attr("value",sizeValues[1]);
+				d3.select("#ground").attr("width",sizeValues[0]);
+				d3.select("#ground").attr("height",sizeValues[1]);
+				d3.select("#titleContainer").attr("width",sizeValues[0]);
+				d3.select("#titleBackground").attr("width", sizeValues[0]);
+				d3.select("#xAxis").attr("width", sizeValues[0]);
+
+				var widthInputBox = $("#widthInput");
+				var heightInputBox = $("#heightInput");
+
+				widthInputBox.val(sizeValues[0]);
+				heightInputBox.val(sizeValues[1]);
+
+				var height = Number(sizeValues[1])
+
+				if(height > 500)
+				{
+					$('#staticContainer').css({ position: "absolute" });
+				}
+				else
+				{
+					$('#staticContainer').css({ position: "fixed" });
+				}
 			}
 
 			sizesContainer.append(sizesItem);
 		}	
-
-		sizesItem = $('<option value="">Custom Size</option>')
-		sizesContainer.append(sizesItem);
 		
 		// loops through the series data
 		for (var i=0; i < g.series.length; i++) {
@@ -530,7 +553,34 @@ ChartBuilder = {
 					chart.yAxis.pop()
 				}
 
+				var selectedSize = $("#sizeItems :selected").text();
 
+				for(var i=0;i<g.chartsizes.length;i++)
+				{
+					sizeValues=currSize.data.split(",");
+							
+					if(g.chartsizes[i].name == selectedSize)
+					{
+						g.chartsizes[i].selected= "selected";
+
+						if(g.chartsizes[i].name == "Custom Size")
+						{
+							var width = $("#widthInput").val();
+							var height = $("#heightInput").val();
+
+							g.chartsizes[i].data = width +"," + height;
+						}
+					}
+					else
+					{
+						g.chartsizes[i].selected = "";
+
+						if(g.chartsizes[i].name == "Custom Size")
+						{
+							g.chartsizes[i].data= "600,343";
+						}	
+					}
+				}
 				
 				chart.setYScales()
 					.setYAxes()
@@ -1058,19 +1108,37 @@ ChartBuilder = {
 		}
 		return x1 + x2;
 	},
-	actions: {
+	actions: {		
 		chart_size_change: function(index,that) {
+			var selectedSize = $(that).find("option:selected").text();
+			var g = chart;
+			var sizeValues;
+
+			for(var i=0;i<g.chartsizes.length;i++)
+			{
+				currSize = g.chartsizes[i];
+
+				if(currSize.name == selectedSize)
+				{
+					g.chartsizes[i].selected= "selected";
+				}
+				else
+				{
+					g.chartsizes[i].selected = "";	
+				}
+			}
+
 			var sizeValues=$(that).val().split(",");
 
 			var chartWidth = sizeValues[0];
 			var chartHeight = sizeValues[1];
 			var widthInputBox = $("#widthInput");
-			var heightInputBox = $("#widthInput");
+			var heightInputBox = $("#heightInput");
 
 			widthInputBox.val(chartWidth);
-			heightInputBox.val(chartWidth);
+			heightInputBox.val(chartHeight);
 
-			if($(that).val() == "")
+			if(selectedSize == "Custom Size")
 			{
 				d3.select("#widthInput").attr('disabled', null);
 				d3.select("#heightInput").attr('disabled', null);
@@ -1081,10 +1149,15 @@ ChartBuilder = {
 				d3.select("#heightInput").attr('disabled', "disabled");
 			}
 
+			$('#topSection').css({ height: Number(sizeValues[1]) + 57 +"px" });
+
 			$('.chartContainer').css({ width: chartWidth });
-			//d3.select("#chartContainer").attr("width", $(that).val());
-			chart.width(chartWidth);			
+			$('.chartContainer').css({ height: chartHeight });
+
+			chart.width(chartWidth);		
+			chart.height(chartHeight);	
 			d3.select("#ground").attr("width", chartWidth);
+			d3.select("#ground").attr("height", chartHeight);
 			d3.select("#titleContainer").attr("width",chartWidth);
 			d3.select("#titleBackground").attr("width", chartWidth);
 			d3.select("#xAxis").attr("width", chartWidth);		
@@ -1106,6 +1179,15 @@ ChartBuilder = {
 			if ( chart.creditline !== "" || chart.sourceline !== "")
 			{
 				chart.appendMeta();
+			}
+
+			if(Number(chartHeight) > 500)
+			{
+				$('#staticContainer').css({ position: "absolute" });
+			}
+			else
+			{
+				$('#staticContainer').css({ position: "fixed" });
 			}
 		},
 		axis_prefix_change: function(index,that) {
@@ -1275,6 +1357,75 @@ ChartBuilder.start = function(config) {
   	// add interactions to chartbuilder interface
   	//
   	*/
+
+  	$("#heightInput").keyup(function() {
+		var chartHeight=$(this).val();
+
+		$('#topSection').css({ height: Number(chartHeight) + 57 +"px" });
+
+		$('.chartContainer').css({ height: chartHeight });
+		chart.height(chartHeight);	
+		d3.select("#ground").attr("height", chartHeight);
+
+		d3.select("#xBackground").remove();	
+		d3.select("#leftAxis").remove();
+		d3.select("#rightAxis").remove();					
+
+		chart.setYAxes(true);
+
+		ChartBuilder.setChartArea();		
+		chart.redraw();
+
+		if(chart.metaInfo !== undefined)
+		{
+			chart.metaInfo.remove();
+		}
+
+		if ( chart.creditline !== "" || chart.sourceline !== "")
+		{
+			chart.appendMeta();
+		}
+
+		if(Number(chartHeight) > 500)
+		{
+			$('#staticContainer').css({ position: "absolute" });
+		}
+		else
+		{
+			$('#staticContainer').css({ position: "fixed" });
+		}
+
+  	}).keyup() 
+
+  	 $("#widthInput").keyup(function() {
+		var chartWidth=$(this).val();		
+
+		$('.chartContainer').css({ width: chartWidth });
+		chart.width(chartWidth);	
+		d3.select("#ground").attr("width", chartWidth);
+		d3.select("#titleContainer").attr("width",chartWidth);
+		d3.select("#titleBackground").attr("width", chartWidth);
+		d3.select("#xAxis").attr("width", chartWidth);		
+
+		d3.select("#xBackground").remove();	
+		d3.select("#leftAxis").remove();
+		d3.select("#rightAxis").remove();					
+
+		chart.setYAxes(true);
+
+		ChartBuilder.setChartArea();		
+		chart.redraw();
+
+		if(chart.metaInfo !== undefined)
+		{
+			chart.metaInfo.remove();
+		}
+
+		if ( chart.creditline !== "" || chart.sourceline !== "")
+		{
+			chart.appendMeta();
+		}
+  	}).keyup() 
   	
   	$("#csvInput").keyup(function() {
 
@@ -1365,6 +1516,7 @@ ChartBuilder.start = function(config) {
   		}
   
   	}).keyup() 
+
 
 	$("#sizeItems").change(function() {
   		ChartBuilder.actions.chart_size_change(0,this)
