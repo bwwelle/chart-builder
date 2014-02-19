@@ -356,6 +356,17 @@ ChartBuilder = {
 
 				var height = Number(sizeValues[1])
 
+				if(currSize.Name == "Custom Size")
+				{
+					d3.select("#widthInput").attr('disabled', null);
+					d3.select("#heightInput").attr('disabled', null);
+				}
+				else
+				{
+					d3.select("#widthInput").attr('disabled', "disabled");
+					d3.select("#heightInput").attr('disabled', "disabled");
+				}
+
 				if(height > 500)
 				{
 					$('#staticContainer').css({ position: "absolute" });
