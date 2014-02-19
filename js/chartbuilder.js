@@ -356,7 +356,7 @@ ChartBuilder = {
 
 				var height = Number(sizeValues[1])
 
-				if(currSize.Name == "Custom Size")
+				if(currSize.name == "Custom Size")
 				{
 					d3.select("#widthInput").attr('disabled', null);
 					d3.select("#heightInput").attr('disabled', null);
@@ -1010,6 +1010,11 @@ ChartBuilder = {
 		// handles an edge case - where a right axis label was added and then the right axis was removed
 		if ( $("#rightAxisControls").hasClass("hide") && $("#right_axis_label").val() !== "" ){
 			$("#right_axis_label").val("");
+			$("#right_axis_prefix").val("");
+			$("#right_axis_suffix").val("");
+			$("#right_axis_max").val("");
+			$("#right_axis_min").val("");
+
 			d3.select("#rightYLabel").text("");
 			
 			if ( chart.yAxis[ 0 ].label === undefined ) {
@@ -1194,7 +1199,7 @@ ChartBuilder = {
 
 			if (rightAxisLabel !== "" && rightAxisLabel !== undefined)
 			{				
-				chart.yAxis[ 1 ].label = "";
+				chart.yAxis[ 1 ].label = undefined;
 				g.labelContainer=undefined;
 				$("#right_axis_label").keyup();
 
@@ -1459,7 +1464,13 @@ ChartBuilder.start = function(config) {
 			$('#staticContainer').css({ position: "fixed" });
 		}
 
-  	}).keyup() 
+  	})
+
+	$(document).ready(function() {
+	    $('input[type!="button"][type!="submit"][id!="widthInput"][id!="heightInput"], select, textarea[id!="csvInput"]')
+	         .val('')
+	         .blur();
+	});
 
   	 $("#widthInput").keyup(function() {
 		var chartWidth=$(this).val();	
@@ -1485,16 +1496,16 @@ ChartBuilder.start = function(config) {
 
 		var createdLabelContainer = false;
 
-		if (rightAxisLabel !== "" && rightAxisLabel !== undefined)
+		if (rightAxisLabel !== "")
 		{				
-			chart.yAxis[ 1 ].label = "";
+			chart.yAxis[ 1 ].label = undefined;
 			chart.labelContainer=undefined;
 			$("#right_axis_label").keyup();
 
 			createdLabelContainer = true;
 		}
 
-		if(leftAxisLabel !== "" && leftAxisLabel !== undefined)
+		if(leftAxisLabel !== "")
 		{
 			if(createdLabelContainer == false)
 			{
@@ -1537,8 +1548,8 @@ ChartBuilder.start = function(config) {
 		{
 			chart.appendMeta();
 		}
-  	}).keyup() 
-  	
+  	})
+
   	$("#csvInput").keyup(function() {
 
   		//check if the data is different
