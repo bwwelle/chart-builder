@@ -1137,6 +1137,11 @@ ChartBuilder = {
 				}
 				else
 				{
+					if(g.chartsizes[i].name == "Custom Size")
+					{
+						g.chartsizes[i].data = "600,343";
+					}
+
 					g.chartsizes[i].selected = "";	
 				}
 			}
