@@ -554,34 +554,34 @@ ChartBuilder = {
 					chart.yAxis.pop()
 				}
 
-				// var selectedSize = $("#sizeItems :selected").text();
+				var selectedSize = $("#sizeItems :selected").text();
 
-				// for(var i=0;i<g.chartsizes.length;i++)
-				// {
-				// 	sizeValues=currSize.data.split(",");
+				for(var i=0;i<g.chartsizes.length;i++)
+				{
+					sizeValues=currSize.data.split(",");
 							
-				// 	if(g.chartsizes[i].name == selectedSize)
-				// 	{
-				// 		g.chartsizes[i].selected= "selected";
+					if(g.chartsizes[i].name == selectedSize)
+					{
+						g.chartsizes[i].selected= "selected";
 
-				// 		if(g.chartsizes[i].name == "Custom Size")
-				// 		{
-				// 			var width = $("#widthInput").val();
-				// 			var height = $("#heightInput").val();
+						if(g.chartsizes[i].name == "Custom Size")
+						{
+							var width = $("#widthInput").val();
+							var height = $("#heightInput").val();
 
-				// 			g.chartsizes[i].data = width +"," + height;
-				// 		}
-				// 	}
-				// 	else
-				// 	{
-				// 		g.chartsizes[i].selected = "";
+							g.chartsizes[i].data = width +"," + height;
+						}
+					}
+					else
+					{
+						g.chartsizes[i].selected = "";
 
-				// 		if(g.chartsizes[i].name == "Custom Size")
-				// 		{
-				// 			g.chartsizes[i].data= "600,343";
-				// 		}	
-				// 	}
-				// }
+						if(g.chartsizes[i].name == "Custom Size")
+						{
+							g.chartsizes[i].data= "600,343";
+						}	
+					}
+				}
 				
 				chart.setYScales()
 					.setYAxes()
@@ -1118,29 +1118,29 @@ ChartBuilder = {
 
 			for(var i=0;i<g.chartsizes.length;i++)
 			{
-				currSize = g.chartsizes[i];
-
-				if(currSize.name == selectedSize)
+				if(g.chartsizes[i].name == selectedSize)
 				{
 					g.chartsizes[i].selected= "selected";
+					
+					sizeValues = g.chartsizes[i].data;
 				}
 				else
 				{
 					g.chartsizes[i].selected = "";	
 				}
 			}
-
-			var sizeValues=$(that).val().split(",");
-
-			var chartWidth = sizeValues[0];
-			var chartHeight = sizeValues[1];
+			
+			var splitSizeValues = sizeValues.split(",");
+			var chartWidth = splitSizeValues[0];
+			var chartHeight = splitSizeValues[1];
 			var widthInputBox = $("#widthInput");
 			var heightInputBox = $("#heightInput");
+
 
 			widthInputBox.val(chartWidth);
 			heightInputBox.val(chartHeight);
 
-			if(selectedSize == "Custom Size")
+			if(selectedSize == "Custom Size" && $("#heightInput")!==undefined)
 			{
 				d3.select("#widthInput").attr('disabled', null);
 				d3.select("#heightInput").attr('disabled', null);
@@ -1151,7 +1151,7 @@ ChartBuilder = {
 				d3.select("#heightInput").attr('disabled', "disabled");
 			}
 
-			$('#topSection').css({ height: Number(sizeValues[1]) + 57 +"px" });
+			$('#topSection').css({ height: Number(splitSizeValues[1]) + 57 +"px" });
 
 			$('.chartContainer').css({ width: chartWidth });
 			$('.chartContainer').css({ height: chartHeight });
@@ -1173,7 +1173,7 @@ ChartBuilder = {
 
 			var rightAxisLabel = $("#right_axis_label").val();
 			var leftAxisLabel = $("#left_axis_label").val();
-
+			var bottomAxisLabel = $("#x_axis_label").val();
 			var createdLabelContainer = false;
 
 			if (rightAxisLabel !== "" && rightAxisLabel !== undefined)
@@ -1198,6 +1198,11 @@ ChartBuilder = {
 
 			ChartBuilder.setChartArea();		
 			chart.redraw();
+
+			if(bottomAxisLabel !== "" && bottomAxisLabel !== undefined)
+			{
+				d3.select("#xLabel").attr("x", chart.getXLabelPosition( $("#x_axis_label_position").val() ));
+			}
 
 			if(chart.metaInfo !== undefined)
 			{
@@ -1388,6 +1393,7 @@ ChartBuilder.start = function(config) {
 
   	$("#heightInput").keyup(function() {
 		var chartHeight=$(this).val();
+		var selectedSize = $("#sizeItems :selected").text();
 
 		$('#topSection').css({ height: Number(chartHeight) + 57 +"px" });
 
@@ -1397,7 +1403,21 @@ ChartBuilder.start = function(config) {
 
 		d3.select("#xBackground").remove();	
 		d3.select("#leftAxis").remove();
-		d3.select("#rightAxis").remove();					
+		d3.select("#rightAxis").remove();	
+
+		if(selectedSize == "Custom Size")
+		{
+			for(var i=0;i<chart.chartsizes.length;i++)
+			{
+				if(chart.chartsizes[i].name == "Custom Size")
+				{
+					var width = $("#widthInput").val();
+					var height = $("#heightInput").val();
+
+					chart.chartsizes[i].data = width +"," + height;
+				}
+			}
+		}				
 
 		chart.setYAxes(true);
 
@@ -1426,7 +1446,8 @@ ChartBuilder.start = function(config) {
   	}).keyup() 
 
   	 $("#widthInput").keyup(function() {
-		var chartWidth=$(this).val();		
+		var chartWidth=$(this).val();	
+		var selectedSize = $("#sizeItems :selected").text();
 
 		$('.chartContainer').css({ width: chartWidth });
 		chart.width(chartWidth);	
@@ -1444,13 +1465,14 @@ ChartBuilder.start = function(config) {
 
 		var rightAxisLabel = $("#right_axis_label").val();
 		var leftAxisLabel = $("#left_axis_label").val();
+		var bottomAxisLabel = $("#x_axis_label").val();
 
 		var createdLabelContainer = false;
 
 		if (rightAxisLabel !== "" && rightAxisLabel !== undefined)
 		{				
 			chart.yAxis[ 1 ].label = undefined;
-			g.labelContainer=undefined;
+			chart.labelContainer=undefined;
 			$("#right_axis_label").keyup();
 
 			createdLabelContainer = true;
@@ -1460,15 +1482,35 @@ ChartBuilder.start = function(config) {
 		{
 			if(createdLabelContainer == false)
 			{
-				g.labelContainer = undefined;
+				chart.labelContainer = undefined;
 			}
 			
 			chart.yAxis[ 0 ].label = undefined;
 			$("#left_axis_label").keyup();
 		}
 
+		if(selectedSize == "Custom Size")
+		{
+			for(var i=0;i<chart.chartsizes.length;i++)
+			{
+				if(chart.chartsizes[i].name == "Custom Size")
+				{
+					var width = $("#widthInput").val();
+					var height = $("#heightInput").val();
+
+					chart.chartsizes[i].data = width +"," + height;
+				}
+			}	
+		}	
+
 		ChartBuilder.setChartArea();		
 		chart.redraw();
+
+		if(bottomAxisLabel !== "" && bottomAxisLabel !== undefined)
+			{
+				d3.select("#xLabel").attr("x", chart.getXLabelPosition( $("#x_axis_label_position").val() ));
+			}
+
 
 		if(chart.metaInfo !== undefined)
 		{
