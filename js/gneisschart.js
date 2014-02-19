@@ -132,7 +132,7 @@ Gneiss.defaultGneissChartConfig = {
 	chartsizes: [
 		{
 			name: "Powerpoint",
-			data: "600,500",
+			data: "600,343",
 			selected: "selected" //"selected" if you want it to be selected as default when opening the app
 		},
 		{
@@ -883,6 +883,7 @@ function Gneiss(config)
 				axisGroup = g.chart.append("g")
 					.attr("class","axis yAxis")
 					.attr("id",i==0?"leftAxis":"rightAxis")
+					.attr("name",i==0?"leftAxis":"rightAxis")
 					.attr("transform",i==0?"translate("+g.padding.left+",0)":"translate("+( g.width()-g.padding.right)+",0)")
 					.attr("fill", "none") //Background color for y axis
 					.call(g.yAxis[i].axis)

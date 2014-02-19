@@ -343,6 +343,7 @@ ChartBuilder = {
 
 				d3.select("#ground").attr("width",sizeValues[0]);
 				d3.select("#ground").attr("height",sizeValues[1]);
+				d3.select("#xBackground").attr("width",sizeValues[0]);
 				d3.select("#titleContainer").attr("width",sizeValues[0]);
 				d3.select("#titleBackground").attr("width", sizeValues[0]);
 				d3.select("#xAxis").attr("width", sizeValues[0]);
@@ -553,34 +554,34 @@ ChartBuilder = {
 					chart.yAxis.pop()
 				}
 
-				var selectedSize = $("#sizeItems :selected").text();
+				// var selectedSize = $("#sizeItems :selected").text();
 
-				for(var i=0;i<g.chartsizes.length;i++)
-				{
-					sizeValues=currSize.data.split(",");
+				// for(var i=0;i<g.chartsizes.length;i++)
+				// {
+				// 	sizeValues=currSize.data.split(",");
 							
-					if(g.chartsizes[i].name == selectedSize)
-					{
-						g.chartsizes[i].selected= "selected";
+				// 	if(g.chartsizes[i].name == selectedSize)
+				// 	{
+				// 		g.chartsizes[i].selected= "selected";
 
-						if(g.chartsizes[i].name == "Custom Size")
-						{
-							var width = $("#widthInput").val();
-							var height = $("#heightInput").val();
+				// 		if(g.chartsizes[i].name == "Custom Size")
+				// 		{
+				// 			var width = $("#widthInput").val();
+				// 			var height = $("#heightInput").val();
 
-							g.chartsizes[i].data = width +"," + height;
-						}
-					}
-					else
-					{
-						g.chartsizes[i].selected = "";
+				// 			g.chartsizes[i].data = width +"," + height;
+				// 		}
+				// 	}
+				// 	else
+				// 	{
+				// 		g.chartsizes[i].selected = "";
 
-						if(g.chartsizes[i].name == "Custom Size")
-						{
-							g.chartsizes[i].data= "600,343";
-						}	
-					}
-				}
+				// 		if(g.chartsizes[i].name == "Custom Size")
+				// 		{
+				// 			g.chartsizes[i].data= "600,343";
+				// 		}	
+				// 	}
+				// }
 				
 				chart.setYScales()
 					.setYAxes()
@@ -991,6 +992,7 @@ ChartBuilder = {
 			else {
 				chart.yAxis[ axisId ].label = that.value;
 				d3.select( yLabel ).text( chart.yAxis[ axisId ].label );
+
 			}
 		}
 
@@ -1164,9 +1166,35 @@ ChartBuilder = {
 
 			d3.select("#xBackground").remove();	
 			d3.select("#leftAxis").remove();
-			d3.select("#rightAxis").remove();					
+			d3.select("#rightAxis").remove();	
+			d3.select("#yLabelContainer").remove();
 
 			chart.setYAxes(true);
+
+			var rightAxisLabel = $("#right_axis_label").val();
+			var leftAxisLabel = $("#left_axis_label").val();
+
+			var createdLabelContainer = false;
+
+			if (rightAxisLabel !== "" && rightAxisLabel !== undefined)
+			{				
+				chart.yAxis[ 1 ].label = undefined;
+				g.labelContainer=undefined;
+				$("#right_axis_label").keyup();
+
+				createdLabelContainer = true;
+			}
+
+			if(leftAxisLabel !== "" && leftAxisLabel !== undefined)
+			{
+				if(createdLabelContainer == false)
+				{
+					g.labelContainer = undefined;
+				}
+
+				chart.yAxis[ 0 ].label = undefined;
+				$("#left_axis_label").keyup();
+			}
 
 			ChartBuilder.setChartArea();		
 			chart.redraw();
@@ -1409,9 +1437,35 @@ ChartBuilder.start = function(config) {
 
 		d3.select("#xBackground").remove();	
 		d3.select("#leftAxis").remove();
-		d3.select("#rightAxis").remove();					
+		d3.select("#rightAxis").remove();	
+		d3.select("#yLabelContainer").remove();				
 
 		chart.setYAxes(true);
+
+		var rightAxisLabel = $("#right_axis_label").val();
+		var leftAxisLabel = $("#left_axis_label").val();
+
+		var createdLabelContainer = false;
+
+		if (rightAxisLabel !== "" && rightAxisLabel !== undefined)
+		{				
+			chart.yAxis[ 1 ].label = undefined;
+			g.labelContainer=undefined;
+			$("#right_axis_label").keyup();
+
+			createdLabelContainer = true;
+		}
+
+		if(leftAxisLabel !== "" && leftAxisLabel !== undefined)
+		{
+			if(createdLabelContainer == false)
+			{
+				g.labelContainer = undefined;
+			}
+			
+			chart.yAxis[ 0 ].label = undefined;
+			$("#left_axis_label").keyup();
+		}
 
 		ChartBuilder.setChartArea();		
 		chart.redraw();
@@ -1494,17 +1548,42 @@ ChartBuilder.start = function(config) {
   			else {
   				chart.xAxis.type = "ordinal";
   			}
-  			chart.xAxisRef = [dataObj.data.shift()]
-  			
+  			chart.xAxisRef = [dataObj.data.shift()]			
+
+
   			chart.series = dataObj.data;
+
+
+  			if(newData[0].length == 2)
+  			{
+  				chart.series[0].axis=undefined;
+  				
+	  			for (var i=0; i < chart.series.length; i++) {
+	  				var curr = ChartBuilder.idSafe(chart.series[i].name.split(" ").join("")) + "_check";
+					currSeries = chart.series[i];
+
+					$("#" + curr).removeAttr("checked");
+					chart.series[i].axis=undefined;
+
+					d3.select("#rightAxis").remove();
+					$("#right_axis_label").val("");
+					d3.select("#rightYLabel").text("");
+					d3.select( ".yLabelLine" ).attr( "transform", "translate(0,"+ (-chart.padding.top) +")" );
+					chart.state.hasYLabel = false;
+					chart.padding.top -= chart.padding.yLabel;
+					$("#rightAxisControls").addClass("hide");
+					chart.yAxis.pop();
+					ChartBuilder.updateYLabels();
+				}
+			}
 
   			if (chart.state.hasLegend === true && chart.series.length < 2) {
 		  		chart.state.hasLegend = false;
 		  		chart.padding.top -= chart.padding.legend;
 		  		ChartBuilder.updateTitle();
-		  	}		  	
-  			
-  			ChartBuilder.setChartArea();
+		  	}		    			
+
+			ChartBuilder.setChartArea();
   			
   			chart.setYScales()
   				.setXScales()
@@ -1630,37 +1709,6 @@ ChartBuilder.start = function(config) {
   			ChartBuilder.setChartArea();
   			chart.redraw();
   		}
-  	});
-	
-  	$("#widthInput").keyup(function() {
-  		var chartWidth = $(this).val();
-  		d3.select("#widthInput").attr("value",chartWidth);
-		$('.chartContainer').css({ width: chartWidth });
-		//d3.select("#chartContainer").attr("width", $(that).val());
-		chart.width(chartWidth);			
-		d3.select("#ground").attr("width", chartWidth);
-		d3.select("#titleContainer").attr("width",chartWidth);
-		d3.select("#titleBackground").attr("width", chartWidth);
-		d3.select("#xAxis").attr("width", chartWidth);		
-
-		d3.select("#xBackground").remove();	
-		d3.select("#leftAxis").remove();
-		d3.select("#rightAxis").remove();					
-
-		chart.setYAxes(true);
-
-		ChartBuilder.setChartArea();		
-		chart.redraw();
-
-		if(chart.metaInfo !== undefined)
-		{
-			chart.metaInfo.remove();
-		}
-
-		if ( chart.creditline !== "" || chart.sourceline !== "")
-		{
-			chart.appendMeta();
-		}
   	});
 
   	$("#sourceLine").keyup(function() {
