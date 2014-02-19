@@ -1178,7 +1178,7 @@ ChartBuilder = {
 
 			if (rightAxisLabel !== "" && rightAxisLabel !== undefined)
 			{				
-				chart.yAxis[ 1 ].label = undefined;
+				chart.yAxis[ 1 ].label = "";
 				g.labelContainer=undefined;
 				$("#right_axis_label").keyup();
 
@@ -1471,7 +1471,7 @@ ChartBuilder.start = function(config) {
 
 		if (rightAxisLabel !== "" && rightAxisLabel !== undefined)
 		{				
-			chart.yAxis[ 1 ].label = undefined;
+			chart.yAxis[ 1 ].label = "";
 			chart.labelContainer=undefined;
 			$("#right_axis_label").keyup();
 
