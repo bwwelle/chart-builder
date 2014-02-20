@@ -1626,23 +1626,40 @@ ChartBuilder.start = function(config) {
   			if(newData[0].length == 2)
   			{
 	  			for (var i=0; i < chart.series.length; i++) {
-	  				var curr = ChartBuilder.idSafe(chart.series[i].name.split(" ").join("")) + "_check";
-					currSeries = chart.series[i];
+	  				chart.series[i].axis =0;
 
-					chart.series[i].axis=0;
-					$("#" + curr).removeAttr("checked");
+	  				d3.select("#rightAxis").remove();
 
-					d3.select("#rightAxis").remove();
-					$("#right_axis_label").val("");
-					d3.select("#rightYLabel").text("");
-					d3.select( ".yLabelLine" ).attr( "transform", "translate(0,"+ (-chart.padding.top) +")" );
-					chart.state.hasYLabel = false;
-					chart.padding.top -= chart.padding.yLabel;
-					$("#rightAxisControls").addClass("hide");
-					chart.yAxis.pop();
-					ChartBuilder.updateYLabels();		
+	  // 				var curr = ChartBuilder.idSafe(chart.series[i].name.split(" ").join("")) + "_check";
+			// 		currSeries = chart.series[i];
+
+			// 		chart.series[i].axis=0;
+			// 		$("#" + curr).removeAttr("checked");
+
+			// 		d3.select("#rightAxis").remove();
+					if($("#right_axis_label").val() !== undefined && $("#right_axis_label").val() !== "")
+					{
+						$(".yLabelLine").detach();
+						d3.select("#yLabelContainer").remove();
+						$("#right_axis_label").val("");
+
+						chart.yAxis[ 1 ].label = undefined;
+						chart.labelContainer=undefined;
+						$("#right_axis_label").keyup();
+						d3.select("#yLabelContainer").remove();
+					}	
+
+			// 		d3.select("#rightYLabel").text("");
+			// 		d3.select( ".yLabelLine" ).attr( "transform", "translate(0,"+ (-chart.padding.top) +")" );
+					//chart.state.hasYLabel = false;
+			// 		chart.padding.top -= chart.padding.yLabel;
+			// 		$("#rightAxisControls").addClass("hide");
+					//chart.yAxis.pop();
+			 			//ChartBuilder.updateYLabels();
 				}
 			}
+
+
 
   			if (chart.state.hasLegend === true && chart.series.length < 2) {
 		  		chart.state.hasLegend = false;
