@@ -1625,14 +1625,12 @@ ChartBuilder.start = function(config) {
 
   			if(newData[0].length == 2)
   			{
-  				chart.series[0].axis=undefined;
-  				
 	  			for (var i=0; i < chart.series.length; i++) {
 	  				var curr = ChartBuilder.idSafe(chart.series[i].name.split(" ").join("")) + "_check";
 					currSeries = chart.series[i];
 
+					chart.series[i].axis=0;
 					$("#" + curr).removeAttr("checked");
-					chart.series[i].axis=undefined;
 
 					d3.select("#rightAxis").remove();
 					$("#right_axis_label").val("");
@@ -1642,7 +1640,7 @@ ChartBuilder.start = function(config) {
 					chart.padding.top -= chart.padding.yLabel;
 					$("#rightAxisControls").addClass("hide");
 					chart.yAxis.pop();
-					ChartBuilder.updateYLabels();
+					ChartBuilder.updateYLabels();		
 				}
 			}
 
