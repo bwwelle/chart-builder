@@ -1183,7 +1183,7 @@ ChartBuilder = {
 			d3.select("#ground").attr("height", chartHeight);
 			d3.select("#titleContainer").attr("width",chartWidth);
 			d3.select("#titleBackground").attr("width", chartWidth);
-			d3.select("#xAxis").attr("width", chartWidth);		
+			d3.select("#xAxis").attr("width", chartWidth);			
 
 			d3.select("#xBackground").remove();	
 			d3.select("#leftAxis").remove();
@@ -1217,7 +1217,7 @@ ChartBuilder = {
 				$("#left_axis_label").keyup();
 			}
 
-			ChartBuilder.setChartArea();		
+			ChartBuilder.setChartArea();					
 			chart.redraw();
 
 			if(bottomAxisLabel !== "" && bottomAxisLabel !== undefined)
@@ -1630,36 +1630,20 @@ ChartBuilder.start = function(config) {
 
 	  				d3.select("#rightAxis").remove();
 
-	  // 				var curr = ChartBuilder.idSafe(chart.series[i].name.split(" ").join("")) + "_check";
-			// 		currSeries = chart.series[i];
-
-			// 		chart.series[i].axis=0;
-			// 		$("#" + curr).removeAttr("checked");
-
-			// 		d3.select("#rightAxis").remove();
 					if($("#right_axis_label").val() !== undefined && $("#right_axis_label").val() !== "")
 					{
 						$(".yLabelLine").detach();
 						d3.select("#yLabelContainer").remove();
 						$("#right_axis_label").val("");
 
-						chart.yAxis[ 1 ].label = undefined;
 						chart.labelContainer=undefined;
 						$("#right_axis_label").keyup();
 						d3.select("#yLabelContainer").remove();
-					}	
 
-			// 		d3.select("#rightYLabel").text("");
-			// 		d3.select( ".yLabelLine" ).attr( "transform", "translate(0,"+ (-chart.padding.top) +")" );
-					//chart.state.hasYLabel = false;
-			// 		chart.padding.top -= chart.padding.yLabel;
-			// 		$("#rightAxisControls").addClass("hide");
-					//chart.yAxis.pop();
-			 			//ChartBuilder.updateYLabels();
+						chart.yAxis.splice(1,1);
+					}	
 				}
 			}
-
-
 
   			if (chart.state.hasLegend === true && chart.series.length < 2) {
 		  		chart.state.hasLegend = false;
