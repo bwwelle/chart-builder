@@ -2232,6 +2232,10 @@ function Gneiss(config)
 			orderedArr.push(this);
 		});
 
+		d3.select("#seriesContainer").selectAll(".seriesColumn").each(function(){
+			orderedArr.push(this);
+		});
+
 		var selection = d3.select("#seriesContainer").selectAll(".seriesArea");
 
         function my_compare(z,k){ 
@@ -2253,59 +2257,6 @@ function Gneiss(config)
         selection.sort(my_compare);
         
  		selection.each(function(){
-			orderedArr.push(this);
-		});
-
-		// var selectiontest = d3.select("#seriesContainer").selectAll(".seriesStackedArea");
-
-  //       function my_comparetest(x,y){ 
-  //       	return x.data.max() - y.data.max();
-  //       }
-
-  //       selectiontest.sort(my_comparetest);
-        
- 	// 	selectiontest.each(function(){
-		// 	orderedArr.push(this);
-		// });
-
- 	    // 	var seriesAreaArray = [],t;
-
-		// selection.each(function(j){
-		// 	seriesAreaArray.push(j.data.max());
-
-		// });
-
-
-
-		// for ( i = seriesAreaArray.length-1; i >= 0; i-- )
-		// {
-		// 	selection.each(function(l)
-		// 	{
-		// 		if (l.data.max() == seriesAreaArray[i])
-		// 		{
-		// 			orderedArr.push(this);
-		// 		}
-		// 	}
-		// }
-
-
-		// $.each(sort(selection,function(g){
-		// 	return g.maxheight;
-		// }),function(){
-		// 	orderedArr.push(this);
-		// });
-
-		//     d3.select("#seriesContainer").selectAll(".seriesArea").sort().
-		//     //sort(function(d){return d.maxheight();})
-		//     each(function(){
-		// 	orderedArr.push(this);
-		// });
-
-		// d3.select("#seriesContainer").selectAll(".seriesArea").each(function(){
-		// 	orderedArr.push(this);
-		// });
-
-		d3.select("#seriesContainer").selectAll(".seriesColumn").each(function(){
 			orderedArr.push(this);
 		});
 
