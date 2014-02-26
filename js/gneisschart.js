@@ -176,12 +176,12 @@ Gneiss.defaultGneissChartConfig = {
 		{
 			name: "Powerpoint",
 			data: "600,343",
-			selected: "" //"selected" if you want it to be selected as default when opening the app
+			selected: "selected" //"selected" if you want it to be selected as default when opening the app
 		},
 		{
 			name: ".com",
 			data: "800,600",
-			selected: "selected"
+			selected: ""
 		},
 		{
 			name: "Something Else",
