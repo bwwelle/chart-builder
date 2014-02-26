@@ -325,7 +325,7 @@ ChartBuilder = {
 		var seriesContainer = $("#seriesItems");
 		var sizesContainer = $("#sizeItems");
 		var isMultiAxis = false;
-		var sizeValues;
+		var sizeValues;		
 
 		for(var i=0;i<g.chartsizes.length;i++)
 		{
@@ -378,7 +378,7 @@ ChartBuilder = {
 			}
 
 			sizesContainer.append(sizesItem);
-		}	
+		}			
 		
 		// loops through the series data
 		for (var i=0; i < g.series.length; i++) {
@@ -1351,8 +1351,9 @@ ChartBuilder.start = function(config) {
   	
   	//construct a Gneisschart using default data
   	//this should change to be more like this http://bost.ocks.org/mike/chart/
-    chart = new Gneiss(chartConfig);
-    
+    chart = new Gneiss(chartConfig);    
+
+
   	// Scale the chart up so the outputted image looks good on retina displays
   	//$("#chart").attr("transform", "scale(2)");
   	
@@ -1470,6 +1471,43 @@ ChartBuilder.start = function(config) {
 	    $('input[type!="button"][type!="submit"][id!="widthInput"][id!="heightInput"], select, textarea[id!="csvInput"]')
 	         .val('')
 	         .blur();
+
+	    //to set the default values of the pull down menus
+	    $('#left_axis_tick_num').val(Number(chart.yAxis[0].ticks)).change();
+	    $('#x_axis_tick_num').val(Number(chart.xAxis.ticks)).change();
+
+	    var axisLabelContainer = $('#x_axis_label_position');
+	    var axisDateFormatContainer = $('#x_axis_date_format');
+	    var axisLabelPositionHTML;
+	    var axisDateFormatHTML;
+
+	    for (var i=0; i<chart.xAxis.labelPosition.length; i++)
+	    {
+	    	if (chart.xAxis.labelPosition[i].selected == "selected")
+	    	{
+	    		axisLabelPositionHTML = "<option selected>" + chart.xAxis.labelPosition[i].name + "</option>";
+	    	}
+	    	else
+	    	{
+	    		axisLabelPositionHTML = "<option>" + chart.xAxis.labelPosition[i].name + "</option>";
+	    	}
+
+	    	axisLabelContainer.append(axisLabelPositionHTML);
+	    }
+
+	    for (var i=0; i<chart.xAxis.dateFormat.length; i++)
+	    {
+	    	if (chart.xAxis.dateFormat[i].selected == "selected")
+	    	{
+	    		axisDateFormatHTML = $('<option value="' + chart.xAxis.dateFormat[i].name + '" selected>' + chart.xAxis.dateFormat[i].name + '</option>');
+	    	}
+	    	else
+	    	{
+	    		axisDateFormatHTML = $('<option value="' + chart.xAxis.dateFormat[i].name + '">' + chart.xAxis.dateFormat[i].name + '</option>');
+	    	}
+
+	    	axisDateFormatContainer.append(axisDateFormatHTML);
+	    }
 	});
 
   	 $("#widthInput").keyup(function() {
@@ -1534,9 +1572,9 @@ ChartBuilder.start = function(config) {
 		chart.redraw();
 
 		if(bottomAxisLabel !== "" && bottomAxisLabel !== undefined)
-			{
-				d3.select("#xLabel").attr("x", chart.getXLabelPosition( $("#x_axis_label_position").val() ));
-			}
+		{
+			d3.select("#xLabel").attr("x", chart.getXLabelPosition( $("#x_axis_label_position").val() ));
+		}
 
 
 		if(chart.metaInfo !== undefined)
@@ -1662,6 +1700,7 @@ ChartBuilder.start = function(config) {
   			ChartBuilder.updateInterface();
   		}
   
+
   	}).keyup() 
 
 
@@ -1810,7 +1849,7 @@ ChartBuilder.start = function(config) {
   			ChartBuilder.setChartArea();
   			chart.redraw();
   		}
-  	});
+  	});	
   	
   	$("#chart_title").keyup(function() {
   		ChartBuilder.updateTitle(this);

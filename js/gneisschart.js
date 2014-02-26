@@ -62,7 +62,50 @@ Gneiss.defaultGneissChartConfig = {
 		type: "linear",
 		formatter: null,
 		mixed: true,
-		ticks: 5
+		ticks: 5,
+		labelPosition: [
+			{
+				name: "Left",
+				selected: ""
+			},
+			{	
+				name: "Center",
+				selected: "selected"
+			},
+			{
+				name: "Right",
+				selected: ""
+			}	
+		],
+		dateFormat: [
+			{
+				name: "month",
+				selected: ""
+			},
+			{	name: "month(abbr)",
+				selected: ""
+			},
+			{	
+				name: "year",
+				selected: ""
+			},
+			{
+				name: "mm/dd/yy",
+				selected: ""
+			},
+			{
+				name: "mm/dd/yyyy",
+				selected: "selected"
+			},
+			{	
+				name: "month 'yy",
+				selected: ""
+			},
+			{
+				name: "month(abbr) 'yy",
+				selected: ""
+			}
+		]
 	},
 	yAxis: [
 		{
@@ -76,7 +119,7 @@ Gneiss.defaultGneissChartConfig = {
 				value: "",
 				use: "top"
 			},
-			ticks: 4,
+			ticks: 5,
 			formatter: null,
 			color: null
 		}
@@ -133,12 +176,12 @@ Gneiss.defaultGneissChartConfig = {
 		{
 			name: "Powerpoint",
 			data: "600,343",
-			selected: "selected" //"selected" if you want it to be selected as default when opening the app
+			selected: "" //"selected" if you want it to be selected as default when opening the app
 		},
 		{
 			name: ".com",
 			data: "800,600",
-			selected: ""
+			selected: "selected"
 		},
 		{
 			name: "Something Else",
@@ -875,7 +918,7 @@ function Gneiss(config)
 					.scale(g.yAxis[i].scale)
 					.orient(i==0?"right":"left")
 					.tickSize(40) //Length of y-axis tick size
-					//.ticks(g.yAxis[0].ticks) // I'm not using built in ticks because it is too opinionated
+					.ticks(g.yAxis[0].ticks) 
 					.tickValues(g.yAxis[i].tickValues?g.yAxis[i].tickValues:Gneiss.helper.exactTicks(g.yAxis[i].scale.domain(),g.yAxis[0].ticks))
 					
 				//append axis container
@@ -889,7 +932,8 @@ function Gneiss(config)
 					.call(g.yAxis[i].axis)
 			}
 			else {
-				g.yAxis[i].axis//.ticks(g.yAxis[0].ticks) // I'm not using built in ticks because it is too opinionated
+				g.yAxis[i].axis
+					.ticks(g.yAxis[0].ticks)
 					.tickValues(g.yAxis[i].tickValues?g.yAxis[i].tickValues:Gneiss.helper.exactTicks(g.yAxis[i].scale.domain(),g.yAxis[0].ticks))
 					
 				axisGroup = g.chart.selectAll(i==0?"#leftAxis":"#rightAxis")
