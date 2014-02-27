@@ -391,6 +391,7 @@ ChartBuilder = {
 				<select class="typePicker" id="'+this.idSafe(currSeries.name.split(" ").join(""))+'_type">\
 					<option '+(currSeries.type=="line"?"selected":"")+' value="line">Line</option>\
 					<option '+(currSeries.type=="column"?"selected":"")+' value="column">Column</option>\
+					<option '+(currSeries.type=="stackedcolumn"?"selected":"")+' value="stackedcolumn">Stacked Column</option>\
 					<option '+(currSeries.type=="bargrid"?"selected":"")+' '+(g.xAxis.type === "date"?"disabled":"")+' value="bargrid">Bar Grid</option>\
 					<option '+(currSeries.type=="scatter"?"selected":"")+' value="scatter">Scatter</option>\
 					<option '+(currSeries.type=="area"?"selected":"")+' value="area">Area</option>\
@@ -459,6 +460,7 @@ ChartBuilder = {
 			  		var seriesByType = {
 						"line": [],
 						"column": [],
+						"stackedcolumn": [],
 						"bargrid": [],
 						"scatter": [],
 						"area": [],
@@ -1618,6 +1620,7 @@ ChartBuilder.start = function(config) {
 		  		var seriesByType = {
 					"line": [],
 					"column": [],
+					"stackedcolumn": [],
 					"bargrid": [],
 					"scatter": [],
 					"area": [],
