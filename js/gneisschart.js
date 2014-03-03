@@ -784,62 +784,42 @@ function Gneiss(config)
 
 		// if isBargrid evaluates to false
 		if ( !g.isBargrid() ){
-
 			longestYValue = this.getLongestYValue();
-
 			
 			// if there is more than 1 y axis
-			if ( g.yAxis.length > 1 ){
+			if (g.yAxis.length > 1 ){
 
 				// if some of the data is being presented as a bar chart
 				if (g.xAxis.hasColumns){
 					rangeArray = [ longestYValue + ( g.padding.left * 2 ) + (g.columns.columnGroupWidth / 2), g.width() - longestYValue - (g.padding.right * 2) - (g.columns.columnGroupWidth / 2) ];
 				}
-
-				else {
-					rangeArray = [ longestYValue + ( g.padding.left * 2 ), g.width() - longestYValue - (g.padding.right * 2) ];
-				}
-
-				// if some of the data is being presented as a bar chart
-				if (g.xAxis.hasStackedColumns){
+				else if (g.xAxis.hasStackedColumns){
 					rangeArray = [ longestYValue + ( g.padding.left * 2 ) + (g.stackedColumns.stackedColumnGroupWidth / 2), g.width() - longestYValue - (g.padding.right * 2) - (g.stackedColumns.stackedColumnGroupWidth/ 2) ];
 				}
-
-				else {
+				else{
 					rangeArray = [ longestYValue + ( g.padding.left * 2 ), g.width() - longestYValue - (g.padding.right * 2) ];
 				}
-
 
 				// add the range to chart object as a property
 				g.xAxis.range = rangeArray;
 			}
-
 			// if there is only 1 y axis
-			else {
-				
+			else {				
 				// if some of the data is being presented as a bar chart
 				if (g.xAxis.hasColumns){
 					rangeArray = [ longestYValue + ( g.padding.left * 2 ) + (g.columns.columnGroupWidth / 2), g.width() - g.padding.right - (g.columns.columnGroupWidth / 2) ]; 
 				}
-
-				else {
-					rangeArray = [ longestYValue + ( g.padding.left * 2 ), g.width() - g.padding.right ]; 
-				}
-
-				// if some of the data is being presented as a bar chart
-				if (g.xAxis.hasStackedColumns){
+				else if (g.xAxis.hasStackedColumns){
 					rangeArray = [ longestYValue + ( g.padding.left * 2 ) + (g.stackedColumns.stackedColumnGroupWidth / 2), g.width() - g.padding.right - (g.stackedColumns.stackedColumnGroupWidth / 2) ]; 
 				}
-
-				else {
+				else{
 					rangeArray = [ longestYValue + ( g.padding.left * 2 ), g.width() - g.padding.right ]; 
-				}
+				}		
 				
 				// add the range to chart object as a property
 				g.xAxis.range = rangeArray;
 			}
-		}
-		
+		}		
 		// if isBargrid evaluates to true
 		else {
 			var numSets = g.series[0].data.length;
@@ -1300,13 +1280,13 @@ function Gneiss(config)
 			if ( g.xAxis.type !== "date" ){
 				g.xAxis.formatter = null;
 			}
-				g.xAxis.axis.scale(g.xAxis.scale)
+
+			g.xAxis.axis.scale(g.xAxis.scale)
 				.tickFormat(g.xAxis.formatter ? Gneiss.dateParsers[g.xAxis.formatter] : function(d) { return d; })
 				.ticks(g.xAxis.ticks)
 				.orient(g.isBargrid() ? "left" : "bottom")
 				.tickPadding(4)  //padding for xaxis tick value to the bottom of the tick 
-				.tickSize(g.isBargrid() ? 0 : 6);
-			
+				.tickSize(g.isBargrid() ? 0 : 6);		
 				
 			
 			// if(g.xAxis.type == "date") {
@@ -1368,7 +1348,6 @@ function Gneiss(config)
 				var attrx = Number(attr.split("(")[1].split(",")[0]);
 				var attry = Number(attr.split(")")[0].split(",")[1]);
 				var counter = 0;
-
 				
 				if(!g.isBargrid()) {
 					// fix labels to not fall off edge when not bargrid
@@ -1380,18 +1359,15 @@ function Gneiss(config)
 						this.setAttribute("x",Number(this.getAttribute("x")) - g.getLongestYValue())
 						this.setAttribute("text-anchor","start")
 					}
+
 					g.padding.left = g.defaultPadding().left
-				}
-				
-				else {
-					
+				}				
+				else {					
 					d3.select(this)
-					.attr("x", g.getLongestXValue())
-					.attr("y", g.state.hasLegend ? (g.bargrid.barHeight - ((g.bargrid.barHeight - 8) / 2) +12) : (g.bargrid.barHeight - ((g.bargrid.barHeight - 8) / 2) - 5) );
-				
+						.attr("x", g.getLongestXValue())
+						.attr("y", g.state.hasLegend ? (g.bargrid.barHeight - ((g.bargrid.barHeight - 8) / 2) +12) : (g.bargrid.barHeight - ((g.bargrid.barHeight - 8) / 2) - 5) );
 						//.attr("y",function(d,i) {return g.padding.top + (g.bargrid.barHeight * i) + (g.bargrid.barSpacing * (i-1)) + g.bargrid.barHeight - ((g.bargrid.barHeight-8)/2) });
 				}
-
 
 				// else {
 				// 	// //adjust padding for bargrid
@@ -1402,7 +1378,6 @@ function Gneiss(config)
 					
 				// }
 			});
-
       
 		return this;
 	};
@@ -1425,6 +1400,7 @@ function Gneiss(config)
   	}
   };
 
+  //added for stackedcolumn
    this.calculateStackedColumnWidths = function Gneiss$calculateStackedColumnWidths() {
 		/*
 			Calculate the proper column width for column charts
@@ -1514,21 +1490,21 @@ function Gneiss(config)
 		g.columns.numGutters = (g.series[0].data.length < 2) ? 0 : g.series[0].data.length - 1;
 		g.columns.totalGutters = g.columns.gutterSpacing * g.columns.numGutters;
 
-			// if g.isBargrid evaluates to false, than calculate the available width for the chart
-			if ( !g.isBargrid() ){
-				g.columns.longestYValue = Math.ceil(this.getLongestYValue());
-				if (g.seriesByType().column.length === 1){
-					g.columns.range = Math.floor(( g.yAxis.length === 1 ) ? Math.floor( g.width() - ( g.padding.left * 2 ) - g.padding.right - Math.ceil(g.columns.longestYValue) ) : Math.floor( g.width() - ( g.padding.left * 2 ) - (g.padding.right*2) - ( Math.ceil(g.columns.longestYValue) * 2 ) ));
-				}
-				else {
-					g.columns.range = Math.floor(( g.yAxis.length === 1 ) ? Math.floor( g.width() - ( g.padding.left * 2 ) - g.padding.right - Math.ceil(g.columns.longestYValue) ) : Math.floor( g.width() - ( g.padding.left * 2 ) - (g.padding.right*2) - ( Math.ceil(g.columns.longestYValue) * 2 ) ));
-				}
-			} 
-
-			// bargrid has it's own method for calculating its available space
-			else {
-				g.columns.range = Math.floor( g.height() - g.padding.bottom );
+		// if g.isBargrid evaluates to false, than calculate the available width for the chart
+		if ( !g.isBargrid() ){
+			g.columns.longestYValue = Math.ceil(this.getLongestYValue());
+			if (g.seriesByType().column.length === 1){
+				g.columns.range = Math.floor(( g.yAxis.length === 1 ) ? Math.floor( g.width() - ( g.padding.left * 2 ) - g.padding.right - Math.ceil(g.columns.longestYValue) ) : Math.floor( g.width() - ( g.padding.left * 2 ) - (g.padding.right*2) - ( Math.ceil(g.columns.longestYValue) * 2 ) ));
 			}
+			else {
+				g.columns.range = Math.floor(( g.yAxis.length === 1 ) ? Math.floor( g.width() - ( g.padding.left * 2 ) - g.padding.right - Math.ceil(g.columns.longestYValue) ) : Math.floor( g.width() - ( g.padding.left * 2 ) - (g.padding.right*2) - ( Math.ceil(g.columns.longestYValue) * 2 ) ));
+			}
+		} 
+
+		// bargrid has it's own method for calculating its available space
+		else {
+			g.columns.range = Math.floor( g.height() - g.padding.bottom );
+		}
 
 		// determine the width of each column				
 		g.columns.columnWidth = ( g.columns.range - g.columns.totalGutters - g.columns.totalColumnSpacing ) / g.columns.totalColumns;
@@ -1616,13 +1592,14 @@ function Gneiss(config)
 			lineSeries = g.seriesContainer.selectAll("path.seriesLine");
 			areaSeries = g.seriesContainer.selectAll("path.seriesArea");
 			columnSeries = g.seriesContainer.selectAll("g.seriesColumn");
+			//added for stackedcolumn
 			stackedColumnSeries = g.seriesContainer.selectAll("g.seriesStackedColumn");
 			stackedAreaSeries = g.seriesContainer.selectAll("g.seriesStackedArea");
 
 			var columnGroups
 			var columnRects
 			var stackedColumnGroups
-			var stackedColumnRects
+
 			//var lineSeriesDots = g.seriesContainer.selectAll("g.lineSeriesDots")
 			var scatterSeries = g.seriesContainer.selectAll("g.seriesScatter")
 				
@@ -1653,12 +1630,8 @@ function Gneiss(config)
 							})
 						.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; 
 							return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
-								
-				
-
-
-
-				//add stacked columns to chart
+					
+				//added for stackedcolumn
 				stackedColumnGroups = stackedColumnSeries.data(sbt.stackedcolumn)
 					.enter()
 					.append("g") 
@@ -1673,32 +1646,14 @@ function Gneiss(config)
 						return d.data})
 					.enter()
 						.append("rect")
-						.attr("width",g.columns.columnWidth)
+						.attr("width",g.columns.stackedColumnWidth)
 						.attr("height", function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; 
 							return Math.abs(g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())))})
 						.attr("x", function(d,i) {
-							return g.xAxis.scale(g.xAxisRef[0].data[i])  - g.columns.columnWidth/2
+							return g.xAxis.scale(g.xAxisRef[0].data[i])  - g.columns.stackedColumnWidth/2
 							})
 						.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; 
 							return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 				//add lines to chart
 				lineSeries.data(sbt.line)
@@ -1732,25 +1687,6 @@ function Gneiss(config)
 						.attr("fill",function(d,i){
 							return d.color? d.color : g.colors[i]})
 
-				//add stacked areas to chart
-				stackedAreaSeries.data(sbt.stackedarea)
-					.enter()
-					.append("path")
-						.attr("d",function(d,j) { //yAxisIndex = d.axis; 
-							                      pathString = g.yAxis[d.axis].line(d.data).split("L0,0L").join("M");  							                      
-							                     var ymin = g.yAxis[d.axis].scale(Math.max(g.yAxis[d.axis].domain[0],0));
-							                     var xmin = g.xAxis.range[0];
-							                     var xmax = g.xAxis.range[1];
-							                     pathString += "L"+xmax+","+ymin+"L"+xmin+","+ymin;
-							                      return pathString.indexOf("NaN")==-1?pathString:"M0,0"})
-						.attr("class","seriesStackedArea seriesGroup")
-						.attr("stroke",function(d,i){return d.color? d.color : g.colors[i]})
-						.attr("stroke-width",0.1)
-						//.attr("stroke-linejoin","round")
-						//.attr("stroke-linecap","round")
-						.attr("fill",function(d,i){
-							return d.color? d.color : g.colors[i]})
-		
 				
 				/*lineSeriesDotGroups = lineSeriesDots.data(sbt.line)
 					.enter()
@@ -1799,17 +1735,17 @@ function Gneiss(config)
 			
 			lineSeries = g.seriesContainer.selectAll("path.seriesLine");
 			areaSeries = g.seriesContainer.selectAll("path.seriesArea");
-			columnSeries = g.seriesContainer.selectAll("g.seriesColumn");
-			stackedColumnSeries = g.seriesContainer.selectAll("path.seriesStackedColumn");
+			columnSeries = g.seriesContainer.selectAll("g.seriesColumn");			
 			scatterSeries = g.seriesContainer.selectAll("g.seriesScatter");
 			stackedAreaSeries = g.seriesContainer.selectAll("path.seriesStackedArea");
 
 			//lineSeriesDotGroups = g.seriesContainer.selectAll("g.lineSeriesDots")
 			var columnGroups
 			var columnRects
+			var stackedColumnRects
 			
 			if(g.isBargrid()) {
-
+				stackedColumnSeries = g.seriesContainer.selectAll("g.seriesStackedColumn");
 				//add bars to chart
 				columnGroups = g.seriesContainer.selectAll("g.seriesColumn")
 					.data(sbt.bargrid)
@@ -1852,8 +1788,7 @@ function Gneiss(config)
 						}
 					});
 					
-				columnGroups.exit().remove()
-				
+				columnGroups.exit().remove()				
 				
 				columnRects = columnGroups.selectAll("rect")
 					.data(function(d,i){return d.data})
@@ -1891,7 +1826,8 @@ function Gneiss(config)
 				//remove non bargrid stuff
 				scatterSeries.remove()
 				columnRects.exit().remove()
-				stackedColumnRects.exti().remove()
+				//added for stackedcolumn
+				stackedColumnSeries.remove()
 				//lineSeriesDotGroups.remove()
 				lineSeries.remove()
 				areaSeries.remove()
@@ -1899,6 +1835,7 @@ function Gneiss(config)
 			}
 			else {
 				//Not a bargrid
+				stackedColumnSeries = g.seriesContainer.selectAll("path.seriesStackedColumn");
 				//add columns to chart
 				columnGroups = g.seriesContainer.selectAll("g.seriesColumn")
 					.data(sbt.column)
@@ -1932,6 +1869,7 @@ function Gneiss(config)
 						.attr("x",g.xAxis.type =="date" ?
 							function(d,i) {
 								g.calculateColumnWidths();
+								g.calculateStackedColumnWidths();
 								if (i===0){
 									if (g.columns.numColumnCharts === 1){
 										return ( g.padding.left * 2 ) + g.columns.longestYValue + ((g.columns.numColumnCharts - 1) * (g.columns.columnWidth/2)) + ( ((g.columns.numColumnCharts - 1) * g.columns.columnSpacing)/2 ) + (i * (g.columns.numColumnCharts * g.columns.columnWidth)) + (i * (g.columns.numColumnCharts) * g.columns.columnSpacing);
@@ -1948,8 +1886,10 @@ function Gneiss(config)
 										return ( g.padding.left * 2 ) + g.columns.longestYValue + ((g.columns.numColumnCharts - 1) * (g.columns.columnWidth/2)) + ( ((g.columns.numColumnCharts - 1) * g.columns.columnSpacing)/2 ) + (i * (g.columns.numColumnCharts * g.columns.columnWidth)) + (i * (g.columns.numColumnCharts-1) * g.columns.columnSpacing) + (i * g.columns.gutterSpacing);
 									}
 								}}:
-							function(i) {
-								return g.xAxis.scale(i) - g.columns.columnWidth/2})
+							function(i) 
+							{
+								return g.xAxis.scale(i) - g.columns.columnWidth/2
+							})
 						.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; 
 							return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
 			
@@ -1960,6 +1900,7 @@ function Gneiss(config)
 					.attr("x",g.xAxis.type =="date" ?
 						function(d,i) {
 							g.calculateColumnWidths();
+							g.calculateStackedColumnWidths();
 							if (i===0){
 								if (g.columns.numColumnCharts === 1){
 									return ( g.padding.left * 2 ) + g.columns.longestYValue + ((g.columns.numColumnCharts - 1) * (g.columns.columnWidth/2)) + ( ((g.columns.numColumnCharts - 1) * g.columns.columnSpacing)/2 ) + (i * (g.columns.numColumnCharts * g.columns.columnWidth)) + (i * (g.columns.numColumnCharts) * g.columns.columnSpacing);
@@ -1982,6 +1923,7 @@ function Gneiss(config)
 						return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
 					
 				columnRects.exit().remove()
+
 
 				//add stacked columns to chart
 				stackedColumnGroups = g.seriesContainer.selectAll("g.seriesStackedColumn")
@@ -2061,12 +2003,15 @@ function Gneiss(config)
 									return ( g.padding.left * 2 ) + g.stackedColumns.longestYValue + ((g.stackedColumns.numStackedColumnCharts - 1) * (g.stackedColumns.stackedColumnWidth/2)) + ( ((g.stackedColumns.numStackedColumnCharts - 1) * g.stackedColumns.stackedColumnSpacing)/2 ) + (i * (g.stackedColumns.numStackedColumnCharts * g.stackedColumns.stackedColumnWidth)) + (i * (g.stackedColumns.numStackedColumnCharts-1) * g.stackedColumns.stackedColumnSpacing) + (i * g.stackedColumns.gutterSpacing);
 								}
 							}}:
-						function(i) {
-							return g.xAxis.scale(i) - g.stackedColumns.stackedColumnWidth/2})
+						function(i) 
+						{
+							return g.xAxis.scale(i) - g.stackedColumns.stackedColumnWidth/2
+						})
 					.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; 
 						return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
 					
 				stackedColumnRects.exit().remove()
+
 
 				//add lines
 				lineSeries = g.seriesContainer.selectAll("path.seriesLine")
@@ -2442,6 +2387,7 @@ function Gneiss(config)
 			graph.xAxis.hasColumns = false;
 		}
 
+		//added for stackedcolumn
 		if(seriesByType.stackedcolumn.length > 0) {
 			graph.xAxis.hasStackedColumns = true;
 		}
@@ -2467,6 +2413,7 @@ function Gneiss(config)
 		this.updateGraphPropertiesBasedOnSeriesType(this, this.seriesByType());
 		
 		this.calculateColumnWidths();
+		//added for stackedcolumn
 		this.calculateStackedColumnWidths();
 		
 		this.setYScales()
@@ -2498,6 +2445,7 @@ function Gneiss(config)
 			orderedArr.push(this);
 		});
 
+		//added for stackedcolumn
 		d3.select("#seriesContainer").selectAll(".seriesStackedColumn").each(function(){
 			orderedArr.push(this);
 		});
