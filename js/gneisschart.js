@@ -2343,29 +2343,64 @@ function Gneiss(config)
 		
 		var newStackedArea;
 		var count = 0;
+		var positiveSeriesData=[];
+		var negativeSeriesData=[];
 		
 		for (var i = 0; i < series.length; i++) 
 		{
-			if(series[i].type == 'stackedarea' || series[i].type == 'stackedcolumn')
+			if(series[i].type == 'stackedarea')
 			{	
 				var newColor = series[i].color;
 
 				if(typeof(newStackedArea) === 'undefined'){
-						newStackedArea = jQuery.extend(true, {}, series[i]);
+					newStackedArea = jQuery.extend(true, {}, series[i]);
 				}
 				else
 				{
 					for (var t=0; t<series[i].data.length; t++)
-					{					
-						var num = newStackedArea.data[t] + series[i].data[t];
-
+					{
 						newStackedArea.data[t] += series[i].data[t];
 					}
 				}
 
 				newStackedArea.color = newColor;
+				seriesByType[series[i].type].push(jQuery.extend(true, {}, newStackedArea)); 
+			}
+			else if(series[i].type == 'stackedcolumn')
+			{	
+				var newColor = series[i].color;	
 
-			 	seriesByType[series[i].type].push(jQuery.extend(true, {}, newStackedArea)); 	
+				if(typeof(newStackedColumn) == 'undefined')
+				{
+					var newStackedColumn = jQuery.extend(true, {}, series[i]);
+				}
+
+				for (var t=0; t < series[i].data.length; t++)
+				{	
+					if(series[i].data[t] < 0)
+					{
+						if(negativeSeriesData[t] == null)
+						{
+							negativeSeriesData[t] = 0;
+						}
+
+						negativeSeriesData[t] += series[i].data[t];
+						newStackedColumn.data[t] = negativeSeriesData[t];
+					}
+					else
+					{
+						if(positiveSeriesData[t] == null)
+						{
+							positiveSeriesData[t] = 0;
+						}
+
+						positiveSeriesData[t] += series[i].data[t];
+						newStackedColumn.data[t] = positiveSeriesData[t];							
+					}
+				}
+
+				newStackedColumn.color = newColor;
+				seriesByType[series[i].type].push(jQuery.extend(true, {}, newStackedColumn)); 			 		
 			 }
 			 else
 			 {
