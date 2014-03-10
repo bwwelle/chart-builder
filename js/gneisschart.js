@@ -755,7 +755,8 @@ function Gneiss(config)
 				for (var i = g.series.length - 1; i >= 0; i--){
 					maxLength = Math.max(maxLength, g.series[i].data.length)
 				};
-				g.xAxis.scale = d3.scale.ordinal().domain(g.xAxisRef[0].data)
+				g.xAxis.scale = d3.scale.ordinal()
+					.domain(g.xAxisRef[0].data)
 				
 				g.maxLength = maxLength;
 			}
@@ -811,7 +812,6 @@ function Gneiss(config)
 		if ( g.xAxis.type == "date" ) {
 			g.xAxis.scale.range(rangeArray);
 		}
-
 		else {
 			g.xAxis.scale.rangePoints(rangeArray);
 		}
@@ -1603,6 +1603,7 @@ function Gneiss(config)
 						.attr("width",g.columns.columnWidth)
 						.attr("height", function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; return Math.abs(g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())))})
 						.attr("x", function(d,i) {
+							var test = g.xAxis.scale(g.xAxisRef[0].data[i])
 							return g.xAxis.scale(g.xAxisRef[0].data[i])  - g.columns.columnWidth/2
 							})
 						.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
@@ -1809,7 +1810,8 @@ function Gneiss(config)
 				columnGroups.exit().remove()
 			
 				columnRects = columnGroups.selectAll("rect")
-					.data(function(d,i){return d.data})
+					.data(function(d,i){
+						return d.data})
 				
 				columnRects.enter()
 						.append("rect")
@@ -1835,7 +1837,8 @@ function Gneiss(config)
 										return ( g.padding.left * 2 ) + g.columns.longestYValue + ((g.columns.numColumnCharts - 1) * (g.columns.columnWidth/2)) + ( ((g.columns.numColumnCharts - 1) * g.columns.columnSpacing)/2 ) + (i * (g.columns.numColumnCharts * g.columns.columnWidth)) + (i * (g.columns.numColumnCharts-1) * g.columns.columnSpacing) + (i * g.columns.gutterSpacing);
 									}
 								}}:
-							function(d,i) {return g.xAxis.scale(i) - g.columns.columnWidth/2})
+							function(d,i) {
+								return g.xAxis.scale(g.xAxisRef[0].data[i]) - g.columns.columnWidth/2})
 						.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
 			
 				columnRects.transition()
@@ -1862,7 +1865,9 @@ function Gneiss(config)
 									return ( g.padding.left * 2 ) + g.columns.longestYValue + ((g.columns.numColumnCharts - 1) * (g.columns.columnWidth/2)) + ( ((g.columns.numColumnCharts - 1) * g.columns.columnSpacing)/2 ) + (i * (g.columns.numColumnCharts * g.columns.columnWidth)) + (i * (g.columns.numColumnCharts-1) * g.columns.columnSpacing) + (i * g.columns.gutterSpacing);
 								}
 							}}:
-						function(d,i) {return g.xAxis.scale(i) - g.columns.columnWidth/2})
+						function(d,i) {
+							return g.xAxis.scale(g.xAxisRef[0].data[i]) - g.columns.columnWidth/2
+						})
 					.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
 					.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
 				
@@ -1914,7 +1919,7 @@ function Gneiss(config)
 										return ( g.padding.left * 2 ) + g.stackedColumns.longestYValue + ((g.stackedColumns.numStackedColumnCharts - 1) * (g.stackedColumns.stackedColumnWidth/2)) + ( ((g.stackedColumns.numStackedColumnCharts - 1) * g.stackedColumns.stackedColumnSpacing)/2 ) + (i * (g.stackedColumns.numStackedColumnCharts * g.stackedColumns.stackedColumnWidth)) + (i * (g.stackedColumns.numStackedColumnCharts-1) * g.stackedColumns.stackedColumnSpacing) + (i * g.stackedColumns.gutterSpacing);
 									}
 								}}:
-							function(d,i) {return g.xAxis.scale(i) - g.stackedColumns.stackedColumnWidth/2})
+							function(d,i) {return g.xAxis.scale(g.xAxisRef[0].data[i]) - g.stackedColumns.stackedColumnWidth/2})
 						.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
 			
 				stackedColumnRects.transition()
@@ -1941,7 +1946,7 @@ function Gneiss(config)
 									return ( g.padding.left * 2 ) + g.stackedColumns.longestYValue + ((g.stackedColumns.numStackedColumnCharts - 1) * (g.stackedColumns.stackedColumnWidth/2)) + ( ((g.stackedColumns.numStackedColumnCharts - 1) * g.stackedColumns.stackedColumnSpacing)/2 ) + (i * (g.stackedColumns.numStackedColumnCharts * g.stackedColumns.stackedColumnWidth)) + (i * (g.stackedColumns.numStackedColumnCharts-1) * g.stackedColumns.stackedColumnSpacing) + (i * g.stackedColumns.gutterSpacing);
 								}
 							}}:
-						function(d,i) {return g.xAxis.scale(i) - g.stackedColumns.stackedColumnWidth/2})
+						function(d,i) {return g.xAxis.scale(g.xAxisRef[0].data[i]) - g.stackedColumns.stackedColumnWidth/2})
 					.attr("y",function(d,i) {yAxisIndex = d3.select(this.parentNode).data()[0].axis; return (g.yAxis[yAxisIndex].scale(d)-g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain()))) >= 0 ? g.yAxis[yAxisIndex].scale(Gneiss.helper.columnXandHeight(d,g.yAxis[yAxisIndex].scale.domain())) : g.yAxis[yAxisIndex].scale(d)})
 					
 				stackedColumnRects.exit().remove()
