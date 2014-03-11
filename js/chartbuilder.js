@@ -3,6 +3,42 @@ ChartBuilder = {
 	allColors: [ "00ADEF", "0A57A4", "B20838", "FF6600","65B500","889CA2","FFB800","006065","780028","AF335C","BE597A","D28CA3","DCA6B8","993900","FF6600",
 	"FF9900","FFB800","003300","006600","65B500","ACD733","889CA2","A0B0B5","B8C4C7","CFD7DA","000000"],
 	curRaw: "",
+	SaveAsDefaultSettings: function()
+	{
+		window.localStorage.setItem('ChartSize', $("#sizeItems").find("option:selected").text());
+
+		var g = chart;
+		var currSeries;
+
+		for (var i=0; i < g.series.length; i++) {
+			currSeries = g.series[i];
+
+			window.localStorage.setItem('SeriesOptions_Name_' + i, currSeries.name);
+			window.localStorage.setItem('SeriesOptions_Data_' + i, currSeries.data);
+			window.localStorage.setItem('SeriesOptions_Source_' + i, currSeries.source);
+			window.localStorage.setItem('SeriesOptions_Type_' + i, currSeries.type);
+			window.localStorage.setItem('SeriesOptions_Axis_' + i, currSeries.axis);
+			window.localStorage.setItem('SeriesOptions_Color_' + i, currSeries.color);
+		}
+
+		window.localStorage.setItem('ChartData', $('#csvInput').val());
+
+		var chartOptions = {};
+		chartOptions.title = $("#chart_title").val();
+		chartOptions.source = $("#source").val();
+		window.localStorage.setItem( 'ChartOptions', JSON.stringify(chartOptions) );
+
+
+
+		
+
+  //   	var defaultChartOptions = localStorage.getItem('ChartOptions');
+  //   	var defaultLeftAxisOptions = localStorage.getItem('LeftAxisOptions');
+  //   	var defaultRightAxisOptions = localStorage.getItem('RightAxisOptions');
+  //   	var defaultBottomAxisOptions = localStorage.getItem('BottomAxisOptions');
+
+		 
+	},
 	getNewData: function(csv) {
 		// Split the csv information by lines
 		var csv_array = csv.split("\n");
@@ -325,7 +361,7 @@ ChartBuilder = {
 		var seriesContainer = $("#seriesItems");
 		var sizesContainer = $("#sizeItems");
 		var isMultiAxis = false;
-		var sizeValues;		
+		var sizeValues;	
 
 		for(var i=0;i<g.chartsizes.length;i++)
 		{
@@ -1337,7 +1373,7 @@ ChartBuilder.getDefaultConfig = function() {
   var chartConfig = {};
   
   chartConfig.colors = ["00ADEF", "0A57A4", "B20838", "FF6600","65B500","889CA2","FFB800","006065","780028","AF335C","BE597A","D28CA3","DCA6B8","993900","FF6600",
-	"FF9900","FFB800","003300","006600","65B500","ACD733","889CA2","A0B0B5","B8C4C7","CFD7DA", "000000"];
+	"FF9900","FFB800","003300","006600","65B500","ACD733","889CA2","A0B0B5","B8C4C7","CFD7DA", "000000"];	
   
   return chartConfig;
 }
@@ -1353,7 +1389,99 @@ ChartBuilder.start = function(config) {
   	
   	//construct a Gneisschart using default data
   	//this should change to be more like this http://bost.ocks.org/mike/chart/
-    chart = new Gneiss(chartConfig);    
+    chart = new Gneiss(chartConfig);  
+
+    var defaultSize = window.localStorage.getItem('ChartSize');
+
+    var defaultChartOptions = localStorage.getItem('ChartOptions');
+    var defaultLeftAxisOptions = localStorage.getItem('LeftAxisOptions');
+    var defaultRightAxisOptions = localStorage.getItem('RightAxisOptions');
+    var defaultBottomAxisOptions = localStorage.getItem('BottomAxisOptions');
+
+    if (defaultSize != null)
+    {
+	    for(var i=0;i<chart.chartsizes.length;i++)
+		{
+			if(chart.chartsizes[i].name == defaultSize)
+			{
+				chart.chartsizes[i].selected= "selected";
+				
+				sizeValues = chart.chartsizes[i].data;
+			}
+			else
+			{
+				if(chart.chartsizes[i].name == "Custom Size")
+				{
+					chart.chartsizes[i].data = "600,343";
+				}
+
+				chart.chartsizes[i].selected = "";	
+			}
+		}
+	}
+
+	var seriesIndex = 0;
+	var seriesName = window.localStorage.getItem('SeriesOptions_Name_' + seriesIndex);
+
+	var chartOptions = JSON.parse(window.localStorage.getItem('ChartOptions'));
+
+	if (chartOptions !== null)
+	{	
+		chart.state.hasTitle = true;
+		chart.title = chartOptions.title;
+	}
+
+	if(window.localStorage.getItem('ChartData')!==null)
+	{
+		var newData = ChartBuilder.getNewData(window.localStorage.getItem('ChartData'));
+		dataObj = ChartBuilder.makeDataObj(newData);
+		if(dataObj == null) {
+			ChartBuilder.showInvalidData();
+			return;
+		}
+
+		d3.select("#invalidDataSpan").text("Warning: Data is Invalid");
+
+		ChartBuilder.hideInvalidData();
+
+		ChartBuilder.createTable(newData, dataObj.datetime);
+		
+		chart.series.unshift(chart.xAxisRef)
+		dataObj = ChartBuilder.mergeData(dataObj)
+		
+		if(dataObj.datetime) {
+			chart.xAxis.type = "date";
+			chart.xAxis.formatter = chart.xAxis.formatter?chart.xAxis.formatter:"mm/dd/yyyy";
+		}
+		else {
+			chart.xAxis.type = "ordinal";
+		}
+
+		chart.xAxisRef = [dataObj.data.shift()]			
+
+		chart.series = dataObj.data;
+	}
+
+	while(seriesName!==undefined && seriesName!==null)
+	{
+		chart.series[seriesIndex].name = seriesName;
+
+		chart.series[seriesIndex].source = window.localStorage.getItem('SeriesOptions_Source_' + seriesIndex);
+		chart.series[seriesIndex].type = window.localStorage.getItem('SeriesOptions_Type_' + seriesIndex);
+		//chart.series[seriesIndex].axis = localStorage.getItem('SeriesOptions_Axis_' + seriesIndex);
+		chart.series[seriesIndex].color = window.localStorage.getItem('SeriesOptions_Color_' + seriesIndex);
+
+		seriesIndex++;
+		seriesName = window.localStorage.getItem('SeriesOptions_Name_' + seriesIndex);
+	}
+
+
+	// if(defaultData !== null)
+	// {
+	// 	$("#csvInput").val(defaultData);
+	// 	$("#csvInput").keyup();
+	// }
+
 
 
   	// Scale the chart up so the outputted image looks good on retina displays
@@ -1393,7 +1521,11 @@ ChartBuilder.start = function(config) {
   			//.enter()
   			//.append("option")
   			//.text(function(d){return d.name?d.name:"Untitled Chart"})
-  			
+  	
+  	$("#saveAsDefaultButton").click(function() {
+		ChartBuilder.SaveAsDefaultSettings();		  
+  	})
+
   	
   	$("#createImageButton").click(function() {
 			ChartBuilder.inlineAllStyles();
@@ -1477,6 +1609,19 @@ ChartBuilder.start = function(config) {
 	    //to set the default values of the pull down menus
 	    $('#left_axis_tick_num').val(Number(chart.yAxis[0].ticks)).change();
 	    $('#x_axis_tick_num').val(Number(chart.xAxis.ticks)).change();
+
+	    if(chart.title != "" && chart.state.hasTitle != false)
+	    {
+	    	var val = chart.title;
+			chart.title = val;
+			$('#chart_title').val(val);
+			d3.select("#titleBackground").attr("fill-opacity", 1);
+			chart.titleLine.text(chart.title);
+			chart.padding.top += chart.padding.title;
+			ChartBuilder.updateYLabels();
+			ChartBuilder.setChartArea();
+			chart.setYScales().redraw();
+		}
 
 	    var axisLabelContainer = $('#x_axis_label_position');
 	    var axisDateFormatContainer = $('#x_axis_date_format');

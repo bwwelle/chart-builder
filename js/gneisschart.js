@@ -21,8 +21,8 @@ Date.setLocale('en');
 //A default configuration 
 //Should change to more d3esque methods e.g. http://bost.ocks.org/mike/chart/
 Gneiss.defaultGneissChartConfig = {
-	container: "#chartContainer", //css id of target chart container
-	editable: true, // reserved for enabling or dissabling on chart editing
+	container: "#chartContainer", //css id of target chart containes
+	editable: true, // reserved for enabling or dissabling on chart editins
 	legend: true, // whether or not there should be a legend
 	title: "", // the chart title 
 	colors: [ "00ADEF", "0A57A4", "B20838", "FF6600","65B500","889CA2","FFB800","006065","780028","AF335C","BE597A","D28CA3","DCA6B8","993900","FF6600",
@@ -127,7 +127,7 @@ Gneiss.defaultGneissChartConfig = {
 	series: [
 		{
 			name: "Revenue",
-			data: [ 65.50, 60.20, 68.30, 73.80, 77.30 ],
+			data: [ 65.53, 60.20, 65.53, 73.80, 77.30 ],
 			source: "",
 			type: "line",
 			axis: 0,
