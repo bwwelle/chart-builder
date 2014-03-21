@@ -20,6 +20,12 @@ ChartBuilder = {
 			color: null
 		}
 	],
+	RemoveDefaultSettings:function()
+	{
+		window.localStorage.clear();
+
+		location.reload();
+	},
 	SaveAsDefaultSettings: function()
 	{
 		window.localStorage.setItem('ChartSize', $("#sizeItems").find("option:selected").text());
@@ -1590,6 +1596,10 @@ ChartBuilder.start = function(config) {
   	
   	$("#saveAsDefaultButton").click(function() {
 		ChartBuilder.SaveAsDefaultSettings();		  
+  	})
+
+  	$("#removeDefaultSettingsButton").click(function() {
+		ChartBuilder.RemoveDefaultSettings();		  
   	})
 
   	
