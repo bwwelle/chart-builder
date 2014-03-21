@@ -27,6 +27,8 @@ Gneiss.defaultGneissChartConfig = {
 	title: "", // the chart title 
 	colors: [ "00ADEF", "0A57A4", "B20838", "FF6600","65B500","889CA2","FFB800","006065","780028","AF335C","BE597A","D28CA3","DCA6B8","993900","FF6600",
 	"FF9900","FFB800","003300","006600","65B500","ACD733","889CA2","A0B0B5","B8C4C7","CFD7DA", "000000"],
+	sourceline: "",
+	creditline: "",
 	bargrid: {
 		barHeight: 30,
 		barSpacing: 2,
@@ -193,9 +195,7 @@ Gneiss.defaultGneissChartConfig = {
 			data: "600,343",
 			selected: ""
 		}
-	],
-	sourceline: "",
-	creditline: ""
+	]
 };
 
 Gneiss.dateParsers = {
@@ -772,11 +772,14 @@ function Gneiss(config)
 			if (g.yAxis.length > 1 ){
 
 				// if some of the data is being presented as a bar chart
-				if (g.xAxis.hasColumns){
-					rangeArray = [ longestYValue + ( g.padding.left * 2 ) + (g.columns.columnGroupWidth / 2), g.width() - longestYValue - (g.padding.right * 2) - (g.columns.columnGroupWidth / 2) ];
+				if (g.xAxis.hasColumns && !g.xAxis.hasStackedColumns){
+					rangeArray = [ longestYValue + ( g.padding.left * 2 ) + (g.columns.columnGroupWidth/ 2), g.width() - longestYValue - (g.padding.right * 2) - (g.columns.columnGroupWidth / 2) ];
 				}
-				else if (g.xAxis.hasStackedColumns){
+				else if (g.xAxis.hasStackedColumns && !g.xAxis.hasColumns){
 					rangeArray = [ longestYValue + ( g.padding.left * 2 ) + (g.stackedColumns.stackedColumnGroupWidth / 2), g.width() - longestYValue - (g.padding.right * 2) - (g.stackedColumns.stackedColumnGroupWidth/ 2) ];
+				}
+				else if (g.xAxis.hasStackedColumns && g.xAxis.hasColumns){
+					rangeArray = [ longestYValue + ( g.padding.left * 2 ) + ((g.stackedColumns.stackedColumnGroupWidth + g.columns.columnGroupWidth)/ 2), g.width() - longestYValue - (g.padding.right * 2) - ((g.stackedColumns.stackedColumnGroupWidth + g.columns.columnGroupWidth)/ 2) ];
 				}
 				else{
 					rangeArray = [ longestYValue + ( g.padding.left * 2 ), g.width() - longestYValue - (g.padding.right * 2) ];
@@ -788,11 +791,15 @@ function Gneiss(config)
 			// if there is only 1 y axis
 			else {				
 				// if some of the data is being presented as a bar chart
-				if (g.xAxis.hasColumns){
+				if (g.xAxis.hasColumns && !g.xAxis.hasStackedColumns){
 					rangeArray = [ longestYValue + ( g.padding.left * 2 ) + (g.columns.columnGroupWidth / 2), g.width() - g.padding.right - (g.columns.columnGroupWidth / 2) ]; 
 				}
-				else if (g.xAxis.hasStackedColumns){
+				else if (g.xAxis.hasStackedColumns && !g.xAxis.hasColumns){
 					rangeArray = [ longestYValue + ( g.padding.left * 2 ) + (g.stackedColumns.stackedColumnGroupWidth / 2), g.width() - g.padding.right - (g.stackedColumns.stackedColumnGroupWidth / 2) ]; 
+				}
+				else if(g.xAxis.hasStackedColumns && g.xAxis.hasColumns)
+				{
+					rangeArray = [ longestYValue + ( g.padding.left * 2 ) + ((g.stackedColumns.stackedColumnGroupWidth + g.columns.columnGroupWidth) / 2), g.width() - g.padding.right - ((g.stackedColumns.stackedColumnGroupWidth + g.columns.columnGroupWidth)/ 2) ]; 
 				}
 				else{
 					rangeArray = [ longestYValue + ( g.padding.left * 2 ), g.width() - g.padding.right ]; 
@@ -835,7 +842,8 @@ function Gneiss(config)
 		var extremes = [],
 			g=this;
 
-		d3.selectAll('.yAxis').selectAll('text').each(function(){
+		d3.selectAll('.yAxis').selectAll('text').each(function()
+		{
 			var el = d3.select(this)[0][0];
 			extremes.push( parseFloat(el.getBoundingClientRect().width) )
 		});
@@ -1396,15 +1404,15 @@ function Gneiss(config)
 		// calculate gutterSpacing according to situation
 		if (g.xAxis.type === "date"){
 
-			if (g.seriesByType().stackedcolumn.length === 1){
+			// if (g.seriesByType().stackedcolumn.length === 1){
 				g.stackedColumns.gutterSpacing = 0;
-				g.stackedColumns.totalStackedColumnspacing = (g.series[0].data.length - 1) * g.stackedColumns.stackedColumnSpacing;
-			} 
+				g.stackedColumns.totalStackedColumnSpacing = (g.series[0].data.length - 1) * g.stackedColumns.stackedColumnSpacing;
+			// } 
 			
-			else {
-				g.stackedColumns.gutterSpacing = 8;
-				g.stackedColumns.totalStackedColumnSpacing = ((g.stackedColumns.numStackedColumnCharts - 1) * g.series[0].data.length) * g.stackedColumns.stackedColumnSpacing;
-			}
+			// else {
+			// 	g.stackedColumns.gutterSpacing = 8;
+			// 	g.stackedColumns.totalStackedColumnSpacing = ((g.stackedColumns.numStackedColumnCharts - 1) * g.series[0].data.length) * g.stackedColumns.stackedColumnSpacing;
+			//}
 		}
 		else {
 			g.stackedColumns.gutterSpacing = 16;
@@ -1418,12 +1426,12 @@ function Gneiss(config)
 		if ( !g.isBargrid() ){
 			g.stackedColumns.longestYValue = Math.ceil(this.getLongestYValue());
 
-			if (g.seriesByType().stackedcolumn.length === 1){
+			// if (g.seriesByType().stackedcolumn.length === 1){
 				g.stackedColumns.range = Math.floor(( g.yAxis.length === 1 ) ? Math.floor( g.width() - ( g.padding.left * 2 ) - g.padding.right - Math.ceil(g.stackedColumns.longestYValue) ) : Math.floor( g.width() - ( g.padding.left * 2 ) - (g.padding.right*2) - ( Math.ceil(g.stackedColumns.longestYValue) * 2 ) ));
-			}
-			else {
-				g.stackedColumns.range = Math.floor(( g.yAxis.length === 1 ) ? Math.floor( g.width() - ( g.padding.left * 2 ) - g.padding.right - Math.ceil(g.stackedColumns.longestYValue) ) : Math.floor( g.width() - ( g.padding.left * 2 ) - (g.padding.right*2) - ( Math.ceil(g.stackedColumns.longestYValue) * 2 ) ));
-			}
+			// }
+			// else {
+			// 	g.stackedColumns.range = Math.floor(( g.yAxis.length === 1 ) ? Math.floor( g.width() - ( g.padding.left * 2 ) - g.padding.right - Math.ceil(g.stackedColumns.longestYValue) ) : Math.floor( g.width() - ( g.padding.left * 2 ) - (g.padding.right*2) - ( Math.ceil(g.stackedColumns.longestYValue) * 2 ) ));
+			// }
 		} 
 
 		// bargrid has it's own method for calculating its available space

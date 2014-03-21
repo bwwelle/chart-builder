@@ -3,12 +3,45 @@ ChartBuilder = {
 	allColors: [ "00ADEF", "0A57A4", "B20838", "FF6600","65B500","889CA2","FFB800","006065","780028","AF335C","BE597A","D28CA3","DCA6B8","993900","FF6600",
 	"FF9900","FFB800","003300","006600","65B500","ACD733","889CA2","A0B0B5","B8C4C7","CFD7DA","000000"],
 	curRaw: "",
+	yAxis: [
+		{
+			domain: [null,null],
+			tickValues: null,
+			prefix: {
+				value: "",
+				use: "top" //can be "top" "all" "positive" or "negative"
+			},
+			suffix: {
+				value: "",
+				use: "top"
+			},
+			ticks: 5,
+			formatter: null,
+			color: null
+		}
+	],
 	SaveAsDefaultSettings: function()
 	{
 		window.localStorage.setItem('ChartSize', $("#sizeItems").find("option:selected").text());
 
 		var g = chart;
 		var currSeries;
+
+		var counter = 0;
+		var item = window.localStorage.getItem("SeriesOptions_Name_" + counter);
+
+		while (item !== null)
+		{
+			window.localStorage.clear("SeriesOptions_Name_" + counter);
+			window.localStorage.clear('SeriesOptions_Data_' + counter);
+			window.localStorage.clear('SeriesOptions_Source_' + counter);
+			window.localStorage.clear('SeriesOptions_Type_' + counter);
+			window.localStorage.clear('SeriesOptions_Axis_' + counter);
+			window.localStorage.clear('SeriesOptions_Color_' + counter);
+			counter++;
+
+			item = window.localStorage.getItem("SeriesOptions_Name_" + counter);		
+		}
 
 		for (var i=0; i < g.series.length; i++) {
 			currSeries = g.series[i];
@@ -24,20 +57,27 @@ ChartBuilder = {
 		window.localStorage.setItem('ChartData', $('#csvInput').val());
 
 		var chartOptions = {};
-		chartOptions.title = $("#chart_title").val();
-		chartOptions.source = $("#source").val();
+		chartOptions.Title = $("#chart_title").val();
+		chartOptions.SourceLine = $("#sourceLine").val();
+		chartOptions.CreditLine = $("#creditLine").val();		
+
 		window.localStorage.setItem( 'ChartOptions', JSON.stringify(chartOptions) );
 
+		var leftAxisOptions = {};
+		leftAxisOptions.LeftAxisOptions = $("#left_axis_label").val();
+		leftAxisOptions.LeftAxisPrefix = $("#left_axis_prefix").val();
+		leftAxisOptions.LeftAxisSuffix = $("#left_axis_suffix").val();
+		leftAxisOptions.NumberOfTicks = $("#left_axis_tick_num").find("option:selected").text();
+		leftAxisOptions.LeftAxisMax = $("#left_axis_max").val();
+		leftAxisOptions.LeftAxisMin = $("#left_axis_min").val();
 
+		window.localStorage.setItem( 'LeftAxisOptions', JSON.stringify(leftAxisOptions) );
 
-		
+		var bottomAxisOptions = {};
+		bottomAxisOptions.Label = $("#x_axis_label").val();
+		bottomAxisOptions.Position = $("#x_axis_label_position").find("option:selected").text();
 
-  //   	var defaultChartOptions = localStorage.getItem('ChartOptions');
-  //   	var defaultLeftAxisOptions = localStorage.getItem('LeftAxisOptions');
-  //   	var defaultRightAxisOptions = localStorage.getItem('RightAxisOptions');
-  //   	var defaultBottomAxisOptions = localStorage.getItem('BottomAxisOptions');
-
-		 
+		window.localStorage.setItem( 'BottomAxisOptions', JSON.stringify(bottomAxisOptions) );		 
 	},
 	getNewData: function(csv) {
 		// Split the csv information by lines
@@ -1374,6 +1414,7 @@ ChartBuilder.getDefaultConfig = function() {
   
   chartConfig.colors = ["00ADEF", "0A57A4", "B20838", "FF6600","65B500","889CA2","FFB800","006065","780028","AF335C","BE597A","D28CA3","DCA6B8","993900","FF6600",
 	"FF9900","FFB800","003300","006600","65B500","ACD733","889CA2","A0B0B5","B8C4C7","CFD7DA", "000000"];	
+
   
   return chartConfig;
 }
@@ -1392,8 +1433,6 @@ ChartBuilder.start = function(config) {
     chart = new Gneiss(chartConfig);  
 
     var defaultSize = window.localStorage.getItem('ChartSize');
-
-    var defaultChartOptions = localStorage.getItem('ChartOptions');
     var defaultLeftAxisOptions = localStorage.getItem('LeftAxisOptions');
     var defaultRightAxisOptions = localStorage.getItem('RightAxisOptions');
     var defaultBottomAxisOptions = localStorage.getItem('BottomAxisOptions');
@@ -1424,17 +1463,40 @@ ChartBuilder.start = function(config) {
 	var seriesName = window.localStorage.getItem('SeriesOptions_Name_' + seriesIndex);
 
 	var chartOptions = JSON.parse(window.localStorage.getItem('ChartOptions'));
+	var bottomAxisOptions = JSON.parse(window.localStorage.getItem('BottomAxisOptions'));
+
+	if(bottomAxisOptions != null)
+	{
+		for(var i=0;i<chart.xAxis.labelPosition.length;i++)
+		{
+			if(chart.xAxis.labelPosition[i].name == bottomAxisOptions.Position)
+			{
+				chart.xAxis.labelPosition[i].selected = "selected";
+			}
+			else
+			{
+				chart.xAxis.labelPosition[i].selected = "";
+			}
+		}
+	}
+
 
 	if (chartOptions !== null)
 	{	
 		chart.state.hasTitle = true;
-		chart.title = chartOptions.title;
-	}
+		chart.title = chartOptions.Title;
+		chart.creditline = chartOptions.CreditLine;
+		chart.sourceline = chartOptions.SourceLine;
+	}	
+	
 
-	if(window.localStorage.getItem('ChartData')!==null)
+
+	if(window.localStorage.getItem('ChartData')!==null && window.localStorage.getItem('ChartData') !== undefined)
 	{
 		var newData = ChartBuilder.getNewData(window.localStorage.getItem('ChartData'));
+
 		dataObj = ChartBuilder.makeDataObj(newData);
+
 		if(dataObj == null) {
 			ChartBuilder.showInvalidData();
 			return;
@@ -1460,6 +1522,10 @@ ChartBuilder.start = function(config) {
 		chart.xAxisRef = [dataObj.data.shift()]			
 
 		chart.series = dataObj.data;
+
+		//$('#csvInput').val(newData);
+		//$('#curRaw').val(newData);
+
 	}
 
 	while(seriesName!==undefined && seriesName!==null)
@@ -1472,6 +1538,7 @@ ChartBuilder.start = function(config) {
 		chart.series[seriesIndex].color = window.localStorage.getItem('SeriesOptions_Color_' + seriesIndex);
 
 		seriesIndex++;
+
 		seriesName = window.localStorage.getItem('SeriesOptions_Name_' + seriesIndex);
 	}
 
@@ -1507,7 +1574,6 @@ ChartBuilder.start = function(config) {
   		}; 
   		return data.join("\n")
   	})
-  
   
   	//load previously made charts
   	//var savedCharts = ChartBuilder.getLocalCharts();
@@ -1606,23 +1672,45 @@ ChartBuilder.start = function(config) {
 	         .val('')
 	         .blur();
 
+	    var leftAxisOptions = JSON.parse(window.localStorage.getItem('LeftAxisOptions'));
+	    var bottomAxisOptions = JSON.parse(window.localStorage.getItem('BottomAxisOptions'));
+
+		if(leftAxisOptions !== null)
+		{
+			$('#left_axis_max').val(leftAxisOptions.LeftAxisMax).change();
+			$('#left_axis_min').val(leftAxisOptions.LeftAxisMin).change();
+		}
+
 	    //to set the default values of the pull down menus
 	    $('#left_axis_tick_num').val(Number(chart.yAxis[0].ticks)).change();
 	    $('#x_axis_tick_num').val(Number(chart.xAxis.ticks)).change();
 
+
 	    if(chart.title != "" && chart.state.hasTitle != false)
 	    {
-	    	var val = chart.title;
-			chart.title = val;
-			$('#chart_title').val(val);
+	    	var chartTitle = chart.title;
+	    	var creditLine = chart.creditline;
+	    	var sourceLine = chart.sourceline;
+
+			$('#chart_title').val(chartTitle);
+			$('#sourceLine').val(sourceLine);
+			$('#creditLine').val(creditLine);
+
 			d3.select("#titleBackground").attr("fill-opacity", 1);
 			chart.titleLine.text(chart.title);
 			chart.padding.top += chart.padding.title;
+
+			if ( chart.creditline !== "" || chart.sourceline !== "")
+			{
+				chart.appendMeta();
+			}
+
 			ChartBuilder.updateYLabels();
 			ChartBuilder.setChartArea();
 			chart.setYScales().redraw();
 		}
 
+		var bottomAxisLabel = $('#x_axis_label'); 
 	    var axisLabelContainer = $('#x_axis_label_position');
 	    var axisDateFormatContainer = $('#x_axis_date_format');
 	    var axisLabelPositionHTML;
@@ -1640,6 +1728,11 @@ ChartBuilder.start = function(config) {
 	    	}
 
 	    	axisLabelContainer.append(axisLabelPositionHTML);
+	    }
+
+	    if(bottomAxisOptions.Label !== null)
+	    {
+	    	bottomAxisLabel.val(bottomAxisOptions.Label).keyup();
 	    }
 
 	    for (var i=0; i<chart.xAxis.dateFormat.length; i++)
