@@ -83,7 +83,7 @@ ChartBuilder = {
 		bottomAxisOptions.Label = $("#x_axis_label").val();
 		bottomAxisOptions.Position = $("#x_axis_label_position").find("option:selected").text();
 
-		window.localStorage.setItem( 'BottomAxisOptions', JSON.stringify(bottomAxisOptions) );		 
+		window.localStorage.setItem( 'BottomAxisOptions', JSON.stringify(bottomAxisOptions) );		
 	},
 	getNewData: function(csv) {
 		// Split the csv information by lines
@@ -1594,8 +1594,19 @@ ChartBuilder.start = function(config) {
   			//.append("option")
   			//.text(function(d){return d.name?d.name:"Untitled Chart"})
   	
+$('#popupBoxClose').click( function() {           
+            unloadPopupBox();
+        });
+       
+        $('#container').click( function() {
+            unloadPopupBox();
+        });
+
   	$("#saveAsDefaultButton").click(function() {
-		ChartBuilder.SaveAsDefaultSettings();		  
+		ChartBuilder.SaveAsDefaultSettings();
+
+ 		loadPopupBox();
+
   	})
 
   	$("#removeDefaultSettingsButton").click(function() {
@@ -1613,9 +1624,24 @@ ChartBuilder.start = function(config) {
 			//$("#downloadLinksDiv").toggleClass("hide");
   	})
 		  	
+  	 function loadPopupBox() {    // To Load the Popupbox
+            $('#popup_box').fadeIn("slow");
+            $("#container").css({ // this is just for style
+                "opacity": "0.3" 
+            });        
+        }        
+
+     function unloadPopupBox() {    // TO Unload the Popupbox
+            $('#popup_box').fadeOut("slow");
+            $("#container").css({ // this is just for style       
+                "opacity": "1" 
+            });
+        }    
+
   	$("#csvInput").bind("paste", function(e) {
   		//do nothing special
   	})
+
   	
   	/*
   	//
@@ -1740,7 +1766,7 @@ ChartBuilder.start = function(config) {
 	    	axisLabelContainer.append(axisLabelPositionHTML);
 	    }
 
-	    if(bottomAxisOptions.Label !== null)
+	    if(bottomAxisOptions !== null)
 	    {
 	    	bottomAxisLabel.val(bottomAxisOptions.Label).keyup();
 	    }
