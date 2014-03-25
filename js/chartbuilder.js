@@ -22,7 +22,51 @@ ChartBuilder = {
 	],
 	RemoveDefaultSettings:function()
 	{
-		window.localStorage.clear();
+		var seriesOptionsName = window.localStorage.getItem("SeriesOptions_Name_0");
+		var chartSize = window.localStorage.getItem("ChartSize");
+		var chartOptions = window.localStorage.getItem("ChartOptions");
+		var chartData = window.localStorage.getItem("ChartData");
+		var leftAxisOptions = window.localStorage.getItem("LeftAxisOptions");
+		var bottomAxisOptions = window.localStorage.getItem("BottomAxisOptions");
+
+		while (seriesOptionsName !== null)
+		{
+			window.localStorage.clear("SeriesOptions_Name_" + counter);
+			window.localStorage.clear('SeriesOptions_Data_' + counter);
+			window.localStorage.clear('SeriesOptions_Source_' + counter);
+			window.localStorage.clear('SeriesOptions_Type_' + counter);
+			window.localStorage.clear('SeriesOptions_Axis_' + counter);
+			window.localStorage.clear('SeriesOptions_Color_' + counter);
+			counter++;
+
+			seriesOptionsName = window.localStorage.getItem("SeriesOptions_Name_" + counter);		
+		}
+
+		if(chartSize !== null)
+		{
+			window.localStorage.clear("ChartSize");
+		}
+
+		if(chartOptions !== null)
+		{
+			window.localStorage.clear("ChartOptions");
+		}
+
+		if(chartData !== null)
+		{
+			window.localStorage.clear("ChartData");
+		}
+
+		if(leftAxisOptions !== null)
+		{
+			window.localStorage.clear("LeftAxisOptions");
+		}
+
+		if(bottomAxisOptions !== null)
+		{
+			window.localStorage.clear("BottomAxisOptions");
+		}
+
 
 		location.reload();
 	},
@@ -34,9 +78,9 @@ ChartBuilder = {
 		var currSeries;
 
 		var counter = 0;
-		var item = window.localStorage.getItem("SeriesOptions_Name_" + counter);
+		var seriesOptionsName = window.localStorage.getItem("SeriesOptions_Name_" + counter);
 
-		while (item !== null)
+		while (seriesOptionsName !== null)
 		{
 			window.localStorage.clear("SeriesOptions_Name_" + counter);
 			window.localStorage.clear('SeriesOptions_Data_' + counter);
@@ -46,7 +90,7 @@ ChartBuilder = {
 			window.localStorage.clear('SeriesOptions_Color_' + counter);
 			counter++;
 
-			item = window.localStorage.getItem("SeriesOptions_Name_" + counter);		
+			seriesOptionsName = window.localStorage.getItem("SeriesOptions_Name_" + counter);		
 		}
 
 		for (var i=0; i < g.series.length; i++) {
@@ -82,6 +126,8 @@ ChartBuilder = {
 		var bottomAxisOptions = {};
 		bottomAxisOptions.Label = $("#x_axis_label").val();
 		bottomAxisOptions.Position = $("#x_axis_label_position").find("option:selected").text();
+		bottomAxisOptions.NumberOfTicks = $("x_axis_tick_num").find("option:selected").text();	
+		bottomAxisOptions.DateFormat = $("x_axis_date_format").find("option:selected").text();	
 
 		window.localStorage.setItem( 'BottomAxisOptions', JSON.stringify(bottomAxisOptions) );		
 	},
