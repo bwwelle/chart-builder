@@ -29,6 +29,7 @@ ChartBuilder = {
 		var leftAxisOptions = window.localStorage.getItem("LeftAxisOptions");
 		var bottomAxisOptions = window.localStorage.getItem("BottomAxisOptions");
 
+		var counter = 0;
 		while (seriesOptionsName !== null)
 		{
 			window.localStorage.clear("SeriesOptions_Name_" + counter);
