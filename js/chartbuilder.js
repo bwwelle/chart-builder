@@ -244,7 +244,7 @@ ChartBuilder = {
 					if(i == 0) {
 						o.push([])
 					}
-					if(a[i][j] != "") {
+					if(a[i][j] != null) {
 						o[j][i] = a[i][j]
 					}
 				};
