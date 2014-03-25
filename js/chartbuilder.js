@@ -67,32 +67,15 @@ ChartBuilder = {
 		{
 			window.localStorage.clear("BottomAxisOptions");
 		}
-
-
-		location.reload();
 	},
 	SaveAsDefaultSettings: function()
 	{
-		window.localStorage.setItem('ChartSize', $("#sizeItems").find("option:selected").text());
-
 		var g = chart;
 		var currSeries;
 
-		var counter = 0;
-		var seriesOptionsName = window.localStorage.getItem("SeriesOptions_Name_" + counter);
+		ChartBuilder.RemoveDefaultSettings();
 
-		while (seriesOptionsName !== null)
-		{
-			window.localStorage.clear("SeriesOptions_Name_" + counter);
-			window.localStorage.clear('SeriesOptions_Data_' + counter);
-			window.localStorage.clear('SeriesOptions_Source_' + counter);
-			window.localStorage.clear('SeriesOptions_Type_' + counter);
-			window.localStorage.clear('SeriesOptions_Axis_' + counter);
-			window.localStorage.clear('SeriesOptions_Color_' + counter);
-			counter++;
-
-			seriesOptionsName = window.localStorage.getItem("SeriesOptions_Name_" + counter);		
-		}
+		window.localStorage.setItem('ChartSize', $("#sizeItems").find("option:selected").text());
 
 		for (var i=0; i < g.series.length; i++) {
 			currSeries = g.series[i];
@@ -1653,11 +1636,12 @@ $('#popupBoxClose').click( function() {
 		ChartBuilder.SaveAsDefaultSettings();
 
  		loadPopupBox();
-
   	})
 
   	$("#removeDefaultSettingsButton").click(function() {
-		ChartBuilder.RemoveDefaultSettings();		  
+		ChartBuilder.RemoveDefaultSettings();		
+
+		location.reload();
   	})
 
   	
