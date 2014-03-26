@@ -110,8 +110,8 @@ ChartBuilder = {
 		var bottomAxisOptions = {};
 		bottomAxisOptions.Label = $("#x_axis_label").val();
 		bottomAxisOptions.Position = $("#x_axis_label_position").find("option:selected").text();
-		bottomAxisOptions.NumberOfTicks = $("x_axis_tick_num").find("option:selected").text();	
-		bottomAxisOptions.DateFormat = $("x_axis_date_format").find("option:selected").text();	
+		bottomAxisOptions.TickDateFrequency = $("#x_axis_tick_date_frequency").find("option:selected").text();	
+		bottomAxisOptions.DateFormat = $("#x_axis_date_format").find("option:selected").text();	
 
 		window.localStorage.setItem( 'BottomAxisOptions', JSON.stringify(bottomAxisOptions) );		
 	},
@@ -1514,6 +1514,30 @@ ChartBuilder.start = function(config) {
 				chart.xAxis.labelPosition[i].selected = "";
 			}
 		}
+
+		for(var i=0;i<chart.xAxis.dateFrequency.length;i++)
+		{
+			if(chart.xAxis.dateFrequency[i].name == bottomAxisOptions.TickDateFrequency)
+			{
+				chart.xAxis.dateFrequency[i].selected = "selected";
+			}
+			else
+			{
+				chart.xAxis.dateFrequency[i].selected = "";
+			}
+		}
+
+		for(var i=0;i<chart.xAxis.dateFormat.length;i++)
+		{
+			if(chart.xAxis.dateFormat[i].name == bottomAxisOptions.DateFormat)
+			{
+				chart.xAxis.dateFormat[i].selected = "selected";
+			}
+			else
+			{
+				chart.xAxis.dateFormat[i].selected = "";
+			}
+		}
 	}
 
 
@@ -1624,13 +1648,9 @@ ChartBuilder.start = function(config) {
   			//.append("option")
   			//.text(function(d){return d.name?d.name:"Untitled Chart"})
   	
-$('#popupBoxClose').click( function() {           
-            unloadPopupBox();
-        });
-       
-        $('#container').click( function() {
-            unloadPopupBox();
-        });
+	$('#popupBoxClose').click( function() {           
+        unloadPopupBox();
+    });
 
   	$("#saveAsDefaultButton").click(function() {
 		ChartBuilder.SaveAsDefaultSettings();
@@ -1668,6 +1688,16 @@ $('#popupBoxClose').click( function() {
                 "opacity": "1" 
             });
         }    
+
+	$("#x_axis_tick_date_frequency").change(function(){
+		var val = $(this).val().split(" ")
+		//if the selected option has two words set it as the number of ticks
+		//else set ticks to null
+		chart.xAxis.ticks = val.length > 1 ? val : val = 'auto' ? 5 : null
+		ChartBuilder.redraw()
+		ChartBuilder.inlineAllStyles();
+	})
+
 
   	$("#csvInput").bind("paste", function(e) {
   		//do nothing special
@@ -1780,8 +1810,11 @@ $('#popupBoxClose').click( function() {
 		var bottomAxisLabel = $('#x_axis_label'); 
 	    var axisLabelContainer = $('#x_axis_label_position');
 	    var axisDateFormatContainer = $('#x_axis_date_format');
+	    var axisDateFrequencyContainer = $('#x_axis_tick_date_frequency');
 	    var axisLabelPositionHTML;
 	    var axisDateFormatHTML;
+	    var axisDateFrequencyHTML;
+
 
 	    for (var i=0; i<chart.xAxis.labelPosition.length; i++)
 	    {
@@ -1815,6 +1848,24 @@ $('#popupBoxClose').click( function() {
 
 	    	axisDateFormatContainer.append(axisDateFormatHTML);
 	    }
+
+	    for (var i=0; i<chart.xAxis.dateFrequency.length; i++)
+	    {
+	    	if (chart.xAxis.dateFrequency[i].selected == "selected")
+	    	{
+	    		axisDateFrequencyHTML = $('<option value="' + chart.xAxis.dateFrequency[i].name + '" selected>' + chart.xAxis.dateFrequency[i].name + '</option>');
+	    	}
+	    	else
+	    	{
+	    		axisDateFrequencyHTML = $('<option value="' + chart.xAxis.dateFrequency[i].name + '">' + chart.xAxis.dateFrequency[i].name + '</option>');
+	    	}
+
+	    	axisDateFrequencyContainer.append(axisDateFrequencyHTML);
+	    }
+
+	    $('#x_axis_tick_date_frequency').val($("#x_axis_tick_date_frequency").find("option:selected").text()).change();
+
+	    $('#x_axis_date_format').val($("#x_axis_date_format").find("option:selected").text()).change();
 	});
 
   	 $("#widthInput").keyup(function() {

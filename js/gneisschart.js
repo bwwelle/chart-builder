@@ -79,6 +79,57 @@ Gneiss.defaultGneissChartConfig = {
 				selected: ""
 			}	
 		],
+		dateFrequency:[
+			{
+				name: "auto",
+				selected: "selected",
+			},
+			{
+				name: "1 hour",
+				selected: "",
+			},
+			{
+				name: "1 day",
+				selected: "",
+			},
+			{
+				name: "1 week",
+				selected: "",
+			},
+			{
+				name: "1 month",
+				selected: "",
+			},
+			{
+				name: "3 months",
+				selected: "",
+			},
+			{
+				name: "6 months",
+				selected: "",
+			},
+			{
+				name: "1 year",
+				selected: "",
+			},
+			{
+				name: "5 years",
+				selected: "",
+			},
+			{
+				name: "10 years",
+				selected: "",
+			},
+			{
+				name: "20 years",
+				selected: "",
+			},
+			{
+				name: "50 years",
+				selected: "",
+			}
+		]
+		,
 		dateFormat: [
 			{
 				name: "month",
@@ -1153,33 +1204,78 @@ function Gneiss(config)
 				.tickFormat(g.xAxis.formatter ? Gneiss.dateParsers[g.xAxis.formatter] : function(d) {return d})
 				.ticks(g.xAxis.ticks); 
 				
-			// if(g.xAxis.type == "date") {
-				
-			// 	switch(g.xAxis.formatter) {
-			// 	   // "mmddyyyy":
-			// 	   // "mmdd"
-			// 		case "yy":
-			// 			g.xAxis.axis.ticks(d3.time.years,1)
-			// 		break;
-					
-			// 		case "yyyy":
-			// 			g.xAxis.axis.ticks(d3.time.years,1)
-			// 		break;
-					
-			// 		case "MM":
-			// 			g.xAxis.axis.ticks(d3.time.months,1)
-			// 		break;
-					
-			// 		case "M":
-			// 			g.xAxis.axis.ticks(d3.time.months,1)
-			// 		break;
-			// 	   // "hmm"
+			if(g.xAxis.type == "date") {
+					if(g.xAxis.ticks === null || !isNaN(g.xAxis.ticks)) {
+						//auto suggest the propper tick gap
+						var timeSpan = g.xAxis.scale.domain()[1]-g.xAxis.scale.domain()[0],
+										months = timeSpan/2592000000,
+										years = timeSpan/31536000000;
 
-			// 		case "YY":
-			// 			g.xAxis.axis.ticks(d3.time.years,1)
-			// 		break;
-			// 	}
-			// }
+
+						if(years > 30) {
+							yearGap = 10
+						}
+						if(years > 15) {
+							yearGap = 5;
+						}
+						else {
+							yearGap = 1;
+						}
+						switch(g.xAxis.formatter) {
+						   // "mmddyyyy":
+						   // "mmdd"
+							case "yy":
+								g.xAxis.axis.ticks(d3.time.years,yearGap)
+							break;
+
+
+							case "yyyy":
+								g.xAxis.axis.ticks(d3.time.years,yearGap)
+							break;
+
+
+							case "MM":
+								g.xAxis.axis.ticks(d3.time.months,1)
+							break;
+
+
+							case "M":
+								g.xAxis.axis.ticks(d3.time.months,1)
+							break;
+						   // "hmm"
+
+
+							case "YY":
+								g.xAxis.axis.ticks(d3.time.years,1)
+							break;
+						}
+					}
+					else if(g.xAxis.ticks instanceof Array) {
+						//use the specified tick gap
+						var gap,
+							gapString = g.xAxis.ticks[1], 
+							num = parseInt(g.xAxis.ticks[0]);
+
+
+							if((/day/i).test(gapString)) {
+								gap = d3.time.days;
+							}
+							else if((/week/i).test(gapString)) {
+								gap = d3.time.weeks;
+							}
+							else if((/month/i).test(gapString)) {
+								gap = d3.time.months;
+							}
+							else if((/year/i).test(gapString)) {
+								gap = d3.time.years;
+							}
+						g.xAxis.axis.ticks(gap,num)
+					}
+					else {
+						throw new Error("xAxis.ticks set to invalid date format");
+					}
+				}
+
 				
 			var xAxis = g.chart.append("g")
 				.attr("class",'axis')
@@ -1278,42 +1374,77 @@ function Gneiss(config)
 				.tickSize(g.isBargrid() ? 0 : 6);		
 				
 			
-			// if(g.xAxis.type == "date") {
-			// 	var timeSpan = g.xAxis.scale.domain()[1]-g.xAxis.scale.domain()[0],
-			// 	months = timeSpan/2592000000,
-			// 	years = timeSpan/31536000000;
-				
-			// 	if(years > 20) {
-			// 		yearGap = 5;
-			// 	}
-			// 	else {
-			// 		yearGap = 1;
-			// 	}
-			// 	switch(g.xAxis.formatter) {
-			// 	   // "mmddyyyy":
-			// 	   // "mmdd"
-			// 		case "yy":
-			// 			g.xAxis.axis.ticks(d3.time.years,yearGap)
-			// 		break;
-					
-			// 		case "yyyy":
-			// 			g.xAxis.axis.ticks(d3.time.years,yearGap)
-			// 		break;
-					
-			// 		case "MM":
-			// 			g.xAxis.axis.ticks(d3.time.months,1)
-			// 		break;
-					
-			// 		case "M":
-			// 			g.xAxis.axis.ticks(d3.time.months,1)
-			// 		break;
-			// 	   // "hmm"
+			if(g.xAxis.type == "date") {
+				if(g.xAxis.ticks === null || !isNaN(g.xAxis.ticks)) {
+					//auto suggest the propper tick gap
+					var timeSpan = g.xAxis.scale.domain()[1]-g.xAxis.scale.domain()[0],
+									months = timeSpan/2592000000,
+									years = timeSpan/31536000000;
 
-			// 		case "YY":
-			// 			g.xAxis.axis.ticks(d3.time.years,1)
-			// 		break;
-			// 	}
-			// }
+
+					if(years > 30) {
+						yearGap = 10
+					}
+					if(years > 15) {
+						yearGap = 5;
+					}
+					else {
+						yearGap = 1;
+					}
+					switch(g.xAxis.formatter) {
+					   // "mmddyyyy":
+					   // "mmdd"
+						case "yy":
+							g.xAxis.axis.ticks(d3.time.years,yearGap)
+						break;
+
+
+						case "yyyy":
+							g.xAxis.axis.ticks(d3.time.years,yearGap)
+						break;
+
+
+						case "MM":
+							g.xAxis.axis.ticks(d3.time.months,1)
+						break;
+
+
+						case "M":
+							g.xAxis.axis.ticks(d3.time.months,1)
+						break;
+					   // "hmm"
+
+
+						case "YY":
+							g.xAxis.axis.ticks(d3.time.years,1)
+						break;
+					}
+				}
+				else if(g.xAxis.ticks instanceof Array) {
+					var gap,
+						gapString = g.xAxis.ticks[1], 
+						num = parseInt(g.xAxis.ticks[0]);
+
+
+						if((/day/i).test(gapString)) {
+							gap = d3.time.days;
+						}
+						else if((/week/i).test(gapString)) {
+							gap = d3.time.weeks;
+						}
+						else if((/month/i).test(gapString)) {
+							gap = d3.time.months;
+						}
+						else if((/year/i).test(gapString)) {
+							gap = d3.time.years;
+						}
+					g.xAxis.axis.ticks(gap,num)
+				}
+				else {
+					throw new Error("xAxis.ticks set to invalid date format");
+				}
+			}
+
 			
 			if ( d3.select("#metaInfo")[0][0] === null ){
 				g.chart.selectAll("#xAxis")
@@ -2399,8 +2530,59 @@ function Gneiss(config)
 		this.updateGraphPropertiesBasedOnSeriesType(this, this.seriesByType());
 		
 		this.calculateColumnWidths();
+		
+		if(this.seriesByType().column.length > 0)
+		{
+			if (this.columns.columnWidth < 0)
+			{
+				if(this.seriesByType().column.length == 1)
+				{
+					d3.select("#invalidDataSpan").text("Warning: Too Many Data Points To Display Stacked Column/Column Series");
+				}
+				else
+				{
+					d3.select("#invalidDataSpan").text("Warning: Too Many Data Points To Display Multiple Stacked Column/Column Series");	
+				}
+
+				ChartBuilder.showInvalidData();
+			}
+			else
+			{
+				ChartBuilder.hideInvalidData();
+			}
+		}
+		else
+		{
+			ChartBuilder.hideInvalidData();
+		}
+		
 		//added for stackedcolumn
 		this.calculateStackedColumnWidths();
+
+		if(this.seriesByType().stackedcolumn.length > 0)
+		{
+			if(this.stackedColumns.stackedColumnWidth < 0)
+			{
+				if(this.seriesByType().stackedcolumn.length == 1)
+				{
+					d3.select("#invalidDataSpan").text("Warning: Too Many Data Points To Display Stacked Column/Column Series");
+				}
+				else
+				{
+					d3.select("#invalidDataSpan").text("Warning: Too Many Data Points To Display Multiple Stacked Column/Column Series");	
+				}
+
+				ChartBuilder.showInvalidData();
+			}
+			else if (this.seriesByType().column.length == 0)
+			{
+				ChartBuilder.hideInvalidData();
+			}
+		}
+		else if (this.seriesByType().column.length == 0)
+		{
+			ChartBuilder.hideInvalidData();
+		}
 		
 		this.setYScales()
 			.setXScales()
