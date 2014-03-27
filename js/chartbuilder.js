@@ -377,11 +377,9 @@ ChartBuilder = {
 
 		var canvasContext = canvas.getContext("2d")
 
-
 		var svg = $.trim(document.getElementById("chartContainer").innerHTML)
-		canvasContext.drawSvg(svg,0,0)
-		
-		
+		canvasContext.drawSvg(svg,0.5,0.5)
+
 		var filename = [];
 		for (var i=0; i < chart.series.length; i++) {
 			filename.push(chart.series[i].name.split(" ").join(""));
@@ -409,8 +407,9 @@ ChartBuilder = {
 		})
 
 		var icon = this.setFavicon()
-		//this.storeLocalChart(filename)	
+
 		
+		//this.storeLocalChart(filename)		
 	},
 	setFavicon: function() {
 		//set favicon to image of chart
@@ -426,7 +425,7 @@ ChartBuilder = {
 		
 		var icon = favicanvas.toDataURL("png");
 		$("#favicon").attr("href",icon)
-		
+
 		return icon;
 	},
 	redraw: function() {
