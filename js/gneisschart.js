@@ -85,10 +85,6 @@ Gneiss.defaultGneissChartConfig = {
 				selected: "selected",
 			},
 			{
-				name: "1 hour",
-				selected: "",
-			},
-			{
 				name: "1 day",
 				selected: "",
 			},
@@ -98,6 +94,10 @@ Gneiss.defaultGneissChartConfig = {
 			},
 			{
 				name: "1 month",
+				selected: "",
+			},
+			{
+				name: "2 months",
 				selected: "",
 			},
 			{
@@ -113,6 +113,14 @@ Gneiss.defaultGneissChartConfig = {
 				selected: "",
 			},
 			{
+				name: "2 years",
+				selected: "",
+			},
+			{
+				name: "4 years",
+				selected: "",
+			},
+			{
 				name: "5 years",
 				selected: "",
 			},
@@ -122,10 +130,6 @@ Gneiss.defaultGneissChartConfig = {
 			},
 			{
 				name: "20 years",
-				selected: "",
-			},
-			{
-				name: "50 years",
 				selected: "",
 			}
 		]
