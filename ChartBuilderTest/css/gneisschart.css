@@ -1,0 +1,75 @@
+@import url(http://fonts.googleapis.com/css?family=Cutive);
+
+svg #ground {
+	fill: #FFFFFF;
+	stroke: none;
+}
+
+svg .axis line,
+svg .yLabelLine,
+svg .xLabelLine,
+svg .xSourceLine {
+	fill: none;
+	shape-rendering: crispEdges;
+}
+
+svg .axis g.zero line {
+		stroke: #666666;
+}
+
+svg #xAxis line {
+	stroke: #CCC;
+}
+
+svg #xAxis{
+	fill: #666666;
+}
+
+svg .axis path {
+	stroke: none;
+	fill: none;
+}
+
+svg path.xLabelLine,
+svg path.xSourceLine {
+	stroke: #CCC;
+	shape-rendering: crispEdges;
+}
+
+svg .axis line,
+svg .yLabelLine,
+svg .xLabelLine,
+svg .xSourceLine {
+	fill: none;
+	shape-rendering: crispEdges;
+}
+
+svg .axis text,
+svg .legendItem text,
+svg .yLabel text {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	text-rendering:   optimizeLegibility;
+
+}
+
+svg text.metaText {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size:  10px;
+	text-rendering:   optimizeLegibility;
+}
+
+svg text.barLabel, 
+svg text.bargridLabel {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+	
+#titleLine {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+}
+svg #xAxis .tick {
+	stroke: #AAA;
+}
