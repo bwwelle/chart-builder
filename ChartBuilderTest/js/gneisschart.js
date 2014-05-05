@@ -1883,6 +1883,10 @@ function Gneiss(config)
 					}
 				}
 
+				var width = g.width(),
+			    height = g.height(),
+			    outerRadius = Math.min(width, height) / 2;
+
 				if(g.hasPie())
 				{
 					innerRadius = 0
@@ -1892,9 +1896,6 @@ function Gneiss(config)
 			    	innerRadius = outerRadius * .6
 				}
 
-				var width = g.width(),
-			    height = g.height(),
-			    outerRadius = Math.min(width, height) / 2,
 			    data = g.series[donutPieIndex].data,
 			    color = d3.scale.category20(),
 			    donutPie = d3.layout.pie(),
@@ -2407,7 +2408,7 @@ function Gneiss(config)
 			// if the legendLine does exist
 			d3.select(".legendLine").remove();
 
-			if(g.hasDonut())
+			if(g.hasDonut() || g.hasPie())
 			{								//add legend to chart
 				var legendGroups = g.legendItemContainer.selectAll("g")
 					.data(g.xAxisRef[0].data);

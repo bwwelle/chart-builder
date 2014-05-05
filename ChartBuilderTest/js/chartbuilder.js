@@ -431,6 +431,7 @@ ChartBuilder = {
 	redraw: function() {
 		$(".seriesItemGroup").detach();
 		$(".selectBox").detach();
+		var selectedGraphType = $("#graphType").find("option:selected").text();
 		var g = chart;
 		var currSeries;
 		var seriesContainer = $("#seriesItems");
@@ -495,24 +496,36 @@ ChartBuilder = {
 		for (var i=0; i < g.series.length; i++) {
 			currSeries = g.series[i];
 			
-			// create the series input for each set of series data
-			seriesItem = $('<div class="seriesItemGroup">\
-				<label for="'+this.idSafe(currSeries.name.split(" ").join(""))+'_color">'+currSeries.name+'</label>\
-				<input id="'+this.idSafe(currSeries.name.split(" ").join(""))+'_color" name="'+this.idSafe(currSeries.name.split(" ").join(""))+'" type="text" />\
-				<select class="typePicker" id="'+this.idSafe(currSeries.name.split(" ").join(""))+'_type">\
-					<option '+(currSeries.type=="line"?"selected":"")+' value="line">Line</option>\
-					<option '+(currSeries.type=="column"?"selected":"")+' value="column">Column</option>\
-					<option '+(currSeries.type=="stackedcolumn"?"selected":"")+' value="stackedcolumn">Stacked Column</option>\
-					<option '+(currSeries.type=="bargrid"?"selected":"")+' '+(g.xAxis.type === "date"?"disabled":"")+' value="bargrid">Bar Grid</option>\
-					<option '+(currSeries.type=="scatter"?"selected":"")+' value="scatter">Scatter</option>\
-					<option '+(currSeries.type=="area"?"selected":"")+' value="area">Area</option>\
-					<option '+(currSeries.type=="stackedarea"?"selected":"")+' value="stackedarea">Stacked Area</option>\
-					<option '+(currSeries.type=="donut"?"selected":"")+' value="donut">Donut</option>\
-					<option '+(currSeries.type=="pie"?"selected":"")+' value="pie">Pie</option>\
-				</select>\
-				<input id="'+this.idSafe(currSeries.name.split(" ").join(""))+'_check" name="'+this.idSafe(currSeries.name.split(" ").join(""))+'_check" type="checkbox" />\
-				<div class="clearfix"></div>\
-			</div>');
+			if(selectedGraphType == "NA")
+			{		
+				// create the series input for each set of series data
+				seriesItem = $('<div class="seriesItemGroup">\
+					<label for="'+this.idSafe(currSeries.name.split(" ").join(""))+'_color">'+currSeries.name+'</label>\
+					<input id="'+this.idSafe(currSeries.name.split(" ").join(""))+'_color" name="'+this.idSafe(currSeries.name.split(" ").join(""))+'" type="text" />\
+					<select class="typePicker" id="'+this.idSafe(currSeries.name.split(" ").join(""))+'_type">\
+						<option '+(currSeries.type=="line"?"selected":"")+' value="line">Line</option>\
+						<option '+(currSeries.type=="column"?"selected":"")+' value="column">Column</option>\
+						<option '+(currSeries.type=="stackedcolumn"?"selected":"")+' value="stackedcolumn">Stacked Column</option>\
+						<option '+(currSeries.type=="bargrid"?"selected":"")+' '+(g.xAxis.type === "date"?"disabled":"")+' value="bargrid">Bar Grid</option>\
+						<option '+(currSeries.type=="scatter"?"selected":"")+' value="scatter">Scatter</option>\
+						<option '+(currSeries.type=="area"?"selected":"")+' value="area">Area</option>\
+						<option '+(currSeries.type=="stackedarea"?"selected":"")+' value="stackedarea">Stacked Area</option>\
+						<option '+(currSeries.type=="donut"?"selected":"")+' value="donut">Donut</option>\
+						<option '+(currSeries.type=="pie"?"selected":"")+' value="pie">Pie</option>\
+					</select>\
+					<input id="'+this.idSafe(currSeries.name.split(" ").join(""))+'_check" name="'+this.idSafe(currSeries.name.split(" ").join(""))+'_check" type="checkbox" />\
+					<div class="clearfix"></div>\
+				</div>');
+			}
+			else
+			{
+				// create the series input for each set of series data
+				seriesItem = $('<div class="seriesItemGroup">\
+					<label for="'+this.idSafe(currSeries.name.split(" ").join(""))+'_color">'+currSeries.name+'</label>\
+					<input id="'+this.idSafe(currSeries.name.split(" ").join(""))+'_color" name="'+this.idSafe(currSeries.name.split(" ").join(""))+'" type="text" />\
+					<div class="clearfix"></div>\
+				</div>');
+			}
 			
 			// each set of series data is assigned the next color in the colors array
 			var color = currSeries.color ? currSeries.color.replace("#","") : g.colors[i].replace("#","");
@@ -567,8 +580,10 @@ ChartBuilder = {
 	  				return;
 	  			}
 
+	  			$(".arc").detach();
+
 	  			if(chart.splitSeriesByType(chart.series).donut.length > 0 || chart.splitSeriesByType(chart.series).pie.length > 0)
-	  			{
+	  			{	  				
 	  				chart.redraw();  	
 
 	  				d3.select('#leftAxis').style("display","none");
