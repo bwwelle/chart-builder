@@ -1913,8 +1913,10 @@ function Gneiss(config)
 				    .attr("class", "arc")
 				    .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
 
+				//.attr("stroke",function(d,i){return d.color? d.color : g.colors[i]})
+				//.attr("fill", function(d, i) { return color(i); })
 				arcs.append("path")
-				    .attr("fill", function(d, i) { return color(i); })
+				    .attr("fill",function(d,i){return d.color? d.color : "#" + g.colors[i]})
 				    .attr("d", arc);
 
 				arcs.append("text")
@@ -1927,32 +1929,6 @@ function Gneiss(config)
 				    .text(function(d, i) { return d.value.toFixed(2); });
 
 				this.drawLegend();
-
-			 //    var vis = this.seriesContainer
-				//   .append("svg")
-				//     .data([data])
-				//     .attr("width", width)
-				//     .attr("height", height);
-
-				// var arcs = vis.selectAll("g.arc")
-				//     .data(donut)
-				//   .enter().append("g")
-				//     .attr("class", "arc")
-				//     .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
-
-				// arcs.append("path")
-				//     .attr("fill", function(d, i) { return color(i); })
-				//     .attr("d", arc);
-
-				// arcs.append("text")
-				//     .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-				//     .attr("dy", ".35em")
-				//     .attr("text-anchor", "middle")
-				//     .attr("display", function(d) { 
-				//     	return d.value > .15 ? null : "none"; 
-				//     })
-				//     .text(function(d, i) { return d.value.toFixed(2); });
-
 			}			
 			else if(g.isBargrid()) 
 			{
@@ -2438,7 +2414,7 @@ function Gneiss(config)
 						.attr("height",6)
 						.attr("x",0)
 						.attr("y",-13)
-						.attr("fill", function(d, i) { return color(i); })
+						.attr("fill",function(d,i){return d.color? d.color : "#" + g.colors[i]})
 				
 				if (g.state.hasLegend === false){
 					g.padding.top += g.padding.legend;
