@@ -1337,6 +1337,11 @@ function Gneiss(config)
 					.attr("height", Math.abs(g.padding.xAxis))
 					.attr("fill", "#F5F5F5")  //background color of x axis
 					.attr("transform", "translate(0,0)");
+
+					if(g.HasPie || g.hasDonut)
+						$('.axis').css({ "display": "none" });
+					else			
+  						$('.axis').css({ "display": "" });
 			}
 		}
 

@@ -570,84 +570,76 @@ ChartBuilder = {
 
 		  			$(".arc").detach();
 
-		  			if(chart.splitSeriesByType(chart.series).donut.length > 0 || chart.splitSeriesByType(chart.series).pie.length > 0)
-		  			{	  				
-		  				chart.redraw();  	
+		  			d3.select('#leftAxis').style("display","");
+	  				d3.select('#xAxis').style("display","");
+	  				
+		  			// if the current chart is a bargrid, but then a date chart is entered
+				  	// swithc all of the bargrids to a line
+				  	if ( chart.splitSeriesByType(chart.series).bargrid.length > 0 && chart.xAxis.type === "date"  ){
+				  		var seriesByType = {
+							"line": [],
+							"column": [],
+							"stackedcolumn": [],
+							"bargrid": [],
+							"scatter": [],
+							"area": [],
+							"stackedarea": [],
+							"donut": [],
+							"pie": []
+						};
 
-		  				d3.select('#leftAxis').style("display","none");
-		  				d3.select('#xAxis').style("display","none");	  					
+				  		for (var i = 0; i < chart.series.length; i++) {
+				  			if (chart.series[i].type === "bargrid"){
+				  				chart.series[i].type = "line";
+				  			}
+				  			seriesByType[chart.series[i].type].push(chart.series[i]);
+				  		}
+				  	}
+		  
+		  			dataObj = ChartBuilder.makeDataObj(newData);
+
+		  			if(dataObj == null) {
+							ChartBuilder.showInvalidData();
+		  				return;
 		  			}
-		  			else
-		  			{
-		  				d3.select('#leftAxis').style("display","");
-		  				d3.select('#xAxis').style("display","");
-			  			// if the current chart is a bargrid, but then a date chart is entered
-					  	// swithc all of the bargrids to a line
-					  	if ( chart.splitSeriesByType(chart.series).bargrid.length > 0 && chart.xAxis.type === "date"  ){
-					  		var seriesByType = {
-								"line": [],
-								"column": [],
-								"stackedcolumn": [],
-								"bargrid": [],
-								"scatter": [],
-								"area": [],
-								"stackedarea": [],
-								"donut": [],
-								"pie": []
-							};
 
-					  		for (var i = 0; i < chart.series.length; i++) {
-					  			if (chart.series[i].type === "bargrid"){
-					  				chart.series[i].type = "line";
-					  			}
-					  			seriesByType[chart.series[i].type].push(chart.series[i]);
-					  		}
-					  	}
-			  
-			  			dataObj = ChartBuilder.makeDataObj(newData);
+		  			d3.select("#invalidDataSpan").text("Warning: Data is Invalid");
+					ChartBuilder.hideInvalidData();
+		  
+		  			ChartBuilder.createTable(newData, dataObj.datetime);
+		  		
+		  			chart.series.unshift(chart.xAxisRef)
+		  			dataObj = ChartBuilder.mergeData(dataObj)
+	  			
 
-			  			if(dataObj == null) {
-								ChartBuilder.showInvalidData();
-			  				return;
-			  			}
-
-			  			d3.select("#invalidDataSpan").text("Warning: Data is Invalid");
-						ChartBuilder.hideInvalidData();
-			  
-			  			ChartBuilder.createTable(newData, dataObj.datetime);
-			  		
-			  			chart.series.unshift(chart.xAxisRef)
-			  			dataObj = ChartBuilder.mergeData(dataObj)
+		  			if(dataObj.datetime) {
+		  				chart.xAxis.type = "date";
+		  				chart.xAxis.formatter = chart.xAxis.formatter?chart.xAxis.formatter:"mm/dd/yyyy";
+		  			}
+		  			else {
+		  				chart.xAxis.type = "ordinal";
+		  			}
+		  			chart.xAxisRef = [dataObj.data.shift()]
 		  			
-
-			  			if(dataObj.datetime) {
-			  				chart.xAxis.type = "date";
-			  				chart.xAxis.formatter = chart.xAxis.formatter?chart.xAxis.formatter:"mm/dd/yyyy";
-			  			}
-			  			else {
-			  				chart.xAxis.type = "ordinal";
-			  			}
-			  			chart.xAxisRef = [dataObj.data.shift()]
-			  			
-			  			chart.series = dataObj.data;
-						
-						// removes the right y axis when it is not in use
-						if ( chart.yAxis.length > 1 && chart.isBargrid() ) {
-							for ( var i = 0; i < chart.series.length; i++ ){
-								if (chart.series[i].axis === 1){
-									chart.series[i].axis = 0;
-								}
+		  			chart.series = dataObj.data;
+					
+					// removes the right y axis when it is not in use
+					if ( chart.yAxis.length > 1 && chart.isBargrid() ) {
+						for ( var i = 0; i < chart.series.length; i++ ){
+							if (chart.series[i].axis === 1){
+								chart.series[i].axis = 0;
 							}
-							chart.yAxis.pop();
 						}
-						ChartBuilder.updateTitle();
-						chart.setXScales();
-						ChartBuilder.redraw();
-						ChartBuilder.updateYLabels();
-						chart.redraw();
-						ChartBuilder.updateInterface();
-						//ChartBuilder.redraw();
+						chart.yAxis.pop();
 					}
+
+					ChartBuilder.updateTitle();
+					chart.setXScales();
+					ChartBuilder.redraw();
+					ChartBuilder.updateYLabels();
+					chart.redraw();
+					ChartBuilder.updateInterface();
+					//ChartBuilder.redraw();
 
 				});
 				
@@ -791,7 +783,7 @@ ChartBuilder = {
 				});
 			}	
 
-			chart.redraw();					
+			chart.redraw();				
 		}		
 		
 		var yAxisObj = []
