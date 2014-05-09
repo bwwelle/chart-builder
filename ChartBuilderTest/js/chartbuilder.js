@@ -1448,9 +1448,7 @@ ChartBuilder = {
 						};
 
   			if(selectedGraphType =="pie" || selectedGraphType == "donut")
-  			{	 			
-				chart.series[0].type = selectedGraphType;
-			}
+  				chart.series[0].type = selectedGraphType;
 			else if(chart.series[0].type == "pie" || chart.series[0].type == "donut")
 			{
 				var seriesType = window.localStorage.getItem('SeriesOptions_Type_0');
@@ -1473,12 +1471,14 @@ ChartBuilder = {
   				return;
   			}		
 
-			chart.redraw();  	
-
-			d3.select('#leftAxis').style("display","none");
-			d3.select('#xAxis').style("display","none");	  	
+			chart.redraw();  		
 
 			ChartBuilder.redraw();
+
+			if(selectedGraphType =="pie" || selectedGraphType == "donut")
+  				$('.axis').css({ "display": "none" });
+  			else
+  				$('.axis').css({ "display": "" });
 		},
 		axis_prefix_change: function(index,that) {
 			chart.yAxis[index].prefix.value = $(that).val();
