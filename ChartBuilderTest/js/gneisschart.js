@@ -1336,12 +1336,7 @@ function Gneiss(config)
 					.attr("width", g.width())
 					.attr("height", Math.abs(g.padding.xAxis))
 					.attr("fill", "#F5F5F5")  //background color of x axis
-					.attr("transform", "translate(0,0)");
-
-					if(g.HasPie || g.hasDonut)
-						$('.axis').css({ "display": "none" });
-					else			
-  						$('.axis').css({ "display": "" });
+					.attr("transform", "translate(0,0)");					
 			}
 		}
 
@@ -2693,7 +2688,7 @@ function Gneiss(config)
 		if(this.seriesByType().donut.length > 0 || this.seriesByType().pie.length > 0)
 		{
 			this.setXAxis()
-				.drawSeries();
+				.drawSeries();			
 		}
 		else
 		{ 

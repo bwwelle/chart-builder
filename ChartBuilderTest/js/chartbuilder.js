@@ -783,7 +783,7 @@ ChartBuilder = {
 				});
 			}	
 
-			chart.redraw();				
+			chart.redraw();		
 		}		
 		
 		var yAxisObj = []
@@ -813,8 +813,7 @@ ChartBuilder = {
 		else {
 			$("#rightAxisControls").addClass("hide")
 		}
-		
-		
+
 		var state = {
 			container: g.container,
 			colors: g.colors,
@@ -832,6 +831,12 @@ ChartBuilder = {
 		chart = g;
 		ChartBuilder.inlineAllStyles();
 		ChartBuilder.updateInterface();
+
+		if(selectedGraphType == "pie" || selectedGraphType == "donut")  			
+  			$('.axis').css({ "display": "none" });	
+  		else
+  			$('.axis').css({ "display": "" });		
+		
 	},
 
 	updateInterface: function() {
