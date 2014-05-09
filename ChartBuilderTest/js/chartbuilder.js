@@ -431,7 +431,7 @@ ChartBuilder = {
 	redraw: function() {
 		$(".seriesItemGroup").detach();
 		$(".selectBox").detach();
-		var selectedGraphType = $("#graphType").find("option:selected").text();
+		var selectedGraphType = $("#graphType").val();
 		var g = chart;
 		var currSeries;
 		var seriesContainer = $("#seriesItems");
@@ -490,14 +490,15 @@ ChartBuilder = {
 			}
 
 			sizesContainer.append(sizesItem);
-		}			
-		
-		// loops through the series data
-		for (var i=0; i < g.series.length; i++) {
-			currSeries = g.series[i];
-			
-			if(selectedGraphType == "NA")
-			{		
+		}
+
+		if(selectedGraphType == "NA")
+		{				
+			// loops through the series data
+			for (var i=0; i < g.series.length; i++) 
+			{
+				currSeries = g.series[i];
+
 				// create the series input for each set of series data
 				seriesItem = $('<div class="seriesItemGroup">\
 					<label for="'+this.idSafe(currSeries.name.split(" ").join(""))+'_color">'+currSeries.name+'</label>\
@@ -510,247 +511,288 @@ ChartBuilder = {
 						<option '+(currSeries.type=="scatter"?"selected":"")+' value="scatter">Scatter</option>\
 						<option '+(currSeries.type=="area"?"selected":"")+' value="area">Area</option>\
 						<option '+(currSeries.type=="stackedarea"?"selected":"")+' value="stackedarea">Stacked Area</option>\
-						<option '+(currSeries.type=="donut"?"selected":"")+' value="donut">Donut</option>\
-						<option '+(currSeries.type=="pie"?"selected":"")+' value="pie">Pie</option>\
 					</select>\
 					<input id="'+this.idSafe(currSeries.name.split(" ").join(""))+'_check" name="'+this.idSafe(currSeries.name.split(" ").join(""))+'_check" type="checkbox" />\
 					<div class="clearfix"></div>\
 				</div>');
-			}
-			else
-			{
-				// create the series input for each set of series data
-				seriesItem = $('<div class="seriesItemGroup">\
-					<label for="'+this.idSafe(currSeries.name.split(" ").join(""))+'_color">'+currSeries.name+'</label>\
-					<input id="'+this.idSafe(currSeries.name.split(" ").join(""))+'_color" name="'+this.idSafe(currSeries.name.split(" ").join(""))+'" type="text" />\
-					<div class="clearfix"></div>\
-				</div>');
-			}
-			
-			// each set of series data is assigned the next color in the colors array
-			var color = currSeries.color ? currSeries.color.replace("#","") : g.colors[i].replace("#","");
-			currSeries.color = "#"+color;
-			
-			// append the series data inputs to the series input container
-			seriesContainer.append(seriesItem);
+				// each set of series data is assigned the next color in the colors array
+				var color = currSeries.color ? currSeries.color.replace("#","") : g.colors[i].replace("#","");
+				currSeries.color = "#"+color;
+				
+				// append the series data inputs to the series input container
+				seriesContainer.append(seriesItem);
 
-			// assigns variables for the three main things you'd change about the series data
-			// picker for color; typer for chart type; and axer for axes
-			var picker = seriesItem.find("#"+this.idSafe(currSeries.name.split(" ").join(""))+"_color").colorPicker({pickerDefault: color, colors:this.allColors});
-			var typer = seriesItem.find("#"+this.idSafe(currSeries.name.split(" ").join(""))+"_type")
-			var axer = seriesItem.find("#"+this.idSafe(currSeries.name.split(" ").join(""))+"_check") 
-
-			ChartBuilder.setChartArea();
-			
-			// check if the current series' data is being used to create a right axis
-			if ( g.series[i].axis == 1 ) {
-				axer.prop("checked",true)
-				isMultiAxis = true;
-			}
-
-			// not sure we need this - unless it's being stored somewhere
-			else {
-				axer.prop("checked",false)
-			}
-			
-			// assigns the current index (i) to the current data series (seriesItem) inputs									
-			seriesItem.data("index",i)
-			
-			// tracks changes to picker
-			// assigns the new color to the data series' color property and redraws
-			picker.change(function() {
-				chart.series[$(this).parent().data().index].color = $(this).val()
-				ChartBuilder.redraw()
-			});
-			
-			// tracks changes to typer
-			// assigns the new type to the data series' type property
-			typer.change(function() {
-				var val = $(this).val();
-
-				var index = $(this).parent().data().index;
-				chart.series[index].type = val;
+				// assigns variables for the three main things you'd change about the series data
+				// picker for color; typer for chart type; and axer for axes
+				var picker = seriesItem.find("#"+this.idSafe(currSeries.name.split(" ").join(""))+"_color").colorPicker({pickerDefault: color, colors:this.allColors});
+				var typer = seriesItem.find("#"+this.idSafe(currSeries.name.split(" ").join(""))+"_type")
+				var axer = seriesItem.find("#"+this.idSafe(currSeries.name.split(" ").join(""))+"_check") 
 
 				ChartBuilder.setChartArea();
+				
+				// check if the current series' data is being used to create a right axis
+				if ( g.series[i].axis == 1 ) {
+					axer.prop("checked",true)
+					isMultiAxis = true;
+				}
 
-				var csv = ChartBuilder.curRaw;
-	  			var newData = ChartBuilder.getNewData(csv);
-	  			if(newData == null) {
-						ChartBuilder.showInvalidData();
-	  				return;
-	  			}
+				// not sure we need this - unless it's being stored somewhere
+				else {
+					axer.prop("checked",false)
+				}
+				
+				// assigns the current index (i) to the current data series (seriesItem) inputs									
+				seriesItem.data("index",i)
+				
+				// tracks changes to picker
+				// assigns the new color to the data series' color property and redraws
+				picker.change(function() {
+					chart.series[$(this).parent().data().index].color = $(this).val()
+					ChartBuilder.redraw()
+				});
+				
+				// tracks changes to typer
+				// assigns the new type to the data series' type property
+				typer.change(function() {
+					var val = $(this).val();
 
-	  			$(".arc").detach();
+					var index = $(this).parent().data().index;
+					chart.series[index].type = val;
 
-	  			if(chart.splitSeriesByType(chart.series).donut.length > 0 || chart.splitSeriesByType(chart.series).pie.length > 0)
-	  			{	  				
-	  				chart.redraw();  	
+					ChartBuilder.setChartArea();
 
-	  				d3.select('#leftAxis').style("display","none");
-	  				d3.select('#xAxis').style("display","none");	  					
-	  			}
-	  			else
-	  			{
-	  				d3.select('#leftAxis').style("display","");
-	  				d3.select('#xAxis').style("display","");
-		  			// if the current chart is a bargrid, but then a date chart is entered
-				  	// swithc all of the bargrids to a line
-				  	if ( chart.splitSeriesByType(chart.series).bargrid.length > 0 && chart.xAxis.type === "date"  ){
-				  		var seriesByType = {
-							"line": [],
-							"column": [],
-							"stackedcolumn": [],
-							"bargrid": [],
-							"scatter": [],
-							"area": [],
-							"stackedarea": [],
-							"donut": [],
-							"pie": []
-						};
-
-				  		for (var i = 0; i < chart.series.length; i++) {
-				  			if (chart.series[i].type === "bargrid"){
-				  				chart.series[i].type = "line";
-				  			}
-				  			seriesByType[chart.series[i].type].push(chart.series[i]);
-				  		}
-				  	}
-		  
-		  			dataObj = ChartBuilder.makeDataObj(newData);
-
-		  			if(dataObj == null) {
+					var csv = ChartBuilder.curRaw;
+		  			var newData = ChartBuilder.getNewData(csv);
+		  			if(newData == null) {
 							ChartBuilder.showInvalidData();
 		  				return;
 		  			}
 
-		  			d3.select("#invalidDataSpan").text("Warning: Data is Invalid");
-					ChartBuilder.hideInvalidData();
-		  
-		  			ChartBuilder.createTable(newData, dataObj.datetime);
-		  		
-		  			chart.series.unshift(chart.xAxisRef)
-		  			dataObj = ChartBuilder.mergeData(dataObj)
-	  			
+		  			$(".arc").detach();
 
-		  			if(dataObj.datetime) {
-		  				chart.xAxis.type = "date";
-		  				chart.xAxis.formatter = chart.xAxis.formatter?chart.xAxis.formatter:"mm/dd/yyyy";
+		  			if(chart.splitSeriesByType(chart.series).donut.length > 0 || chart.splitSeriesByType(chart.series).pie.length > 0)
+		  			{	  				
+		  				chart.redraw();  	
+
+		  				d3.select('#leftAxis').style("display","none");
+		  				d3.select('#xAxis').style("display","none");	  					
 		  			}
-		  			else {
-		  				chart.xAxis.type = "ordinal";
-		  			}
-		  			chart.xAxisRef = [dataObj.data.shift()]
+		  			else
+		  			{
+		  				d3.select('#leftAxis').style("display","");
+		  				d3.select('#xAxis').style("display","");
+			  			// if the current chart is a bargrid, but then a date chart is entered
+					  	// swithc all of the bargrids to a line
+					  	if ( chart.splitSeriesByType(chart.series).bargrid.length > 0 && chart.xAxis.type === "date"  ){
+					  		var seriesByType = {
+								"line": [],
+								"column": [],
+								"stackedcolumn": [],
+								"bargrid": [],
+								"scatter": [],
+								"area": [],
+								"stackedarea": [],
+								"donut": [],
+								"pie": []
+							};
+
+					  		for (var i = 0; i < chart.series.length; i++) {
+					  			if (chart.series[i].type === "bargrid"){
+					  				chart.series[i].type = "line";
+					  			}
+					  			seriesByType[chart.series[i].type].push(chart.series[i]);
+					  		}
+					  	}
+			  
+			  			dataObj = ChartBuilder.makeDataObj(newData);
+
+			  			if(dataObj == null) {
+								ChartBuilder.showInvalidData();
+			  				return;
+			  			}
+
+			  			d3.select("#invalidDataSpan").text("Warning: Data is Invalid");
+						ChartBuilder.hideInvalidData();
+			  
+			  			ChartBuilder.createTable(newData, dataObj.datetime);
+			  		
+			  			chart.series.unshift(chart.xAxisRef)
+			  			dataObj = ChartBuilder.mergeData(dataObj)
 		  			
-		  			chart.series = dataObj.data;
-					
-					// removes the right y axis when it is not in use
-					if ( chart.yAxis.length > 1 && chart.isBargrid() ) {
+
+			  			if(dataObj.datetime) {
+			  				chart.xAxis.type = "date";
+			  				chart.xAxis.formatter = chart.xAxis.formatter?chart.xAxis.formatter:"mm/dd/yyyy";
+			  			}
+			  			else {
+			  				chart.xAxis.type = "ordinal";
+			  			}
+			  			chart.xAxisRef = [dataObj.data.shift()]
+			  			
+			  			chart.series = dataObj.data;
+						
+						// removes the right y axis when it is not in use
+						if ( chart.yAxis.length > 1 && chart.isBargrid() ) {
+							for ( var i = 0; i < chart.series.length; i++ ){
+								if (chart.series[i].axis === 1){
+									chart.series[i].axis = 0;
+								}
+							}
+							chart.yAxis.pop();
+						}
+						ChartBuilder.updateTitle();
+						chart.setXScales();
+						ChartBuilder.redraw();
+						ChartBuilder.updateYLabels();
+						chart.redraw();
+						ChartBuilder.updateInterface();
+						//ChartBuilder.redraw();
+					}
+
+				});
+				
+				// tracks changes to axer
+				axer.change(function() {
+					var axis = $(this).is(':checked') ? 1 : 0;
+					chart.series[$(this).parent().data().index].axis = axis
+
+					//updateAxers
+					// a checkbox was checked
+					if (axis === 1){
+
+						// loop through all of the seires data and see if anything else has an axis of 1
+						// if so, then set that one to 0
 						for ( var i = 0; i < chart.series.length; i++ ){
-							if (chart.series[i].axis === 1){
+							var selectedElem = $(this).attr("id"),
+								curr = ChartBuilder.idSafe(chart.series[i].name.split(" ").join("")) + "_check";
+
+							if ( (chart.series[i].axis === 1) && (curr !== selectedElem) ){
+								$("#" + curr).removeAttr("checked");
 								chart.series[i].axis = 0;
+								chart.yAxis[1].domain = d3.extent( chart.series[$(this).parent().data().index].data )
 							}
 						}
-						chart.yAxis.pop();
 					}
-					ChartBuilder.updateTitle();
-					chart.setXScales();
+					
+					// if the user wants a right axis and it hasn't been created, create one
+					if(!chart.yAxis[axis]){
+						chart.yAxis[axis] = {
+							domain: [null,null],
+							tickValues: null,
+							prefix: {
+								value: "",
+								use: "top" //can be "top" "all" "positive" or "negative"
+							},
+							suffix: {
+								value: "",
+								use: "top"
+							},
+							ticks: 4,
+							formatter: null,
+							color: null,
+						}
+					}
+					
+					// removes the right y axis when it is not in use
+					if( (chart.yAxis.length > 1 && axis == 0) ) {
+						chart.yAxis.pop()
+					}
+
+					var selectedSize = $("#sizeItems :selected").text();
+
+					for(var i=0;i<g.chartsizes.length;i++)
+					{
+						sizeValues=currSize.data.split(",");
+								
+						if(g.chartsizes[i].name == selectedSize)
+						{
+							g.chartsizes[i].selected= "selected";
+
+							if(g.chartsizes[i].name == "Custom Size")
+							{
+								var width = $("#widthInput").val();
+								var height = $("#heightInput").val();
+
+								g.chartsizes[i].data = width +"," + height;
+							}
+						}
+						else
+						{
+							g.chartsizes[i].selected = "";
+
+							if(g.chartsizes[i].name == "Custom Size")
+							{
+								g.chartsizes[i].data= "600,343";
+							}	
+						}
+					}
+					
+					chart.setYScales()
+						.setYAxes()
+						.setXAxis()
+						.setLineMakers();
 					ChartBuilder.redraw();
 					ChartBuilder.updateYLabels();
-					chart.redraw();
-					ChartBuilder.updateInterface();
-					//ChartBuilder.redraw();
-				}
-
-			});
-			
-			// tracks changes to axer
-			axer.change(function() {
-				var axis = $(this).is(':checked') ? 1 : 0;
-				chart.series[$(this).parent().data().index].axis = axis
-
-				//updateAxers
-				// a checkbox was checked
-				if (axis === 1){
-
-					// loop through all of the seires data and see if anything else has an axis of 1
-					// if so, then set that one to 0
-					for ( var i = 0; i < chart.series.length; i++ ){
-						var selectedElem = $(this).attr("id"),
-							curr = ChartBuilder.idSafe(chart.series[i].name.split(" ").join("")) + "_check";
-
-						if ( (chart.series[i].axis === 1) && (curr !== selectedElem) ){
-							$("#" + curr).removeAttr("checked");
-							chart.series[i].axis = 0;
-							chart.yAxis[1].domain = d3.extent( chart.series[$(this).parent().data().index].data )
-						}
-					}
-				}
-				
-				// if the user wants a right axis and it hasn't been created, create one
-				if(!chart.yAxis[axis]){
-					chart.yAxis[axis] = {
-						domain: [null,null],
-						tickValues: null,
-						prefix: {
-							value: "",
-							use: "top" //can be "top" "all" "positive" or "negative"
-						},
-						suffix: {
-							value: "",
-							use: "top"
-						},
-						ticks: 4,
-						formatter: null,
-						color: null,
-					}
-				}
-				
-				// removes the right y axis when it is not in use
-				if( (chart.yAxis.length > 1 && axis == 0) ) {
-					chart.yAxis.pop()
-				}
-
-				var selectedSize = $("#sizeItems :selected").text();
-
-				for(var i=0;i<g.chartsizes.length;i++)
-				{
-					sizeValues=currSize.data.split(",");
-							
-					if(g.chartsizes[i].name == selectedSize)
-					{
-						g.chartsizes[i].selected= "selected";
-
-						if(g.chartsizes[i].name == "Custom Size")
-						{
-							var width = $("#widthInput").val();
-							var height = $("#heightInput").val();
-
-							g.chartsizes[i].data = width +"," + height;
-						}
-					}
-					else
-					{
-						g.chartsizes[i].selected = "";
-
-						if(g.chartsizes[i].name == "Custom Size")
-						{
-							g.chartsizes[i].data= "600,343";
-						}	
-					}
-				}
-				
-				chart.setYScales()
-					.setYAxes()
-					.setXAxis()
-					.setLineMakers();
-				ChartBuilder.redraw();
-				ChartBuilder.updateYLabels();
-				ChartBuilder.redraw();
-			})
-			
-			chart.redraw();
+					ChartBuilder.redraw();
+				})
+						
+				chart.redraw();
+			}
 		}
-		
+		else
+		{
+			for(var z=0; z<g.xAxisRef[0].data.length;z++)
+			{
+				var curDataLabel = g.xAxisRef[0];
+				var colors = g.piedonutcolors;
+
+				//var colortest = function(d,i){return d.color};
+				var response = eval(g.piedonutcolors);
+					$.each(response, function() {
+					            obj = {};
+					            $.each(this, function(k, v) {
+					                if(k=="colors")
+					                {
+					                    colors = v;
+					                }
+					            });
+					        });
+
+				// create the series input for each set of series data
+				seriesItem = $('<div class="seriesItemGroup">\
+					<label for="'+this.idSafe(curDataLabel.data[z].split(" ").join(""))+'_color">'+ curDataLabel.data[z]+'</label>\
+					<input id="'+this.idSafe(curDataLabel.data[z].split(" ").join(""))+'_color" name="' + this.idSafe(curDataLabel.data[z].split(" ").join(""))+'" type="text" />\
+					<div class="clearfix"></div>\
+				</div>');
+
+				// each set of series data is assigned the next color in the colors array
+				var color = colors[z] ? colors[z].replace("#","") : g.colors[z].replace("#","");
+				colors[z] = "#" + color;
+				
+				// append the series data inputs to the series input container
+				seriesContainer.append(seriesItem);
+
+				// assigns variables for the three main things you'd change about the series data
+				// picker for color; typer for chart type; and axer for axes
+				var picker = seriesItem.find("#"+this.idSafe(curDataLabel.data[z].split(" ").join(""))+"_color").colorPicker({pickerDefault: color, colors:this.allColors});
+				var typer = seriesItem.find("#"+this.idSafe(curDataLabel.data[z].split(" ").join(""))+"_type")
+				var axer = seriesItem.find("#"+this.idSafe(curDataLabel.data[z].split(" ").join(""))+"_check") 
+
+				ChartBuilder.setChartArea();	
+
+				// assigns the current index (i) to the current data series (seriesItem) inputs									
+				seriesItem.data("index",z)
+								
+				// tracks changes to picker
+				// assigns the new color to the data series' color property and redraws
+				picker.change(function() {
+					chart.piedonutcolors[0].colors[$(this).parent().data().index] = $(this).val()
+					ChartBuilder.redraw()		
+				});
+			}	
+
+			chart.redraw();					
+		}		
 		
 		var yAxisObj = []
 		for (var i = g.yAxis.length - 1; i >= 0; i--){
@@ -837,11 +879,7 @@ ChartBuilder = {
 
 		if (chart.series.length < 2){
 			$('[type=checkbox]').css("display", "none");
-		}
-
-
-
-		
+		}		
 	},
 
 	setChartArea: function() {
@@ -1390,6 +1428,57 @@ ChartBuilder = {
 			{
 				$('#staticContainer').css({ position: "fixed" });
 			}
+		},
+		graph_type_change:function(index,that)
+		{
+			var selectedGraphType = $("#graphType").val();
+
+  			$(".arc").detach();
+
+  			var seriesByType = {
+							"line": [],
+							"column": [],
+							"stackedcolumn": [],
+							"bargrid": [],
+							"scatter": [],
+							"area": [],
+							"stackedarea": [],
+							"donut": [],
+							"pie": []
+						};
+
+  			if(selectedGraphType =="pie" || selectedGraphType == "donut")
+  			{	 			
+				chart.series[0].type = selectedGraphType;
+			}
+			else if(chart.series[0].type == "pie" || chart.series[0].type == "donut")
+			{
+				var seriesType = window.localStorage.getItem('SeriesOptions_Type_0');
+
+				if(seriesType!==undefined && seriesType!==null)
+					chart.series[0].type = seriesType;	
+				else
+					chart.series[0].type = "line";
+			}			
+
+			seriesByType[chart.series[0].type].push(chart.series[0]);
+
+			ChartBuilder.setChartArea();
+
+			var csv = ChartBuilder.curRaw;
+  			var newData = ChartBuilder.getNewData(csv);
+
+  			if(newData == null) {
+					ChartBuilder.showInvalidData();
+  				return;
+  			}		
+
+			chart.redraw();  	
+
+			d3.select('#leftAxis').style("display","none");
+			d3.select('#xAxis').style("display","none");	  	
+
+			ChartBuilder.redraw();
 		},
 		axis_prefix_change: function(index,that) {
 			chart.yAxis[index].prefix.value = $(that).val();
@@ -2097,6 +2186,9 @@ ChartBuilder.start = function(config) {
 
   	}).keyup() 
 
+	$("#graphType").change(function() {
+  		ChartBuilder.actions.graph_type_change(0,this)
+  	})
 
 	$("#sizeItems").change(function() {
   		ChartBuilder.actions.chart_size_change(0,this)

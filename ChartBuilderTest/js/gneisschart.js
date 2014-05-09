@@ -226,7 +226,7 @@ Gneiss.defaultGneissChartConfig = {
 	xAxisRef: [
 		{
 			name: "Years",
-			data: ["1", "2", "3", "4", "5"]
+			data: ["1", "2", "3", "4", "5"]			
 		}
 	],
 	chartsizes: [
@@ -249,6 +249,11 @@ Gneiss.defaultGneissChartConfig = {
 			name: "Custom Size",
 			data: "600,343",
 			selected: ""
+		}
+	],
+	piedonutcolors:[
+		{
+			colors:["00ADEF", "0A57A4","B20838", "FF6600", "65B500"]
 		}
 	]
 };
@@ -1872,16 +1877,7 @@ function Gneiss(config)
 				//lineSeriesDotGroups.remove()
 				lineSeries.remove()
 				areaSeries.remove()
-				stackedAreaSeries.remove()	
-
-				var donutPieIndex;
-				for (var i = 0; i < g.series.length; i++) 
-				{
-					if (g.series[i].type == "donut" || g.series[i].type == "pie")
-					{
-						donutPieIndex = i;
-					}
-				}
+				stackedAreaSeries.remove()
 
 				var width = g.width(),
 			    height = g.height(),
@@ -1896,7 +1892,7 @@ function Gneiss(config)
 			    	innerRadius = outerRadius * .6
 				}
 
-			    data = g.series[donutPieIndex].data,
+			    data = g.series[0].data,
 			    color = d3.scale.category20(),
 			    donutPie = d3.layout.pie(),
 			    arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius);
@@ -1913,10 +1909,8 @@ function Gneiss(config)
 				    .attr("class", "arc")
 				    .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
 
-				//.attr("stroke",function(d,i){return d.color? d.color : g.colors[i]})
-				//.attr("fill", function(d, i) { return color(i); })
 				arcs.append("path")
-				    .attr("fill",function(d,i){return d.color? d.color : "#" + g.colors[i]})
+				    .attr("fill",function(d,i){return d.color? d.color : "#" + g.piedonutcolors[0].colors[i].replace("#","")})
 				    .attr("d", arc);
 
 				arcs.append("text")
@@ -2414,7 +2408,7 @@ function Gneiss(config)
 						.attr("height",6)
 						.attr("x",0)
 						.attr("y",-13)
-						.attr("fill",function(d,i){return d.color? d.color : "#" + g.colors[i]})
+						.attr("fill",function(d,i){return d.color? d.color : "#" + g.piedonutcolors[0].colors[i].replace("#","")})
 				
 				if (g.state.hasLegend === false){
 					g.padding.top += g.padding.legend;
@@ -2628,11 +2622,11 @@ function Gneiss(config)
 
 				newStackedColumn.color = newColor;
 				seriesByType[series[i].type].push(jQuery.extend(true, {}, newStackedColumn)); 			 		
-			 }
-			 else
-			 {
+			}
+			else
+			{
 				seriesByType[series[i].type].push(series[i]);
-			 }
+			}
 		}
 		
 		return seriesByType;
