@@ -832,10 +832,18 @@ ChartBuilder = {
 		ChartBuilder.inlineAllStyles();
 		ChartBuilder.updateInterface();
 
-		if(selectedGraphType == "pie" || selectedGraphType == "donut")  			
-  			$('.axis').css({ "display": "none" });	
+		if(selectedGraphType == "pie" || selectedGraphType == "donut") 
+		{		
+  			$('.axis').css({ "display": "none" });
+  			$("#bottomAxisControls").addClass("hide");	
+  			$("#leftAxisControls").addClass("hide");	
+  		}
   		else
-  			$('.axis').css({ "display": "" });		
+  		{
+  			$('.axis').css({ "display": "" });	
+  			$("#bottomAxisControls").removeClass("hide");	
+  			$("#leftAxisControls").addClass("hide");		
+  		}
 		
 	},
 
