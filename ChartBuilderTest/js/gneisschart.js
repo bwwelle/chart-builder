@@ -1883,6 +1883,11 @@ function Gneiss(config)
 			    height = g.height(),
 			    outerRadius = Math.min(width, height) / 2;
 
+			    var left = outerRadius;
+			    var top = outerRadius + 30;
+
+			    outerRadius = outerRadius - 35;
+
 				if(g.hasPie())
 				{
 					innerRadius = 0
@@ -1893,7 +1898,6 @@ function Gneiss(config)
 				}
 
 			    data = g.series[0].data,
-			    color = d3.scale.category20(),
 			    donutPie = d3.layout.pie(),
 			    arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius);
 
@@ -1907,20 +1911,22 @@ function Gneiss(config)
 				    .data(donutPie)
 				  .enter().append("g")
 				    .attr("class", "arc")
-				    .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+				    .attr("transform", "translate(" + left + "," + top + ")");
 
 				arcs.append("path")
 				    .attr("fill",function(d,i){return d.color? d.color : "#" + g.piedonutcolors[0].colors[i].replace("#","")})
 				    .attr("d", arc);
 
 				arcs.append("text")
-				    .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+				    .attr("transform", function(d) { 
+				    	return "translate(" + arc.centroid(d) + ")"; })
 				    .attr("dy", ".35em")
 				    .attr("text-anchor", "middle")
 				    .attr("display", function(d) { 
 				    	return d.value > .15 ? null : "none"; 
 				    })
-				    .text(function(d, i) { return d.value.toFixed(2); });
+				    .text(function(d, i) { 
+				    	return d.value; });
 
 				this.drawLegend();
 			}			
@@ -2370,6 +2376,7 @@ function Gneiss(config)
 			legendSpacing = 10;
 		
 		//remove current legends
+		//$(".legendItem").detach();
 		g.legendItemContainer.selectAll("g.legendItem").remove()
 		
 		// if isBargrid() is false
@@ -2392,7 +2399,7 @@ function Gneiss(config)
 
 				// apply the labels for the legend
 				var legLabels = legItems.append("text")
-					.filter(function(){return g.series.length > 1})
+					.filter(function(){return g.xAxisRef[0].data.length > 1})
 					.attr("class","legendLabel")
 					.attr("x",10)
 					.attr("y",-7)
@@ -2401,20 +2408,21 @@ function Gneiss(config)
 						return d
 					});
 
-				if (g.series.length > 1) {
+				if (g.xAxisRef[0].data.length > 1) {
 					// apply the color keys to the legend labels
 					legItems.append("rect")
 						.attr("width",6)
 						.attr("height",6)
 						.attr("x",0)
 						.attr("y",-13)
-						.attr("fill",function(d,i){return d.color? d.color : "#" + g.piedonutcolors[0].colors[i].replace("#","")})
+						.attr("fill",function(d,i){
+							return d.color? d.color : "#" + g.piedonutcolors[0].colors[i].replace("#","")})
 				
-				if (g.state.hasLegend === false){
-					g.padding.top += g.padding.legend;
-					g.state.hasLegend = true;
-				}
-			}	
+					if (g.state.hasLegend === false){
+						g.padding.top += g.padding.legend;
+						g.state.hasLegend = true;
+					}
+				}	
 			}
 			else
 			{
@@ -2448,11 +2456,11 @@ function Gneiss(config)
 						.attr("fill", function(d,i){
 							return d.color? d.color : g.colors[i]})
 			
-				if (g.state.hasLegend === false){
-					g.padding.top += g.padding.legend;
-					g.state.hasLegend = true;
-				}
-			}	
+					if (g.state.hasLegend === false){
+						g.padding.top += g.padding.legend;
+						g.state.hasLegend = true;
+					}
+				}	
 			}
 		}
 
