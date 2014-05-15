@@ -842,7 +842,7 @@ ChartBuilder = {
   		{
   			$('.axis').css({ "display": "" });	
   			$("#bottomAxisControls").removeClass("hide");	
-  			$("#leftAxisControls").addClass("hide");		
+  			$("#leftAxisControls").removeClass("hide");		
   		}
 		
 	},
