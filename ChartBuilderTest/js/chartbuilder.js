@@ -1850,6 +1850,7 @@ ChartBuilder.start = function(config) {
   	$("#heightInput").keyup(function() {
 		var chartHeight=$(this).val();
 		var selectedSize = $("#sizeItems :selected").text();
+		var selectedGraphType = $("#graphType").val();
 
 		$('#topSection').css({ height: Number(chartHeight) + 57 +"px" });
 
@@ -1898,6 +1899,11 @@ ChartBuilder.start = function(config) {
 		{
 			$('#staticContainer').css({ position: "fixed" });
 		}
+
+		if(selectedGraphType =="pie" || selectedGraphType == "donut")
+			$('.axis').css({ "display": "none" });
+		else
+			$('.axis').css({ "display": "" });
 
   	})
 
@@ -2008,6 +2014,7 @@ ChartBuilder.start = function(config) {
   	 $("#widthInput").keyup(function() {
 		var chartWidth=$(this).val();	
 		var selectedSize = $("#sizeItems :selected").text();
+		var selectedGraphType = $("#graphType").val();
 
 		$('.chartContainer').css({ width: chartWidth });
 		chart.width(chartWidth);	
@@ -2081,6 +2088,11 @@ ChartBuilder.start = function(config) {
 		{
 			chart.appendMeta();
 		}
+
+		if(selectedGraphType =="pie" || selectedGraphType == "donut")
+			$('.axis').css({ "display": "none" });
+		else
+			$('.axis').css({ "display": "" });
   	})
 
   	$("#csvInput").keyup(function() {
