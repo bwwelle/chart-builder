@@ -1319,6 +1319,7 @@ ChartBuilder = {
 	actions: {		
 		chart_size_change: function(index,that) {
 			var selectedSize = $(that).find("option:selected").text();
+			var selectedGraphType = $("#graphType").val();
 			var g = chart;
 			var sizeValues;
 
@@ -1433,6 +1434,15 @@ ChartBuilder = {
 			{
 				$('#staticContainer').css({ position: "fixed" });
 			}
+
+			if(selectedGraphType == "pie" || selectedGraphType == "donut") 
+			{		
+	  			$('.axis').css({ "display": "none" });	
+	  		}
+	  		else
+	  		{
+	  			$('.axis').css({ "display": "" });		
+	  		}
 		},
 		graph_type_change:function(index,that)
 		{

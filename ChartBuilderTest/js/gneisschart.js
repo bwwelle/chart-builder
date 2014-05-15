@@ -1857,7 +1857,7 @@ function Gneiss(config)
 			columnSeries = g.seriesContainer.selectAll("g.seriesColumn");			
 			scatterSeries = g.seriesContainer.selectAll("g.seriesScatter");
 			stackedAreaSeries = g.seriesContainer.selectAll("path.seriesStackedArea");
-			donutSeries = g.seriesContainer.selectAll("path.seriesDonut");
+			donutPieSeries = g.seriesContainer.selectAll("svg.seriesPieDonut");
 
 
 			//lineSeriesDotGroups = g.seriesContainer.selectAll("g.lineSeriesDots")
@@ -1869,6 +1869,7 @@ function Gneiss(config)
 			
 			if(g.hasDonut() || g.hasPie() )
 			{
+				donutPieSeries.remove()
 				//remove non bargrid stuff
 				scatterSeries.remove()
 				//added for stackedcolumn
@@ -1905,7 +1906,8 @@ function Gneiss(config)
 				  .append("svg")
 				    .data([data])
 				    .attr("width", width)
-				    .attr("height", height);
+				    .attr("height", height)
+				    .attr("class", "seriesPieDonut");
 
 				var arcs = vis.selectAll("g.arc")
 				    .data(donutPie)
@@ -1932,6 +1934,7 @@ function Gneiss(config)
 			}			
 			else if(g.isBargrid()) 
 			{
+				donutPieSeries.remove();
 				stackedColumnSeries = g.seriesContainer.selectAll("g.seriesStackedColumn");
 				//add bars to chart
 				columnGroups = g.seriesContainer.selectAll("g.seriesColumn")
