@@ -377,6 +377,17 @@ ChartBuilder = {
 
 		var canvasContext = canvas.getContext("2d")
 
+		var selectedGraphType = $("#graphType").val();
+
+		if(selectedGraphType == "pie" || selectedGraphType == "donut") 
+		{		
+  			$('.axis').css({ "display": "none" });	
+  		}
+  		else
+  		{
+  			$('.axis').css({ "display": "" });	
+  		}
+
 		var svg = $.trim(document.getElementById("chartContainer").innerHTML)
 		canvasContext.drawSvg(svg,0.5,0.5)
 
