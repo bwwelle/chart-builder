@@ -1880,8 +1880,14 @@ function Gneiss(config)
 				areaSeries.remove()
 				stackedAreaSeries.remove()
 
+				var metaInfo = document.getElementById("metaInfo");
+
+				if (metaInfo == null)
+					height = g.height();
+			    else
+			    	height = g.height() - g.padding.meta;
+
 				var width = g.width(),
-			    height = g.height(),
 			    outerRadius = Math.min(width, height) / 2;
 
 			    var left = outerRadius;
