@@ -390,17 +390,6 @@ ChartBuilder = {
 		}
 		
 		filename = filename.join("-").replace(/[^\w\d]+/gi, '-');
-
-		var selectedGraphType = $("#graphType").val();
-
-		if(selectedGraphType == "pie" || selectedGraphType == "donut") 
-		{		
-  			$('.axis').css({ "display": "none" });
-  		}
-  		else
-  		{
-  			$('.axis').css({ "display": "" });	
-  		}
 		
 		
 		$("#downloadImageLink").attr("href",canvas.toDataURL("png"))
