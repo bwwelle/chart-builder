@@ -1882,12 +1882,12 @@ function Gneiss(config)
 
 				var metaInfo = document.getElementById("metaInfo");
 
-				if (metaInfo == null)
-					height = g.height();
+				if (metaInfo == null)				
+					height = $("#heightInput").val();				
 			    else
-			    	height = g.height() - g.padding.meta;
+			    	height = $("#heightInput").val() - g.padding.meta;
 
-				var width = g.width(),
+				var width = $("#widthInput").val(),
 			    outerRadius = Math.min(width, height) / 2;
 
 			    var left = outerRadius;
