@@ -2115,6 +2115,10 @@ ChartBuilder.start = function(config) {
  			
   			ChartBuilder.updateInterface();
   			
+  			d3.select('#leftAxis').style("display","");
+	  		d3.select('#xAxis').style("display","");
+
+
   			if($("#right_axis_max").val().length == 0 && $("#right_axis_min").val().length == 0) {
   					chart.yAxis[0].domain = [null,null];
   			}
@@ -2125,8 +2129,10 @@ ChartBuilder.start = function(config) {
   			
   			var csv = $("#csvInput").val();
   			var newData = ChartBuilder.getNewData(csv);
+
   			if(newData == null) {
-					ChartBuilder.showInvalidData();
+				ChartBuilder.showInvalidData();
+
   				return;
   			}
 
@@ -2156,7 +2162,8 @@ ChartBuilder.start = function(config) {
   			dataObj = ChartBuilder.makeDataObj(newData);
 
   			if(dataObj == null) {
-					ChartBuilder.showInvalidData();
+				ChartBuilder.showInvalidData();
+
   				return;
   			}
 
@@ -2219,6 +2226,13 @@ ChartBuilder.start = function(config) {
   			ChartBuilder.redraw();
   			ChartBuilder.inlineAllStyles();
   			ChartBuilder.updateInterface();
+
+	  		var selectedGraphType = $("#graphType").val();
+
+	  		if(selectedGraphType =="pie" || selectedGraphType == "donut")
+				$('.axis').css({ "display": "none" });
+			else
+				$('.axis').css({ "display": "" });
   		}
   
 
