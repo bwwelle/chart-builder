@@ -2115,10 +2115,6 @@ ChartBuilder.start = function(config) {
  			
   			ChartBuilder.updateInterface();
   			
-  			d3.select('#leftAxis').style("display","");
-	  		d3.select('#xAxis').style("display","");
-
-
   			if($("#right_axis_max").val().length == 0 && $("#right_axis_min").val().length == 0) {
   					chart.yAxis[0].domain = [null,null];
   			}
