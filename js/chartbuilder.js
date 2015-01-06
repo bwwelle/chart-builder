@@ -14,7 +14,7 @@ ChartBuilder = {
 			suffix: {
 				value: "",
 				use: "top"
-			},cr
+			},
 			ticks: 5,
 			formatter: null,
 			color: null
