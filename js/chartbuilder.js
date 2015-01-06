@@ -14,7 +14,7 @@ ChartBuilder = {
 			suffix: {
 				value: "",
 				use: "top"
-			},
+			},cr
 			ticks: 5,
 			formatter: null,
 			color: null
@@ -373,7 +373,7 @@ ChartBuilder = {
 		// Create PNG image
 		var canvas = document.getElementById("canvas");
 		canvas.width = $("#chartContainer").width();
-		canvas.height = $("#chartContainer").height();
+		canvas.height = $("#chartContainer").height();		
 
 		var canvasContext = canvas.getContext("2d")
 
@@ -391,7 +391,6 @@ ChartBuilder = {
 		
 		filename = filename.join("-").replace(/[^\w\d]+/gi, '-');
 		
-		
 		$("#downloadImageLink").attr("href",canvas.toDataURL("png"))
 			.attr("download",function(){ return filename + "_chartbuilder.png"
 			});
@@ -400,7 +399,7 @@ ChartBuilder = {
 		// Create SVG image
 		var svgString = $("#chartContainer").html()
 		//add in all the things that validate SVG
-		svgString = '<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n<svg ' + svgString.split("<svg ")[1]
+		svgString = '<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n<svg xmlns="http://www.w3.org/2000/svg" ' + svgString.split("<svg ")[1]
 		
 	$("#downloadSVGLink").attr("href","data:text/svg,"+ encodeURIComponent(svgString.split("PTSerif").join("PT Serif")) )
 		.attr("download",function(){ return filename + "_chartbuilder.svg"
