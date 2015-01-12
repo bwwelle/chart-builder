@@ -47,26 +47,26 @@ svg .xSourceLine {
 svg .axis text,
 svg .legendItem text,
 svg .yLabel text {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: UniversNextforMORNPCCn-Rg;
 	font-size: 10px;
 	text-rendering:   optimizeLegibility;
 
 }
 
 svg text.metaText {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: UniversNextforMORNPCCn-Rg;
 	font-size:  10px;
 	text-rendering:   optimizeLegibility;
 }
 
 svg text.barLabel, 
 svg text.bargridLabel {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: UniversNextforMORNPCCn-Rg;
 	font-size: 10px;
 }
 	
 #titleLine {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-family: UniversNextforMORNPCCn-Rg;
 	font-size: 10px;
 	font-weight: bold;
 }

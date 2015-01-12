@@ -454,9 +454,22 @@ ChartBuilder = {
 				d3.select("#ground").attr("width",sizeValues[0]);
 				d3.select("#ground").attr("height",sizeValues[1]);
 				d3.select("#xBackground").attr("width",sizeValues[0]);
-				d3.select("#titleContainer").attr("width",sizeValues[0]);
 				d3.select("#titleBackground").attr("width", sizeValues[0]);
-				d3.select("#xAxis").attr("width", sizeValues[0]);
+
+				d3.select(".xLabelLine").remove();
+				
+				var xPathData = [ { "x": 0, "y": 0 },  { "x": sizeValues[0],  "y": 0 } ],
+					lineFunction = d3.svg.line()
+			            .x(function(d) { 
+			            	return d.x; 
+			            })
+			            .y(function(d) { return d.y; })
+			        	.interpolate("linear");
+
+			    d3.select("#xAxis").append("path")
+					.attr("class", "xLabelLine")
+					.attr("d", lineFunction(xPathData))
+		    		.attr("stroke", "#AAA");
 
 				var widthInputBox = $("#widthInput");
 				var heightInputBox = $("#heightInput");

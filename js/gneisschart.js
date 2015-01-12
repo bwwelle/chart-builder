@@ -493,8 +493,8 @@ function Gneiss(config)
 		
 		var titleContainer = g.chart.append("g")
 			.attr("id","titleContainer")
-			.attr("width", g.width())
-			.attr("height", g.height())
+			//.attr("width", g.width())
+			//.attr("height", g.height())
 			.attr("transform","translate(0,0)");
 
 		titleContainer.append("rect")
@@ -972,7 +972,6 @@ function Gneiss(config)
 				axisGroup = g.chart.append("g")
 					.attr("class","axis yAxis")
 					.attr("id",i==0?"leftAxis":"rightAxis")
-					.attr("name",i==0?"leftAxis":"rightAxis")
 					.attr("transform",i==0?"translate("+g.padding.left+",0)":"translate("+( g.width()-g.padding.right)+",0)")
 					.attr("fill", "none") //Background color for y axis
 					.call(g.yAxis[i].axis)
@@ -1302,7 +1301,9 @@ function Gneiss(config)
 				
 				var xPathData = [ { "x": 0, "y": 0 },  { "x": g.width(),  "y": 0 } ],
 					lineFunction = d3.svg.line()
-			            .x(function(d) { return d.x; })
+			            .x(function(d) { 
+			            	return d.x; 
+			            })
 			            .y(function(d) { return d.y; })
 			        	.interpolate("linear");
 
