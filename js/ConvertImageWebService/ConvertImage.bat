@@ -1,0 +1,5 @@
+@echo off
+
+pushd F:\InstalledPrograms\ImageMagick-6.9.0-Q16\
+
+convert -units PixelsPerInch "F:\GITProjects\ChartBuilder\js\ConvertImageWebService\test.svg" -density 600 "F:\GITProjects\ChartBuilder\js\ConvertImageWebService\test.png"

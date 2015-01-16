@@ -389,21 +389,95 @@ ChartBuilder = {
 			filename.unshift(chart.title)
 		}
 		
-		filename = filename.join("-").replace(/[^\w\d]+/gi, '-');
-		
-		$("#downloadImageLink").attr("href",canvas.toDataURL("png"))
-			.attr("download",function(){ return filename + "_chartbuilder.png"
-			});
-			
-			
-		// Create SVG image
+		filename = filename.join("-").replace(/[^\w\d]+/gi, '-');	
+
+// 		var getGreeting = function() {  
+//   var url = "http://localhost:2323/ImageMagickWebService/ConverttoPng.asmx/ConvertSVGtoPNG";
+
+//   $.ajax({
+//     type: "POST",
+//     url: url,
+//     contentType: "application/json; charset=utf-8",
+//     dataType: "json",
+//     success: function (data) {
+//       alert(data.d)
+//     },
+//       error: function (xmlHttpRequest, textStatus, errorThrown) {
+//       console.log(xmlHttpRequest.responseText);
+//       console.log(textStatus);
+//       console.log(errorThrown);
+//       }
+//    })
+// };
+
+// Create SVG image
 		var svgString = $("#chartContainer").html()
 		//add in all the things that validate SVG
 		svgString = '<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n<svg xmlns="http://www.w3.org/2000/svg" ' + svgString.split("<svg ")[1]
+
+
+ var url = "/ImageMagickWebService/ConverttoPng.asmx/ConvertSVGtoPNG";
+ var svgData = svgString.split("PTSerif").join("PT Serif");
+var img = new Image();
+
+  var pngImage = $.ajax({
+    type: "Post",
+    url: url,
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    data: JSON.stringify({ svgCode: svgData }),
+    success: function (data) {
+      var pngByteArray = data.d;
+      var uInt8Array = pngByteArray;
+    var i = uInt8Array.length;
+    var binaryString = [i];
+
+    while (i--) {
+        binaryString[i] = String.fromCharCode(uInt8Array[i]);
+    }
+    var data = binaryString.join('');
+
+    var base64 = window.btoa(data);
+
+    
+    img.src = "data:image/png;base64," + base64;
+
+    
+		d3.select("#downloadImageLink").attr("src",img)
+		 	.attr("download",function(){ 
+
+		 		return filename + "_chartbuilder.png"
+		 	});
+
+    
+    },
+      error: function (request, status) {
+     alert(request.statusText);
+      }
+   });  
+
 		
-	$("#downloadSVGLink").attr("href","data:text/svg,"+ encodeURIComponent(svgString.split("PTSerif").join("PT Serif")) )
-		.attr("download",function(){ return filename + "_chartbuilder.svg"
-		})
+
+		// $("#downloadImageLink").attr("href",canvas.toDataURL("png"))
+		//  	.attr("download",function(){ 
+
+		//  		return filename + "_chartbuilder.png"
+		//  	});
+
+			
+			
+
+		 $("#downloadSVGLink").attr("href","data:text/svg,"+ encodeURIComponent(svgString.split("PTSerif").join("PT Serif")) )
+	.attr("download",function(){ 
+	return filename + "_chartbuilder.svg"
+	})
+
+
+
+	// $("#downloadSVGLink").attr("href","data:text/svg,"+ encodeURIComponent(svgString.split("PTSerif").join("PT Serif")) )
+	// 	.attr("download",function(){ 
+	// 		return filename + "_chartbuilder.svg"
+	// 	})
 
 		var icon = this.setFavicon()
 
@@ -779,7 +853,6 @@ ChartBuilder = {
 		ChartBuilder.inlineAllStyles();
 		ChartBuilder.updateInterface();
 	},
-
 	updateInterface: function() {
 		$(".previousCharts").css("display", "none");
 		
@@ -1658,6 +1731,7 @@ ChartBuilder.start = function(config) {
   			//.enter()
   			//.append("option")
   			//.text(function(d){return d.name?d.name:"Untitled Chart"})
+
   	
 	$('#popupBoxClose').click( function() {           
         unloadPopupBox();

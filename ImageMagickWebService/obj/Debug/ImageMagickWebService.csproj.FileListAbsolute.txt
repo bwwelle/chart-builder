@@ -1,0 +1,4 @@
+F:\GITProjects\ChartBuilder\ImageMagickWebService\bin\ImageMagickWebService.dll
+F:\GITProjects\ChartBuilder\ImageMagickWebService\bin\ImageMagickWebService.pdb
+F:\GITProjects\ChartBuilder\ImageMagickWebService\obj\Debug\ImageMagickWebService.dll
+F:\GITProjects\ChartBuilder\ImageMagickWebService\obj\Debug\ImageMagickWebService.pdb
