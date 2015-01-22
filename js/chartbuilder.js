@@ -427,23 +427,26 @@ var img = new Image();
     dataType: "json",
     data: JSON.stringify({ svgCode: svgData }),
     success: function (data) {
-      var pngByteArray = data.d;
-      var uInt8Array = pngByteArray;
-    var i = uInt8Array.length;
-    var binaryString = [i];
+    var pngURL =data.d;
+      //var pngByteArray = data.d;
+    //   var uInt8Array = pngByteArray;
+    // var i = uInt8Array.length;
+    // var binaryString = [i];
 
-    while (i--) {
-        binaryString[i] = String.fromCharCode(uInt8Array[i]);
-    }
-    var data = binaryString.join('');
+    // while (i--) {
+    //     binaryString[i] = String.fromCharCode(uInt8Array[i]);
+    // }
+    // var data = binaryString.join('');
 
-    var base64 = window.btoa(data);
-
-    
-    img.src = "data:image/png;base64," + base64;
+    // var base64 = window.btoa(data);
 
     
-		d3.select("#downloadImageLink").attr("src",img)
+    // img.src = "data:image/png;base64," + base64;
+
+    
+    //var codeForPNG = "<img src='" + img.src + "' />";
+
+		d3.select("#downloadImageLink").attr("href",pngURL)
 		 	.attr("download",function(){ 
 
 		 		return filename + "_chartbuilder.png"

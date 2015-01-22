@@ -412,10 +412,73 @@ ChartBuilder = {
 		var svgString = $("#chartContainer").html()
 		//add in all the things that validate SVG
 		svgString = '<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n<svg xmlns="http://www.w3.org/2000/svg" ' + svgString.split("<svg ")[1]
+
+
+ var url = "/ImageMagickWebService/ConverttoPng.asmx/ConvertSVGtoPNG";
+ var svgData = svgString.split("PTSerif").join("PT Serif");
+var img = new Image();
+
+  var pngImage = $.ajax({
+    type: "Post",
+    url: url,
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    data: JSON.stringify({ svgCode: svgData }),
+    success: function (data) {
+    var pngURL =data.d;
+      //var pngByteArray = data.d;
+    //   var uInt8Array = pngByteArray;
+    // var i = uInt8Array.length;
+    // var binaryString = [i];
+
+    // while (i--) {
+    //     binaryString[i] = String.fromCharCode(uInt8Array[i]);
+    // }
+    // var data = binaryString.join('');
+
+    // var base64 = window.btoa(data);
+
+    
+    // img.src = "data:image/png;base64," + base64;
+
+    
+    //var codeForPNG = "<img src='" + img.src + "' />";
+
+		d3.select("#downloadImageLink").attr("href",pngURL)
+		 	.attr("download",function(){ 
+
+		 		return filename + "_chartbuilder.png"
+		 	});
+
+    
+    },
+      error: function (request, status) {
+     alert(request.statusText);
+      }
+   });  
+
 		
-	$("#downloadSVGLink").attr("href","data:text/svg,"+ encodeURIComponent(svgString.split("PTSerif").join("PT Serif")) )
-		.attr("download",function(){ return filename + "_chartbuilder.svg"
-		})
+
+		// $("#downloadImageLink").attr("href",canvas.toDataURL("png"))
+		//  	.attr("download",function(){ 
+
+		//  		return filename + "_chartbuilder.png"
+		//  	});
+
+			
+			
+
+		 $("#downloadSVGLink").attr("href","data:text/svg,"+ encodeURIComponent(svgString.split("PTSerif").join("PT Serif")) )
+	.attr("download",function(){ 
+	return filename + "_chartbuilder.svg"
+	})
+
+
+
+	// $("#downloadSVGLink").attr("href","data:text/svg,"+ encodeURIComponent(svgString.split("PTSerif").join("PT Serif")) )
+	// 	.attr("download",function(){ 
+	// 		return filename + "_chartbuilder.svg"
+	// 	})
 
 		var icon = this.setFavicon()
 
@@ -467,9 +530,22 @@ ChartBuilder = {
 				d3.select("#ground").attr("width",sizeValues[0]);
 				d3.select("#ground").attr("height",sizeValues[1]);
 				d3.select("#xBackground").attr("width",sizeValues[0]);
-				d3.select("#titleContainer").attr("width",sizeValues[0]);
 				d3.select("#titleBackground").attr("width", sizeValues[0]);
-				d3.select("#xAxis").attr("width", sizeValues[0]);
+
+				d3.select(".xLabelLine").remove();
+				
+				var xPathData = [ { "x": 0, "y": 0 },  { "x": sizeValues[0],  "y": 0 } ],
+					lineFunction = d3.svg.line()
+			            .x(function(d) { 
+			            	return d.x; 
+			            })
+			            .y(function(d) { return d.y; })
+			        	.interpolate("linear");
+
+			    d3.select("#xAxis").append("path")
+					.attr("class", "xLabelLine")
+					.attr("d", lineFunction(xPathData))
+		    		.attr("stroke", "#AAA");
 
 				var widthInputBox = $("#widthInput");
 				var heightInputBox = $("#heightInput");
